@@ -1,0 +1,66 @@
+html,body,nav,img,footer, .interface {
+  max-width: 100%;
+}
+
+.navbar{
+	margin-bottom: 30px;
+}
+nav{
+	position: fixed;
+	height: 100%;
+	width: 15%;
+	margin-top: 3%;
+	background-color: #343a40!important;
+	padding: auto;
+	padding-top: 20px;
+	float: left;
+	border-bottom-right-radius: 30px;
+	
+}
+nav>hr{
+	background-color: #fff;
+	width: 80%;
+	margin-top: -20px;
+}
+nav>div{
+	text-align: center;
+	margin-top: 20px;
+}
+nav>a>img{
+	height: 20px;
+	width: 20px;
+	margin-left: 20px;
+}
+nav>div>button{
+	border: 1px solid transparent;
+	width: 100%;
+}
+
+.btn-active{
+	background-color: #fc7e2f;
+	color: white !important;
+}
+
+.interface{
+	right: 0;
+	margin: 40px;
+	margin-top: 5%;
+	position: absolute;
+	height: auto;
+	width: 80%;
+}
+
+footer{
+	position: absolute; 
+	width: 70%;
+	height: 60px;
+	bottom: 0;
+	padding: 20px;
+	background-color: #343a40!important;
+	color: #fff;
+	font-size: 13pt;
+	text-align: center;
+	margin-left: 20%;
+	border-top-left-radius: 30px;
+	border-top-right-radius: 30px;
+}
