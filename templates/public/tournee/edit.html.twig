@@ -1,0 +1,49 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+{% if result != null %}
+<div class="alert alert-success">
+  {{result}}
+</div>
+{% endif %}
+<form method="POST" action="{{path('updateTournee', {id: tournee.id_tournee})}}">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputCode">Quantité réalisée:</label>
+      <input type="number" step="0.1" class="form-control" name="qte_realisee">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputLibelle">Kilométrage</label>
+      <input type="number" step="0.1" class="form-control" name="kilometrage">
+    </div>
+  </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputLatitude">Heure début de secteur:</label>
+            <input type="time" name="heure_debut_secteur" class="form-control" >
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputLatitude">Heure fin de secteur:</label>
+            <input type="time" name="heure_fin_secteur" class="form-control" >
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputLatitude">Heure de pesée:</label>
+            <input type="time" name="heure_pesee" class="form-control" >
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Durée d'attente:</label>
+            <input type="number" name="duree_attente" class="form-control">
+        </div>
+        <div class="form-group col-md-4">
+            <label >Temps de travail:</label>
+            <input type="number" step="0.01" name="temp_travail" class="form-control">
+        </div>
+    </div>
+    
+  </div>
+  <button type="submit" class="btn btn-primary">Sauvegarder</button>
+</form>
+
+{% endblock %}

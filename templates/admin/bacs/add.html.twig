@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+{% if result != null %}
+<div class="alert alert-success">
+  {{result}}
+</div>
+{% endif %}
+<form method="POST" action="{{path('addBac')}}">
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="inputCode">Code</label>
+      <input type="text" class="form-control" name="code">
+    </div>
+    <div class="form-group col-md-4">
+        <label for="inputLongitude">Adresse</label>
+        <input type="text" name="adresse" class="form-control" >
+      </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+        <label for="inputLatitude" >Nature</label>
+        <select name="nature" class="form-control" id="">
+            <option value="plastique">Plastique</option>
+            <option value="métalique">Métalique</option>
+            <option value="Galvanisé">Galvanisé</option>
+        </select>
+      </div>
+    <div class="form-group col-md-4">
+      <label for="inputLatitude">Nature de déchets:</label>
+      <input type="text" name="nature_dechet" class="form-control" >
+    </div>
+    <div class="form-group col-md-8">
+        <label for="inputLibelle">Volume</label>
+        <input type="number" step="5" class="form-control" name="volume">
+      </div>
+  </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Etat:</label>
+            <select name="etat" id="" class="form-control">
+                <option value="Bon" selected>Bon</option>
+                <option value="Moyen" selected>Moyen</option>
+                <option value="Dégradé" selected>Dégradé</option>
+            </select>
+        </div>
+        <div class="form-group col-md-8">
+            <label for="inputAddress">Date d'installation:</label>
+            <input type="date"  class="form-control col-md-6" name="date" >
+        </div>
+    </div>
+    
+  <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>
+
+{% endblock %}

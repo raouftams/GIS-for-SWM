@@ -1,0 +1,70 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+{% if result != null %}
+<div class="alert alert-success">
+  {{result}}
+</div>
+{% endif %}
+<form method="POST" action="{{path('addVehicle')}}">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputCode">Code</label>
+      <input type="text" class="form-control" name="code">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputLibelle">Marque</label>
+      <input type="text" class="form-control" name="marque">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+        <label for="inputLatitude">Matricule</label>
+        <input type="text" name="matricule" class="form-control" >
+      </div>
+    <div class="form-group col-md-4">
+      <label for="inputLatitude">Genre</label>
+      <input type="text" name="genre" class="form-control" >
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputLongitude">Volume</label>
+      <input type="number" name="volume" class="form-control" >
+    </div>
+  </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Poids</label>
+            <input type="number" step="1" class="form-control" name="poids" value="0" >
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Largeur</label>
+            <input type="number" step="0.1" class="form-control" name="largeur" value="0" >
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputAddress">longueur</label>
+            <input type="number" step="0.1" class="form-control" name="longueur" value="0">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Hauteur</label>
+            <input type="number" step="0.1" class="form-control" name="hauteur" value="0">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Puissance</label>
+            <input type="number" step="1" class="form-control" name="puissance" >
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Etat</label>
+            <select name="etat" id="etat" class="form-control">
+                <option value="En marche">En marche</option>
+                <option value="En panne">En panne</option>
+            </select>
+        </div>
+        <label for="inputAddress">date</label>
+            <input type="date"  class="form-control col-md-6" name="date" >
+    </div>
+  <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>
+
+{% endblock %}

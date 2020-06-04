@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tournee</title>
+	<!-- jQuery -->
+	<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+	<!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+
+	<script src="{{asset('js/leaflet/leaflet.js')}}"></script>
+
+	<script src="{{asset('js/leaflet/esriservices/esri-leaflet.js')}}"></script>
+    <script src="{{asset('js/leaflet/locate/L.Control.Locate.min.js')}}"></script>
+    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+
+	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+	<!-- Material Design Bootstrap -->
+	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
+    <link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
+    <style>
+        #map{border:1px solid transparent; height: 610px; width: 1360px; margin-top: 50px;}
+        nav{position: absolute;}
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+		<a class="navbar-brand" href="#">Dashboard</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+		  <ul class="navbar-nav">
+			<li class="nav-item active">
+			  <a class="nav-link" href="#"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-table"></i> &nbsp; Table
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
+				  <a class="dropdown-item" href='{{path("vehiclesIndex")}}'>Véhicules</a>
+				  <div class="dropdown-divider"></div>
+				  <a class="dropdown-item" href="#">Something else here</a>
+				</div>
+			  </li>
+			<li class="nav-item">
+			  <a class="nav-link" href="#"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link disabled" href="#">Analyse</a>
+			</li>
+		  </ul>
+		</div>
+    </nav>
+    <div id="map"></div>
+</body>
+
+<script type="text/javascript">
+	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
+	L.esri.basemapLayer('Topographic').addTo(map);
+
+    $.ajax({url:"{{path('routeService',{id : id_tournee })}}",
+		success: function(response){
+
+			function onEachFeature(feature, layer) {
+				layer.bindPopup('<b>Code: </b>');
+			}
+
+			window.routes = JSON.parse(response);
+			window.lyrRoutes = L.geoJSON(window.routes.features, {
+				onEachFeature: onEachFeature,
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("erreur");
+		}
+	});
+</script>
+</html>

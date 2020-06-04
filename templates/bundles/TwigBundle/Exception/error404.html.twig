@@ -1,0 +1,16 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{asset('')}}">
+  
+{% endblock %}
+{% block body %}
+
+
+<div class="container">
+    <h2 class="title">Erreur 404</h2>
+    <p>La page que vous cherchez n'existe pas.</p>
+</div>
+
+
+{% endblock %}

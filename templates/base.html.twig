@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+		<link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+		<!-- Google Fonts Roboto -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+		<!-- Material Design Bootstrap -->
+		<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+		<link rel="stylesheet" href="{{asset('css/main.css')}}">
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body style="background-color: rgb(238, 236, 236);">
+        <div class="navbar navbar-dark fixed-top bg-dark">
+			<a class="navbar-brand" href="#">Dashboard</a>
+			<a href="{{path('logout')}}" style="float: right;">
+				<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+					width="25" height="25"
+					viewBox="0 0 172 172"
+					style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#e74c3c"><path d="M86,21.33203l-3.86328,3.69531l-21.5,21.5l7.72656,7.72656l12.26172,-12.26172v65.50781h10.75v-65.50781l12.26172,12.26172l7.72656,-7.72656l-21.5,-21.5zM48.87891,33.25781c-16.56592,11.67383 -27.37891,30.96924 -27.37891,52.74219c0,35.56739 28.93262,64.5 64.5,64.5c35.56739,0 64.5,-28.93261 64.5,-64.5c0,-21.77295 -10.81299,-41.06836 -27.37891,-52.74219l-6.21484,8.73438c13.81543,9.72119 22.84375,25.7832 22.84375,44.00781c0,29.75146 -23.99854,53.75 -53.75,53.75c-29.75146,0 -53.75,-23.99854 -53.75,-53.75c0,-18.22461 9.02832,-34.26562 22.84375,-44.00781z"></path></g></g>
+				</svg>
+			</a>
+		</div>
+        <div class="row1" id="navbar">
+          	<div class="col-xs-2">
+            	<nav class="aside bg-dark">
+					<hr>
+					<div class="btn-group-vertical" style="width: 96%;">
+						
+					<a class="btn btn-dark" href="{{path('dashboard')}}" style="padding-left: 0px;">
+						<i class="fas fa-tachometer-alt"></i>
+						 	&nbsp; Home <span class="sr-only">(current)</span>
+					</a> 
+
+					<a class="btn btn-dark" style="padding-left: 0px;" href="{{path('charts')}}">
+						<i class="far fa-chart-bar"></i>
+						&nbsp; Chart 
+					</a> 
+
+					<a class="btn btn-dark dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;">
+						<i class="fas fa-table"></i>
+						&nbsp; Tables
+					</a>
+                    	<div class="collapse" id="submenu1" aria-expanded="false" style="width: 100%;">
+							<ul class="flex-column pl-2 nav">
+								<a class="nav-item md btn btn-light" href="{{path('pointsIndex')}}"><small>Points</small></a>
+								<a class="nav-item btn btn-light" href="{{path('vehiclesIndex')}}"><small>Véhicules</small></a>
+								<a class="nav-item btn btn-light" href="{{path('bacsIndex')}}"><small>Bacs</small></a>
+							</ul>
+						</div>
+						
+					<a class="btn btn-dark" href="{{path('maps')}}" style="padding-left: 0px;">
+						<i class="fas fa-map-marked-alt"></i>
+						&nbsp; Maps 
+					</a> 
+
+					<a class="btn btn-dark" style="padding-left: 0px;">
+						<i class="fas fa-edit"></i>
+						&nbsp; Form 
+					</a>
+					<a class="btn btn-dark" href="">users</a>
+					</div>
+				</nav>
+			</div>
+        </div>
+        <div class="col-xs-9">
+          <div class="interface">
+            <div id="main_content">
+              {% block body %}{% endblock %}
+            </div>
+          </div>
+        </div>
+        
+        <script>
+            function processAjaxData(response, urlPath){
+                document.getElementById("main_content").innerHTML = response.html;
+                document.title = response.pageTitle;
+                window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
+            }
+            window.onpopstate = function(e){
+                if(e.state){
+                    document.getElementById("main_content").innerHTML = e.state.html;
+                    document.title = e.state.pageTitle;
+                }
+            };
+
+		</script>
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		
+		<!-- jQuery -->
+		<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+		<!-- Bootstrap tooltips -->
+		<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+		<!-- Bootstrap core JavaScript -->
+		<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+		<!-- MDB core JavaScript -->
+		<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+
+		{% block javascripts %}{% endblock %}
+    </body>
+</html>

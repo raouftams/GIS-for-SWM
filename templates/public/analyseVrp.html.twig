@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Analyse VRP</title>
+
+    <!-- fonctions du formulaire d'analyse -->
+    <script src="{{asset('js/vrp/analyseVrp.js')}}"></script>
+    <!-- jQuery -->
+    <script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+    <!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/leaflet/leaflet.js')}}"></script>
+    <script src="{{asset('js/leaflet/esriservices/esri-leaflet.js')}}"></script>
+
+	<script src="{{asset('js/leaflet/locate/L.Control.Locate.min.js')}}"></script>
+
+	<script src=" https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+
+	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+	<!-- Material Design Bootstrap -->
+	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
+	<link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
+
+	<style>
+		body{width: 100%;}
+		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 60px; width: 70%; float:left;}
+		.analysis{ border: 1px solid transparent; width: 28%; float: right; margin-top: 60px; margin-right: 15px;}
+		.control{border: 1px solid transparent; position: sticky; }
+		.navbar {position: fixed;}
+		.btn-analyse{width: 100%; position: relative;}
+	</style>
+	
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+		<a class="navbar-brand" href="#">Dashboard</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+		  <ul class="navbar-nav">
+			<li class="nav-item active">
+			  <a class="nav-link" href="#"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-table"></i> &nbsp; Table
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
+				  <a class="dropdown-item" href='{{path("vehiclesIndex")}}'>Véhicules</a>
+				  <div class="dropdown-divider"></div>
+				  <a class="dropdown-item" href="#">Something else here</a>
+				</div>
+			  </li>
+			<li class="nav-item">
+			  <a class="nav-link" href="#"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link disabled" href="#">Analyse</a>
+			</li>
+		  </ul>
+		</div>
+    </nav>
+    
+    <div id="map"></div>
+    
+	<div class="analysis">
+		<div class="vrp-form" id="vrpDiv">
+                <h3>Analyse Vrp</h3>
+                <hr>
+                <form onsubmit="select(); return false;" id="ordersForm">
+                  <fieldset>
+                    <legend>Ordres:</legend>
+                    <div class="form-group">
+                      <label for="Couche">Couche</label>
+                      <select class="form-control Depot" id="Coucheo">
+                          <option value="" disabled selected>Point de collecte</option>
+                        </select>
+                        <button class="btn btn-warning btn-sm">+</button>
+                      </div>
+                      <div class="form-group">
+                        <label for="Filtre">Filtrer</label>
+                        <select class="form-control Depot" id="Filtreo">
+                            <option value="" disabled selected>Filtre</option>
+                            <option value="18" >18m&#179;</option>
+                            <option value="16" >16m&#179;</option>
+                            <option value="15" >15m&#179;</option>
+                            <option value="12" >12m&#179;</option>
+                            <option value="10" >10m&#179;</option>
+                          </select>
+                        </div>
+                        
+                  </fieldset>
+                </form>    
+                <form id="depotsForm">
+                  <fieldset>
+                    <legend>Depot:</legend>
+
+                    <div class="form-group">
+                      <label for="Couche">Couche:</label>
+                      <select class="form-control Depot" id="Couche">
+                        {% for depot in depots %}
+                          <option value="{{depot.code}}"  selected>{{depot.designation}}</option>
+                        {% endfor %}
+
+                        </select>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="hd">Heure de debut </label>
+                        <input type="time" id="hd" class="form-control Depot" placeholder="Select time">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="hf">Heure de fin </label>
+                        <input type="time" id="hf" class="form-control Depot" placeholder="Select time" >
+                      </div>
+                      
+                      <button type="button" class="btn btn-warning" 
+                      onclick="AjouterDepot()"
+                        >+</button>
+    
+                    </fieldset>
+                  </form>
+                    <hr>
+                  <form id="vehicleForm">
+                    <fieldset>
+                        <legend>Vehicules</legend>
+
+                        <div class="form-group">
+                            <label for="Volume">Volume</label>
+                            <select class="form-control" id="Volume">
+                            <option value="" disabled selected>Choix du Volume</option>
+                            <option value="13">13m&#179;</option>
+                            <option value="12">12m&#179;</option>
+                            <option value="14">14m&#179;</option>
+                            <option value="10">10m&#179;</option>
+                            <option value="11">11m&#179;</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="DepotDepart">Depot de depart:</label>
+                            <select class="form-control" id="DepotDepart">
+                            <option value="" disabled selected>Choix du Depot</option>
+                            
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="DepotFin">Depot de fin de tournée </label>
+                            <select class="form-control" id="DepotFin">
+                            <option value="" disabled selected>Choix du Depot</option>
+
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="HeureDebut">Heure de debut </label>
+                            <input type="time" id="HeureDebut" class="form-control" placeholder="Select time">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="HeureFin">Heure de fin </label>
+                            <input type="time" id="HeureFin" class="form-control" placeholder="Select time">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label" for="ChargeHoraire">Charge horaire max</label>
+                            <input type="time" id="ChargeHoraire" class="form-control" placeholder="Select time">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label" for="NbrMaxOrdres">Nombre max d'ordres a visiter</label>
+                            <input type="number" min="0" class="form-control" placeholder="0" id="NbrMaxOrdres">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label" for="costUnitTime">Coûts par une unité de temps:</label>
+                            <input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitTime">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label" for="costUnitDistance">Coûts par une unité de distance:</label>
+                            <input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitDistance">
+                        </div>
+                        
+                        <button type="button" class="btn btn-warning"
+                        onclick="AjouterVehicule()">+</button>
+                        
+                    </fieldset>
+                  </form>
+
+                  <br>
+                  <button type="button" class="btn btn-info" onclick="makeRequest()" >ANALYSER</button>      
+        </div>
+    </div>
+
+
+<script type="text/javascript">
+    //Instanciation d'une maps avec le fond topographiqe d'ESRI
+	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
+	L.esri.basemapLayer('Topographic').addTo(map);
+	
+    // retourne code hex d'un coulour pour les routes obtenues avec vrp
+	function getRouteColor(r){
+		return r == 1 ? '#ff0000':
+				r == 2 ? '#ffa500':
+				r == 3 ? '#ffff00':
+				r == 4 ? '#008000':
+				r == 5 ? '#0000ff':
+				r == 6 ? '#4b0082':
+				r == 7 ? '#ee82ee':
+				r == 8 ? '#6b8464':
+				r == 9 ? '#cc1a58':
+				 '#4dccff';
+	}
+
+	// requete pour charger les points de collecte
+  	$.ajax({url:"{{path('getPoints')}}",
+		success: function(response){
+			var myIcon = L.icon({
+				iconUrl: '{{asset("img/leaflet/marker.png")}}',
+				iconSize: [30, 30],
+			});
+
+			function onEachFeature(feature, layer) {
+				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p>');
+			}
+
+			window.points = JSON.parse(response);
+            Points = window.points;
+			window.lyrPoints = L.geoJSON(window.points, {
+				pointToLayer: function x(features, coordinates) {
+							return L.marker(coordinates, {icon: myIcon});
+					},
+				onEachFeature: onEachFeature
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+	});
+
+    // requete pour charger le parc et les CETs
+	$.ajax({url:"{{path('getDepotss')}}",
+		success: function(response){
+			function onEachFeature(feature, layer) {
+				layer.bindPopup('<b>Désignation: ' + feature.properties.designatio + '</b>');
+			}
+
+			window.depots = JSON.parse(response);
+			var lyrDepots = L.geoJSON(window.depots, {
+				pointToLayer: function x(features, coordinates) {
+							return L.marker(coordinates);
+					},
+				onEachFeature: onEachFeature
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+	});
+
+	
+	// barre de controle des dessins sur la map
+	var drawPluginOptions = {
+        position: 'topright',
+        draw: {
+            polygon: false,
+            // disable toolbar item by setting it to false
+            polyline: false,
+            circle: false, // Turns off this drawing tool
+            rectangle: false,
+            marker: false,
+            },
+        edit: false
+    };
+    var drawControl = new L.Control.Draw(drawPluginOptions);
+    map.addControl(drawControl);
+    var editableLayers = new L.FeatureGroup();
+    map.addLayer(editableLayers);
+
+    // gérer les dessin sur la map
+    map.on('draw:created', function(e) {
+        var type = e.layerType;
+        window.layer = e.layer;
+
+        if (type === 'marker') {
+            window.layer.bindPopup('A popup!');
+        }
+
+        editableLayers.addLayer(window.layer);
+    });
+
+    // fonction de selection manuelle des points de collecte
+    function select(){
+        var selected = [];
+        window.lyrPoints.eachLayer(function (marker) {
+            if (!window.layer.contains(marker.getLatLng())) {
+                marker.remove();
+            }else{
+                var m = marker.toGeoJSON();
+                L.extend(m.properties, marker.properties);
+                selected.push(m);
+            }
+            map.removeLayer(window.layer);
+        });
+        Points = selected;
+    }
+
+
+    // requete d'analyse VRP
+    function analyser1(){
+        $.ajax({url:"{{path('vrpService')}}",
+            success: function(response){
+                window.i = 1;
+                function onEachFeature(feature, layer) {
+                    layer.bindPopup('<b>Véhicule: </b>' + feature.properties.Name + '<br><b>Distance totale: </b>' + (feature.properties.TotalDistance+45) + '<br><b>Temps total: </b>' + (feature.properties.TotalTime+49) +'<br><b>Nombre d\'ordres:</b>' + feature.properties.OrderCount + '');
+                    layer.setStyle({
+                        color: getRouteColor(window.i)
+                    });
+                    window.i++;
+                }
+
+                var routes = JSON.parse(response);
+                var lyrRoutes = L.geoJSON(routes.features, {
+                    onEachFeature: onEachFeature,
+                    }).addTo(map);
+            },
+            error: function e(error){
+                alert("erreur");
+            }
+        });
+    }
+    // requete d'analyse VRP
+    function analyser(){
+        $.ajax({url:"{{path('vrpService')}}",
+            success: function(response){
+               alert(response);
+            },
+            error: function e(error){
+                alert("erreur");
+            }
+        });
+    }
+	
+//------------------------------------- Données à analyser ---------------------------------------------
+    //fonction d'envoi de données saisies 
+    function makeRequest() {
+        var data = JSON.stringify({
+                    "points": Points,
+                    "depots": Depots,
+                    "vehicles": Vehicules
+                });
+        $.ajax({
+            url: '{{path("vrpService")}}',
+            type: 'POST',
+            contentType: 'JSON',
+            data: data,
+            success: function(response) { 
+              window.i = 1;
+                function onEachFeature(feature, layer) {
+                    layer.bindPopup('<b>Véhicule: </b>' + feature.properties.Name + '<br><b>Distance totale: </b>' + (feature.properties.TotalDistance+45) + '<br><b>Temps total: </b>' + (feature.properties.TotalTime+49) +'<br><b>Nombre d\'ordres:</b>' + feature.properties.OrderCount + '');
+                    layer.setStyle({
+                        color: getRouteColor(window.i)
+                    });
+                    window.i++;
+                }
+
+                var routes = JSON.parse(response);
+                var lyrRoutes = L.geoJSON(routes.features, {
+                    onEachFeature: onEachFeature,
+                    }).addTo(map);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+              alert('Error: ' +  errorThrown);
+            }
+        });
+    }
+	
+
+
+</script>
+</body>
+</html>
+
+

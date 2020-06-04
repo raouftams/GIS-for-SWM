@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<!-- jQuery -->
+	<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+	<!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+
+	<script src="{{asset('js/leaflet/leaflet.js')}}"></script>
+
+	<script src="{{asset('js/leaflet/esriservices/esri-leaflet.js')}}"></script>
+	<script src="{{asset('js/leaflet/locate/L.Control.Locate.min.js')}}"></script>
+
+	<script src=" https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
+
+	<!-- Load Esri Leaflet from CDN -->
+	<script src="https://unpkg.com/esri-leaflet@2.1.1"></script>
+
+	<!-- Esri Leaflet GP -->
+	<script src="https://unpkg.com/esri-leaflet-gp@2.0.3"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+
+	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+	<!-- Material Design Bootstrap -->
+	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
+	<link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
+	<link rel="stylesheet" href="{{asset('css/popup.css')}}">
+
+	<style>
+		body{width: 100%;}
+		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 60px; width: 70%; float:left;}
+		.analysis{ border: 1px solid transparent; width: 28%; float: right; margin-top: 60px; margin-right: 15px;}
+		.control{border: 1px solid transparent; position: sticky; }
+		.navbar {position: fixed;}
+		.btn-analyse{width: 100%; position: relative;}
+	</style>
+	
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+		<a class="navbar-brand" href="#">Dashboard</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+		  <ul class="navbar-nav">
+			<li class="nav-item active">
+			  <a class="nav-link" href="#"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-table"></i> &nbsp; Table
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
+				  <a class="dropdown-item" href='{{path("vehiclesIndex")}}'>Véhicules</a>
+				  <div class="dropdown-divider"></div>
+				  <a class="dropdown-item" href="#">Something else here</a>
+				</div>
+			  </li>
+			<li class="nav-item">
+			  <a class="nav-link" href="#"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link disabled" href="#">Analyse</a>
+			</li>
+		  </ul>
+		</div>
+	</nav>
+	<div id="map"></div>
+	<div class="data"></div>
+
+	<div class="analysis">
+		<div class="control">
+			<div class="btn-group btn-group-sm" role="group" style="margin-left: 0px;">
+				<button type="button" class="btn btn-unique btn-sm" id="couche"><i class="fas fa-layer-group"></i></button>
+				<button type="button" class="btn btn-unique btn-sm" id="vrp"><i class="fas fa-route"></i></button>
+			</div>
+		</div>
+			<div id="layerDiv">
+				<div>
+					<input type="checkbox" name="points" id="points", value="points de Collecte" onchange="reactTo(this)" checked /> Points de collecte
+				</div>
+				<div>
+					<input type="checkbox" name="secteurs" id="secteurs" onchange="showSecteurs(this)" checked/> Secteurs
+				</div>
+			</div>
+		
+	</div>
+
+	<div id="popup1" class="overlay">
+		<div class="popup">
+			<div class="btn-group btn-group-md" role="group" style="width: 80%;">
+				<button class="btn btn-outline-unique btn-md" id="edit_point" onclick="hideShow('point')">Point</button>
+				<button class="btn btn-outline-unique btn-md" id="edit_bacs" onclick="hideShow('bacs')">Bacs</button>
+			</div>
+			<a class="close" href="#">&times;</a><br>
+			<div class="content" id="content">
+				<form method="POST" class="form" id="form-point">
+					<div class="form-group col-md-6">
+						<label for="libelle">Libellé:</label>
+						<input class="form-control" type="text" name="libelle" id="libelle">
+					</div>
+					<div class="form-group col-md-6">
+						<label for="Adresse">Adresse:</label>
+						<input type="text" class="form-control" name="adresse" id="adresse">
+					</div>
+					<div class="form-group">
+						<button class="btn btn-outline-primary" type="submit" style="margin-left: 5px;">Sauvegarder</button>
+					</div>
+				</form>
+
+				<form method="POST" class="form" id="form-bacs" style="margin-left: 10px; width: 80%;">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="bac">Bac:</label>
+							<select name="code_bac" id="bacs" class="form-control" onchange="selectedBac(this)">
+
+							</select>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="volume">Volume</label>
+							<input type="number" name="volume" id="volume"  class="form-control ">
+						</div>
+					</div>	
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="typemat">Type Matière</label>
+							<select name="typemat" id="typemat" class="form-control">
+								<option value="Plastique" selected>Plastique</option>
+								<option value="Métalique">Métalique</option>
+								<option value="Galvanisé">Galvanisé</option>
+							</select>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="typedechet">Nature déchets</label>
+							<input type="text" name="typedechet" id="typedechet" class="form-control ">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="etat">Etat:</label>
+							<select name="etat" id="etat" class="form-control">
+								<option value="Bon">Bon</option>
+								<option value="Moyen">Moyen</option>
+								<option value="Dégradé">Dégradé</option>
+							</select>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="taux">Taux remplissage:</label>
+							<input type="number" step="0.1" min="0" max="100" name="taux_remplissage" id="taux_remplissage" class="form-control ">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="dateinstal">Date installation:</label>
+							<input type="date" name="date_installation" id="date_installation" class="form-control">
+						</div>
+						<div class="form-group" style="margin-top: 20px; margin-left: 5px;">
+							<button class="btn btn-outline-primary" type="submit" style="width: 200px;">Sauvegarder</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript">
+
+	function hideShow(button){
+		if(button == 'point'){
+			$( "#form-bacs" ).hide();
+			$("#form-point").show();	
+		}
+		else{
+			$( "#form-point" ).hide();
+			$("#form-bacs").show();
+		}
+	}
+
+	$('#form-bacs').hide("slow");
+
+	
+</script>
+	
+<script type="text/javascript">
+	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
+	L.esri.basemapLayer('Topographic').addTo(map);
+	
+	function getColour(d){
+        return  d > 20000 ? '#005075':
+                d > 10000 ? '#0AC0C9':
+				d > 5000 ? '#B7E9F7':
+							'#fffff';
+	}
+
+	function getRouteColor(r){
+		return r == 1 ? '#ff0000':
+				r == 2 ? '#ffa500':
+				r == 3 ? '#ffff00':
+				r == 4 ? '#008000':
+				r == 5 ? '#0000ff':
+				r == 6 ? '#4b0082':
+				r == 7 ? '#ee82ee':
+				r == 8 ? '#6b8464':
+				r == 9 ? '#cc1a58':
+				 '#4dccff';
+	}
+	function densityStyle(feature){
+        return {
+            "fillColor": getColour(feature.properties.population), // Call function to get fill colour
+            "weight": 2, //
+            "opacity": 1, //
+            "color": '#000', //
+            "fillOpacity": 0.7 //
+        };
+    }
+	
+  	$.ajax({url:"{{path('getPoints')}}",
+		success: function(response){
+			var myIcon = L.icon({
+				iconUrl: '{{asset("img/leaflet/marker.png")}}',
+				iconSize: [30, 30],
+				iconAnchor: [0,0],
+				popupAnchor: [9, -20]
+			});
+
+			function onEachFeature(feature, layer) {
+				var fonction = "getPoint('code')";
+				fonction = fonction.replace("code", feature.properties.code_point);
+				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white"><a href="#popup1">edit</a></button>');
+			}
+
+			window.points = JSON.parse(response);
+
+			window.lyrPoints = L.geoJSON(window.points, {
+				pointToLayer: function x(features, coordinates) {
+							return L.marker(coordinates, {icon: myIcon});
+					},
+				onEachFeature: onEachFeature
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+	});
+
+	$.ajax({url:"{{path('getSecteurs')}}",
+		success: function(response){
+
+			function onEachFeature(feature, layer) {
+				layer.bindPopup('<b>Code: ' + feature.properties.code + '</b>');
+			}
+
+			var secteurs = JSON.parse(response);
+
+			window.lyrSecteurs = L.geoJSON(secteurs.features, {		
+				style: densityStyle,
+				onEachFeature: onEachFeature,
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("erreur");
+		}
+	});
+
+	
+
+	$.ajax({url:"{{path('getDepotss')}}",
+		success: function(response){
+			function onEachFeature(feature, layer) {
+				layer.bindPopup('<b>Désignation: ' + feature.properties.designatio + '</b>');
+			}
+
+			window.depots = JSON.parse(response);
+			var lyrDepots = L.geoJSON(window.depots, {
+				pointToLayer: function x(features, coordinates) {
+							return L.marker(coordinates);
+					},
+				onEachFeature: onEachFeature
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+	});
+
+	function reactTo(element){
+		if(element.checked){
+			map.addLayer(window.lyrPoints);
+		}
+		else{
+			map.removeLayer(window.lyrPoints);
+		}
+	}
+
+	function showSecteurs(element){
+		if(element.checked){
+			map.addLayer(window.lyrSecteurs);
+		}
+		else{
+			map.removeLayer(window.lyrSecteurs);
+		}
+	}
+	
+	var drawPluginOptions = {
+  position: 'topright',
+  draw: {
+    polygon: false,
+    // disable toolbar item by setting it to false
+    polyline: false,
+    circle: false, // Turns off this drawing tool
+    rectangle: false,
+    marker: false,
+    },
+  edit: false
+};
+var drawControl = new L.Control.Draw(drawPluginOptions);
+map.addControl(drawControl);
+var editableLayers = new L.FeatureGroup();
+map.addLayer(editableLayers);
+
+map.on('draw:created', function(e) {
+  var type = e.layerType;
+  window.layer = e.layer;
+
+  if (type === 'marker') {
+    window.layer.bindPopup('A popup!');
+  }
+
+  editableLayers.addLayer(window.layer);
+
+});
+
+
+function select(){
+	var selected = [];
+	window.lyrPoints.eachLayer(function (marker) {
+        if (!window.layer.contains(marker.getLatLng())) {
+            marker.remove();
+        }else{
+			var m = marker.toGeoJSON();
+			L.extend(m.properties, marker.properties);
+			selected.push(m);
+		}
+		map.removeLayer(window.layer);
+    });
+	console.log(selected);
+  }
+
+
+//Get Location from gps
+var lc = L.control.locate({
+    position: 'topright',
+    strings: {
+        title: "Show me where I am."
+	},
+	initialZoomLevel: false,
+	cacheLocation: true,
+	showCompass: false,
+	drawCircle: false
+}).addTo(map);
+
+	
+
+	
+	
+	
+	/*var legend = L.control({position: 'bottomleft'});
+	legend.onAdd = function(map){
+			var div = L.DomUtil.create('div', 'info legend'); 
+			var grades = [10000,20000];
+			var labels = ["<strong>Population</strong>"];
+			for (var i = 0; i < grades.length-1; i++){
+				var from = grades [i];
+				var to = grades [i+1]-10000;
+				labels.push("<i style='background:" + getColour(from + 10000) + "'></i> " + from + (to ? "&ndash;" + to : "+"));
+			}
+			div.innerHtml = labels.join("<br>");
+			return div;
+		};
+	legend.addTo(map);
+
+	*/
+
+</script>
+<script>
+	function processAjaxData(response, urlPath){
+		document.getElementById("popup1").innerHTML = response.html;
+		document.title = response.pageTitle;
+		window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
+	}
+	window.onpopstate = function(e){
+		if(e.state){
+			document.getElementById("popup1").innerHTML = e.state.html;
+			document.title = e.state.pageTitle;
+		}
+	};
+
+
+	function getPoint(code){
+		var form_point = document.getElementById("form-point");
+		var point_edit_url = "{{path('editPoint', {code: 'code_point'})}}";
+		form_point.setAttribute("action", point_edit_url.replace("code_point", code));
+
+		window.points.features.forEach(function(obj){
+			if (obj.properties.code_point == code) {
+				document.getElementById("libelle").setAttribute("value", obj.properties.libelle);
+				document.getElementById("adresse").setAttribute("value", obj.properties.adresse);
+			}
+		});
+		
+		$('#bacs').empty();
+
+		
+
+		window.bacs;
+		var url = "{{path('getBacs', {code_point: 'code'})}}";
+		$.ajax({url: url.replace("code", code),
+			success: function(response){
+				window.bacs = JSON.parse(response);
+
+				var select_bac = document.getElementById("bacs");
+
+				var opt = document.createElement('option');
+				opt.appendChild(document.createTextNode("Select Bac"));
+				select_bac.appendChild(opt);
+
+				window.bacs.forEach(function(obj){
+					opt = document.createElement('option');
+    				opt.appendChild( document.createTextNode(obj.code));
+					opt.value = obj.code;
+					select_bac.appendChild(opt);
+				});
+			},
+			error: function e(error){
+				alert("Error: "+ error);
+			}
+		});
+	}
+
+	$("#bacs").change(function(){
+		var selectedBac = $(this).children("option:selected").val();
+		window.bacs.forEach(function(obj){
+			if (obj.code == selectedBac) {
+				var form_bacs = document.getElementById("form-bacs");
+				var bac_edit_url = "{{path('editPoint', {code: 'code_bac'})}}";
+				form_bacs.setAttribute("action", bac_edit_url.replace("code_bac", obj.code));
+				
+				document.getElementById("volume").setAttribute("value", obj.volume);
+				document.getElementById("typedechet").setAttribute("value", obj.typedechet);
+				for (let i = 0; i < 3; i++) {
+					if ((document.getElementById("typemat").getElementsByTagName("option")[i].value).toLowerCase() == obj.typemat) {
+						document.getElementById("typemat").getElementsByTagName("option")[i].selected = 'selected';
+					}	
+				}
+				document.getElementById("etat").value = obj.etat;
+				document.getElementById("taux_remplissage").setAttribute("value", obj.tauxrempli);
+				document.getElementById("date_installation").setAttribute("value", obj.dateinstal);
+			}
+		});
+		
+	});
+
+	
+
+</script>
+</body>
+</html>
+
+

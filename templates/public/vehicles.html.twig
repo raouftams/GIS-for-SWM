@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{asset('css/table.css')}}">
+  <style>
+	  td{
+		  margin: auto;
+	  }
+  </style>
+{% endblock %}
+{% block body %}
+<div class="row">
+	<div class="col md-4">
+		<a class="btn btn-success btn-add" href="{{path('addVehicle')}}" value="add" type="submit">Ajouter</a>
+	</div>	
+</div>
+ 
+<table class="table">
+	<thead class="thead-dark">
+		<tr>
+		<th scope="col" class="th-sm">Code</th>
+		<th scope="col" class="th-sm">Marque</th>
+		<th scope="col" class="th-sm">Genre</th>
+		<th scope="col" class="th-sm">Volume</th>
+		<th scope="col" class="th-sm">Mise en marche</th>
+		<th scope="col" class="th-sm">Etat</th>
+		<th scope="col" class="th-sm">Actions</th>
+		</tr>
+	</thead>
+</table>
+<div class="tableFixHead">
+	<table class="table">
+		<tbody>
+		{% for vehicle in vehicles %}
+			<tr>
+				<td class="th-sm">{{ vehicle.code }}</td>
+				<td class="th-sm">{{ vehicle.marque }}</td>
+				<td class="th-sm">{{ vehicle.genre }}</td>
+				<td class="th-sm">{{ vehicle.volume }}</td>
+				<td class="th-sm">{{ vehicle.mise_en_marche }}</td>
+				<td class="th-sm"><p style="float: right; margin-right: 25px;">{{ vehicle.etat }}</p></td>
+				<td class="th-sm">
+					<div class="btn-group" style="float: right;">
+						<a class="btn btn-sm btn-primary" href="{{path('editVehicle',{code:vehicle.code})}}"><i class="fa fa-edit"></i></a>
+						<a class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+					</div>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+  	</table>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

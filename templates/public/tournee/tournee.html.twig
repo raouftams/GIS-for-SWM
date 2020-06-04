@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{asset('css/table.css')}}">
+{% endblock %}
+{% block body %}
+<div class="row">
+
+	<form method="post" action="{{ path('parSecteur') }}" class="col md-9">
+	<label for="secteur" style="float:left; margin-top:15px;">Choisir un secteur:</label>
+	<select id="secteur" name="code" class="form-control col-md-3" style="float:left; margin-top:10px;">
+		<option value="tout">Tout</option>
+		<option value="C013-A11">C013-A11</option>
+	</select>
+		<button class="btn btn-outline-warning" style="float:left;" type="submit" value="filtrer">Filtrer</button>
+	</form>
+	<div class="col md-4">
+		<a class="btn btn-success btn-add" href="{{path('addPoint')}}" value="add" type="submit">Ajouter</a>
+	</div>	
+</div>
+ 
+<table class="table">
+	<thead class="thead-dark">
+		<tr>
+		<th scope="col">Id</th>
+		<th scope="col">Secteur</th>
+		<th scope="col">Véhicule</th>
+		<th scope="col">Equipe</th>
+		<th scope="col">CET</th>
+        <th scope="col">Quantité réalisée</th>
+        <th scope="col">Actions</th>
+		</tr>
+	</thead>
+</table>
+<div class="tableFixHead">
+	<table class="table">
+		<tbody>
+		{% for tournee in tournees %}
+			<tr>
+				<td scope="row">{{ tournee.id_tournee }}</td>
+				<td> {{ tournee.secteur }} </td>
+				<td>{{ tournee.marque }}</td>
+				<td>{{ tournee.equipe }}</td>
+				<td>{{ tournee.designation }}</td>
+                <td>{{ tournee.qte_realise }}</td>
+                
+				<td class="th-sm">
+					<div class="btn-group" style="float: right;">
+						<a class="btn btn-sm btn-warning" href=""><i class="fa fa-edit"></i></a>
+						<a class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                        <a class="btn btn-sm btn-primary" href="{{path('tourneeDetail', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
+					</div>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+  	</table>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

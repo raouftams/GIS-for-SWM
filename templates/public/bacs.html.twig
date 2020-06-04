@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{asset('css/table.css')}}">
+  <style>
+	  td{
+		  margin: auto;
+	  }
+  </style>
+{% endblock %}
+{% block body %}
+<div class="row">
+	<div class="col md-4">
+		<a class="btn btn-success btn-add btn-sm" href="{{path('addBac')}}" value="add" type="submit"><i class="fas fa-plus"></i></a>
+	</div>	
+</div>
+ 
+<table class="table">
+	<thead class="thead-dark">
+		<tr>
+		<th scope="col" class="th-sm">ID</th>
+		<th scope="col" class="th-sm">Nature</th>
+		<th scope="col" class="th-sm">Volume</th>
+		<th scope="col" class="th-sm">Nature déchets</th>
+		<th scope="col" class="th-sm">Date installation</th>
+		<th scope="col" class="th-sm">Etat</th>
+		<th scope="col" class="th-sm">Actions</th>
+		</tr>
+	</thead>
+</table>
+<div class="tableFixHead">
+	<table class="table">
+		<tbody>
+		{% for bac in bacs %}
+			<tr>
+				<td class="th-sm">{{ bac.code }}</td>
+				<td class="th-sm">{{ bac.typemat }}</td>
+				<td class="th-sm">{{ bac.volume }}</td>
+				<td class="th-sm">{{ bac.typedechet }}</td>
+				<td class="th-sm">{{ bac.dateinstal }}</td>
+				<td class="th-sm"><p style="float: right; margin-right: 25px;">{{ bac.etat }}</p></td>
+				<td class="th-sm">
+					<div class="btn-group" style="float: right;">
+						<a class="btn btn-sm btn-primary" href="{{path('editBac',{code: bac.code})}}"><i class="fa fa-edit"></i></a>
+						<a class="btn btn-sm btn-danger" href="{{path('deleteBac', {code: bac.code})}}"><i class="fas fa-trash-alt"></i></a>
+					</div>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+  	</table>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
