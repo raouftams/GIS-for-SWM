@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des utilisateurs{%endblock%}
+{% block header %}Gestion utilisateurs{%endblock%}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{asset('css/table.css')}}">
+<style>
+    h3{
+        border: 1px solid transparent;
+        background-color: #292b2c;
+        color: white;
+        border-radius: 3px;
+        margin-top: 40px;
+        text-align: center;
+        height: 40px;
+    }
+</style>
+{% endblock %}
+{% block body %}
+
+<table class="table">
+	<thead class="thead-dark">
+		<tr>
+		<th scope="col">Id</th>
+		<th scope="col">Nom utilisateur</th>
+		<th scope="col">Roles &nbsp;</th>
+		<th scope="col">Equipe</th>
+		<th scope="col">Date inscription</th>
+        <th scope="col">Actions</th>
+		</tr>
+	</thead>
+</table>
+<div class="tableFixHead">
+	<table class="table">
+		<tbody>
+		{% for user in users %}
+			<tr>
+				<td scope="row" style="padding-right: 50px;">{{ user.id }}</td>
+				<td class="th-sm" style="text-align: left;"> {{ user.username}} </td>
+				<td class="th-sm" style="text-align: right;">{% for role in user.roles %} {{role}}<br> {%endfor%}</td>
+				<td class="th-sm" style="text-align: right;">{{ user.getIdEquipe }}</td>
+				<td class="th-sm" style="text-align: right;">{{ user.getDateInscription.date| json_encode}}</td>
+                
+				<td class="th-sm">
+					<div class="btn-group" style="float: right;">
+						<a class="btn btn-sm btn-warning" href=""><i class="fa fa-edit"></i></a>
+						<a class="btn btn-sm btn-danger" href="{{path('deleteUser', {id: user.id})}}"><i class="fas fa-trash-alt"></i></a>
+					</div>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+  	</table>
+</div>
+<hr>
+<h3>Ajouter un utilisateur</h3>
+{% if result != null %}
+    <h4 class="alert alert-success">{{result}}</h4>
+{% endif %}
+
+<form action="{{path('addUser')}}" method="POST" style="text-align: center; margin-left: 20%;">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Nom d'utilisateur:</label>
+            <input type="text" name="username" class="form-control">
+        </div>
+        <div class="form-group col-md-4">
+            <label>Mot de passe</label>
+            <input type="text" name="password" class="form-control">
+        </div>
+    </div>
+    <div class="form-row">   
+        <div class="form-group col-md-4">
+            <label>Role dans le système:</label>
+            <select name="role" class="form-control">
+                <option value="Administrateur">Administrateur</option>
+                <option value="Planificateur">Planificateur</option>
+                <option value="Chauffeur">Chauffeur</option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Choisie Equipe:</label>
+            <select name="id_equipe" class="form-control">
+            <option value="0" selected>Choisir equipe</option>
+            {% for equipe in equipes %}
+                <option value="{{equipe.id}}">{{equipe.id}}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-info" style="float:left;">Ajouter</button>
+</form>
+
+{% endblock %}

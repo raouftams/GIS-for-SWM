@@ -8,6 +8,7 @@
     transition: opacity 500ms;
     visibility: hidden;
     opacity: 0;
+    overflow: auto;
   }
   .overlay:target {
     visibility: visible;
@@ -21,14 +22,8 @@
     border-radius: 5px;
     width: 60%;
     position: relative;
-    transition: all 5s ease-in-out;
   }
   
-  .popup h2 {
-    margin-top: 0;
-    color: #333;
-    font-family: Tahoma, Arial, sans-serif;
-  }
   .popup .close {
     position: absolute;
     top: 20px;
@@ -44,7 +39,6 @@
   }
   .popup .content {
     max-height: 30%;
-    overflow: auto;
   }
   
   @media screen and (max-width: 700px){

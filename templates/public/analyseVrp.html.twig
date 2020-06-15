@@ -23,7 +23,7 @@
 	<script src=" https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
 
@@ -32,41 +32,33 @@
 	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
 	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
 	<link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
-
-	<style>
-		body{width: 100%;}
-		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 60px; width: 70%; float:left;}
-		.analysis{ border: 1px solid transparent; width: 28%; float: right; margin-top: 60px; margin-right: 15px;}
-		.control{border: 1px solid transparent; position: sticky; }
-		.navbar {position: fixed;}
-		.btn-analyse{width: 100%; position: relative;}
-	</style>
+	<link rel="stylesheet" href="{{asset('css/analyseVrp.css')}}">
 	
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-		<a class="navbar-brand" href="#">Dashboard</a>
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" style="height: 40px;">
+		<h2 class="navbar-brand" >Analyse</h2>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 		  <span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
 		  <ul class="navbar-nav">
 			<li class="nav-item active">
-			  <a class="nav-link" href="#"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
+			  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-home"></i>dashboard <span class="sr-only">(current)</span></a>
 			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-table"></i> &nbsp; Table
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				  <a class="dropdown-item" href='{{path("tournees")}}'>Tournées</a>
 				  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
+				  <a class="dropdown-item" href='{{path("bacsIndex")}}'>Bacs</a>
 				  <a class="dropdown-item" href='{{path("vehiclesIndex")}}'>Véhicules</a>
-				  <div class="dropdown-divider"></div>
-				  <a class="dropdown-item" href="#">Something else here</a>
 				</div>
 			  </li>
 			<li class="nav-item">
-			  <a class="nav-link" href="#"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
+			  <a class="nav-link" href="{{path('maps')}}"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link disabled" href="#">Analyse</a>
@@ -74,137 +66,144 @@
 		  </ul>
 		</div>
     </nav>
-    
+	
+	
     <div id="map"></div>
-    
+	
+	<div id="popup1" class="overlay">
+		<div class="popup">
+			<a class="close" href="#">&times;</a><br>
+			<div class="content" id="content">
+				<form method="POST" class="form" id="form-point">
+					<div class="form-group col-md-8">
+						<label for="libelle">Début fenêtre de temps:</label>
+						<input class="form-control" type="time" name="debut_fenetre_temps" id="debut_fenetre_temps">
+					</div>
+					<div class="form-group col-md-8">
+						<label for="Adresse">Fin fenêtre de temps:</label>
+						<input type="time" class="form-control" name="fin_fenetre_temps" id="fin_fenetre_temps">
+					</div>
+				</form>
+				<div class="form-group">
+					<button class="btn btn-primary" type="submit" style="margin-left: 5px;" onclick="savePointData()" >Sauvegarder</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="analysis">
 		<div class="vrp-form" id="vrpDiv">
-                <h3>Analyse Vrp</h3>
-                <hr>
-                <form onsubmit="select(); return false;" id="ordersForm">
-                  <fieldset>
-                    <legend>Ordres:</legend>
-                    <div class="form-group">
-                      <label for="Couche">Couche</label>
-                      <select class="form-control Depot" id="Coucheo">
-                          <option value="" disabled selected>Point de collecte</option>
-                        </select>
-                        <button class="btn btn-warning btn-sm">+</button>
-                      </div>
-                      <div class="form-group">
-                        <label for="Filtre">Filtrer</label>
-                        <select class="form-control Depot" id="Filtreo">
-                            <option value="" disabled selected>Filtre</option>
-                            <option value="18" >18m&#179;</option>
-                            <option value="16" >16m&#179;</option>
-                            <option value="15" >15m&#179;</option>
-                            <option value="12" >12m&#179;</option>
-                            <option value="10" >10m&#179;</option>
-                          </select>
-                        </div>
-                        
-                  </fieldset>
-                </form>    
-                <form id="depotsForm">
-                  <fieldset>
-                    <legend>Depot:</legend>
-
-                    <div class="form-group">
-                      <label for="Couche">Couche:</label>
-                      <select class="form-control Depot" id="Couche">
-                        {% for depot in depots %}
-                          <option value="{{depot.code}}"  selected>{{depot.designation}}</option>
-                        {% endfor %}
-
-                        </select>
-                      </div>
-                      
-                      <div class="form-group">
-                        <label for="hd">Heure de debut </label>
-                        <input type="time" id="hd" class="form-control Depot" placeholder="Select time">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="hf">Heure de fin </label>
-                        <input type="time" id="hf" class="form-control Depot" placeholder="Select time" >
-                      </div>
-                      
-                      <button type="button" class="btn btn-warning" 
-                      onclick="AjouterDepot()"
-                        >+</button>
-    
-                    </fieldset>
-                  </form>
-                    <hr>
-                  <form id="vehicleForm">
-                    <fieldset>
-                        <legend>Vehicules</legend>
-
-                        <div class="form-group">
-                            <label for="Volume">Volume</label>
-                            <select class="form-control" id="Volume">
-                            <option value="" disabled selected>Choix du Volume</option>
-                            <option value="13">13m&#179;</option>
-                            <option value="12">12m&#179;</option>
-                            <option value="14">14m&#179;</option>
-                            <option value="10">10m&#179;</option>
-                            <option value="11">11m&#179;</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="DepotDepart">Depot de depart:</label>
-                            <select class="form-control" id="DepotDepart">
-                            <option value="" disabled selected>Choix du Depot</option>
-                            
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="DepotFin">Depot de fin de tournée </label>
-                            <select class="form-control" id="DepotFin">
-                            <option value="" disabled selected>Choix du Depot</option>
-
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="HeureDebut">Heure de debut </label>
-                            <input type="time" id="HeureDebut" class="form-control" placeholder="Select time">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="HeureFin">Heure de fin </label>
-                            <input type="time" id="HeureFin" class="form-control" placeholder="Select time">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-form-label" for="ChargeHoraire">Charge horaire max</label>
-                            <input type="time" id="ChargeHoraire" class="form-control" placeholder="Select time">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-form-label" for="NbrMaxOrdres">Nombre max d'ordres a visiter</label>
-                            <input type="number" min="0" class="form-control" placeholder="0" id="NbrMaxOrdres">
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label" for="costUnitTime">Coûts par une unité de temps:</label>
-                            <input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitTime">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-form-label" for="costUnitDistance">Coûts par une unité de distance:</label>
-                            <input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitDistance">
-                        </div>
-                        
-                        <button type="button" class="btn btn-warning"
-                        onclick="AjouterVehicule()">+</button>
-                        
-                    </fieldset>
-                  </form>
-
-                  <br>
-                  <button type="button" class="btn btn-info" onclick="makeRequest()" >ANALYSER</button>      
-        </div>
+			<h3>Analyse Vrp</h3>
+			<hr>
+			<form onsubmit="select(); return false;" id="ordersForm">
+				<fieldset>
+				<legend>Ordres:</legend>
+				<div class="form-group">
+					<label for="Couche">Couche</label>
+					<select class="form-control Depot" id="Coucheo">
+						<option value="" disabled selected>Point de collecte</option>
+					</select>
+					<button class="btn btn-warning btn-sm">+</button>
+					</div>                     
+				</fieldset>
+			</form>   
+			<hr> 
+			<form id="depotsForm">
+				<fieldset>
+				<legend>Depot:</legend>
+				<div class="form-group">
+					<label for="Couche">Couche:</label>
+					<select class="form-control Depot" id="Couche">
+					{% for depot in depots %}
+						<option value="{{depot.code}}"  selected>{{depot.designation}}</option>
+					{% endfor %}
+					</select>
+					</div>
+					
+					<div class="form-group">
+					<label for="hd">Heure de debut </label>
+					<input type="time" id="hd" class="form-control Depot" placeholder="Select time">
+					</div>
+					<div class="form-group">
+					<label for="hf">Heure de fin </label>
+					<input type="time" id="hf" class="form-control Depot" placeholder="Select time" >
+					</div>
+					
+					<button type="button" class="btn btn-warning" 
+					onclick="AjouterDepot()"
+					>+</button>
+				</fieldset>
+				</form>
+				<hr>
+				<form id="vehicleForm">
+				<fieldset>
+					<legend>Vehicules</legend>
+					<div class="form-group">
+						<label for="Volume">Volume</label>
+						<select class="form-control" id="Volume">
+						<option value="" disabled selected>Choix du Volume</option>
+						{% for vehicle in vehicles %}
+							<option value="{{vehicle.volume}}">Benne {{vehicle.volume}}m&#179;</option>
+						{% endfor %}
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="DepotDepart">Depot de depart:</label>
+						<select class="form-control" id="DepotDepart">
+						<option value="" disabled selected>Choix du Depot</option>
+						
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="DepotFin">Depot de fin de tournée </label>
+						<select class="form-control" id="DepotFin">
+						<option value="" disabled selected>Choix du Depot</option>
+						</select>
+					</div>
+					
+					<div class="form-group">
+						<label for="HeureDebut">Heure de debut </label>
+						<input type="time" id="HeureDebut" class="form-control" placeholder="Select time">
+					</div>
+					<div class="form-group">
+						<label for="HeureFin">Heure de fin </label>
+						<input type="time" id="HeureFin" class="form-control" placeholder="Select time">
+					</div>
+					<div class="form-group">
+						<label class="col-form-label" for="ChargeHoraire">Charge horaire max</label>
+						<input type="time" id="ChargeHoraire" class="form-control" placeholder="Select time">
+					</div>
+					<div class="form-group">
+						<label class="col-form-label" for="NbrMaxOrdres">Nombre max d'ordres a visiter</label>
+						<input type="number" min="0" class="form-control" placeholder="0" id="NbrMaxOrdres">
+					</div>
+					<div class="form-group">
+						<label class="col-form-label" for="costUnitTime">Coûts par une unité de temps:</label>
+						<input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitTime">
+					</div>
+					<div class="form-group">
+						<label class="col-form-label" for="costUnitDistance">Coûts par une unité de distance:</label>
+						<input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitDistance">
+					</div>
+					
+					<button type="button" class="btn btn-warning"
+					onclick="AjouterVehicule()">+</button>
+					
+				</fieldset>
+				</form>
+				<hr>
+				<br>
+				<div id="btn-analyse">
+					<button type="button" id="btn-analyse" class="btn btn-info btn-lg" onclick="makeRequest()" >ANALYSER</button>      
+				</div>
+				<div id="btn-save-recalculate" style="display: none;">
+					<button type="button" id="btn-save" class="btn btn-success" onclick="saveResult()" >Sauvegarder</button>
+					<button type="button" id="btn-recalculate" class="btn btn-warning" onclick="recalculate()" >Recalcul</button>
+				</div>
+		</div>
     </div>
+
+	<div id="loading-image"></div>
 
 
 <script type="text/javascript">
@@ -235,14 +234,22 @@
 			});
 
 			function onEachFeature(feature, layer) {
-				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p>');
+				var code = feature.properties.code_point;
+				var fonction = "getPointCode('code_point')";
+				fonction = fonction.replace("code_point", code);
+				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p><a href="#popup1"><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white">Modifier</button></a>');
 			}
 
 			window.points = JSON.parse(response);
             Points = window.points;
 			window.lyrPoints = L.geoJSON(window.points, {
 				pointToLayer: function x(features, coordinates) {
-							return L.marker(coordinates, {icon: myIcon});
+							return L.circleMarker(coordinates, {
+								color: 'black',
+								fillColor: 'black',
+								fillOpacity: 0.7,
+								radius: 5
+							});
 					},
 				onEachFeature: onEachFeature
 				}).addTo(map);
@@ -343,28 +350,22 @@
             }
         });
     }
-    // requete d'analyse VRP
-    function analyser(){
-        $.ajax({url:"{{path('vrpService')}}",
-            success: function(response){
-               alert(response);
-            },
-            error: function e(error){
-                alert("erreur");
-            }
-        });
-    }
+    
 	
 //------------------------------------- Données à analyser ---------------------------------------------
     //fonction d'envoi de données saisies 
     function makeRequest() {
+		$('#loading-image').show();
+		$('#btn-analyse').hide();
+		$('#btn-save-recalculate').show();
+
         var data = JSON.stringify({
                     "points": Points,
                     "depots": Depots,
                     "vehicles": Vehicules
                 });
         $.ajax({
-            url: '{{path("vrpService")}}',
+            url: '{{path("receiveData")}}',
             type: 'POST',
             contentType: 'JSON',
             data: data,
@@ -377,11 +378,14 @@
                     });
                     window.i++;
                 }
-
-                var routes = JSON.parse(response);
-                var lyrRoutes = L.geoJSON(routes.features, {
+				var result = JSON.parse(response);
+                var routes = result.routes;
+				window.stops = result.stops;
+                window.lyrRoutes = L.geoJSON(routes.features, {
                     onEachFeature: onEachFeature,
                     }).addTo(map);
+				
+				$('#loading-image').hide();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
             {
@@ -390,7 +394,73 @@
         });
     }
 	
+	function saveResult(){
+		$('#loading-image').show();
 
+		var data = JSON.stringify({stops: window.stops});
+		$.ajax({
+			url: "{{path('saveVrpResults')}}",
+			type: 'POST',
+			contentType: 'JSON',
+			data: data,
+			success: function(response){
+				alert(response);
+				$('#btn-save-recalculate').hide();
+				$('#btn-analyse').show();
+				$('#loading-image').hide();
+				
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				alert('Error: ' + errorThrown);
+				$('#loading-image').hide();
+			}
+		})
+	}
+</script>
+
+<script>
+	
+	function recalculate(){
+		map.removeLayer(window.lyrRoutes);
+		$('#btn-save-recalculate').hide();
+		$('#btn-analyse').show();
+	}
+
+	function getPointCode(code){
+		window.code = code;
+		window.points.features.forEach(function(point){
+			if(point.properties.code_point == code){
+				var dateDebut = new Date(point.properties.debut_fenetre_temps);
+				var dateFin = new Date(point.properties.fin_fenetre_temps);
+				var dft = dateDebut.toString().split(" ")[4];
+				var fft = dateFin.toString().split(" ")[4];
+				document.getElementById("debut_fenetre_temps").value = dft;
+				document.getElementById("fin_fenetre_temps").value = fft;
+			}
+		});
+	}
+
+	function savePointData(){
+		var data = JSON.stringify({
+			code_point: window.code,
+			debut_fenetre_temps: document.getElementById("debut_fenetre_temps").value,
+			fin_fenetre_temps: document.getElementById("fin_fenetre_temps").value
+		});
+
+		$.ajax({
+			url: "{{path('editPointTime')}}",
+			method: 'POST',
+			contentType: 'JSON',
+			data : data,
+			success: function(response){
+				alert(response);
+				console.log(response);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				alert("Erreur: " + errorThrown);
+			}
+		});
+	}
 
 </script>
 </body>

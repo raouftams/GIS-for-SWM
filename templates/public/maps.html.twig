@@ -41,66 +41,78 @@
 	<style>
 		body{width: 100%;}
 		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 60px; width: 70%; float:left;}
-		.analysis{ border: 1px solid transparent; width: 28%; float: right; margin-top: 60px; margin-right: 15px;}
+		.analysis{ border: 1px solid transparent; width: 28%; float: right; margin-top: 70px; margin-right: 15px;}
 		.control{border: 1px solid transparent; position: sticky; }
 		.navbar {position: fixed;}
 		.btn-analyse{width: 100%; position: relative;}
+		h3{text-align: center; border: 1px solid transparent; color: white; font-size: 24px;background-color: #0989d9; border-top-left-radius: 3px; border-top-right-radius: 3px;}
+		.lyrDiv{border: 1px solid transparent; margin-left: 2%;}
 	</style>
 	
 </head>
 
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-		<a class="navbar-brand" href="#">Dashboard</a>
+		<h2 class="navbar-brand" >Analyse</h2>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 		  <span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
 		  <ul class="navbar-nav">
-			<li class="nav-item active">
-			  <a class="nav-link" href="#"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
-			</li>
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="fas fa-table"></i> &nbsp; Table
-				</a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-				  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
-				  <a class="dropdown-item" href='{{path("vehiclesIndex")}}'>Véhicules</a>
-				  <div class="dropdown-divider"></div>
-				  <a class="dropdown-item" href="#">Something else here</a>
-				</div>
-			  </li>
-			<li class="nav-item">
-			  <a class="nav-link" href="#"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link disabled" href="#">Analyse</a>
-			</li>
-		  </ul>
+				<li class="nav-item active">
+				  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<i class="fas fa-table"></i> &nbsp; Table
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
+					  <a class="dropdown-item" href='{{path("bacsIndex")}}'>Bacs</a>
+					  <a class="dropdown-item" href='{{path("vehiclesIndex")}}'>Véhicules</a>
+					  <a class="dropdown-item" href='{{path("tournees")}}'>Tournees</a>
+					  <a class="dropdown-item" href='{{path("employesIndex")}}'>Employés</a>
+					</div>
+				  </li>
+				<li class="nav-item">
+				  <a class="nav-link" href="{{path('maps')}}"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
+				</li>
+				<li class="nav-item">
+				  <a class="nav-link" href="{{path('analyseVrp')}}">Analyse</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav ml-auto">
+          		<li class="nav-item"><a class="nav-link" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
+          		</li>
+        	</ul>
 		</div>
-	</nav>
+    </nav>
 	<div id="map"></div>
 	<div class="data"></div>
 
 	<div class="analysis">
-		<div class="control">
-			<div class="btn-group btn-group-sm" role="group" style="margin-left: 0px;">
-				<button type="button" class="btn btn-unique btn-sm" id="couche"><i class="fas fa-layer-group"></i></button>
-				<button type="button" class="btn btn-unique btn-sm" id="vrp"><i class="fas fa-route"></i></button>
-			</div>
-		</div>
+		<h3>Menu contrôle</h3>
 			<div id="layerDiv">
 				<div>
-					<input type="checkbox" name="points" id="points", value="points de Collecte" onchange="reactTo(this)" checked /> Points de collecte
+					<input type="checkbox" name="points" id="points", value="points de Collecte" onchange="reactTo(this)" checked /> Points de collecte <i class="fa fa-circle" aria-hidden="true" style="color: rgb(107, 194, 107);"></i>
 				</div>
 				<div>
-					<input type="checkbox" name="secteurs" id="secteurs" onchange="showSecteurs(this)" checked/> Secteurs
+					<input type="checkbox" name="depots" id="depots", value="depot" onchange="showDepots(this)" checked /> Dépôts <i class="fa fa-map-marker" aria-hidden="true" style="color: yellow;"></i>
+				</div>
+				<div>
+					<input type="checkbox" name="secteurs" id="secteurs" onchange="showSecteurs(this)" checked/> Secteurs <i class="fa fa-square" aria-hidden="true" style="color:#005075;"></i>
+				</div>
+				<div>
+					<input type="checkbox" name="quartiers" id="quartiers" onchange="showQuartiers(this)" checked/> Quartiers <i class="fa fa-square" aria-hidden="true" style="color:rgb(131, 168, 247);"></i>
+				</div>
+				<div>
+					<input type="checkbox" name="organismes" id="organismes" onchange="showOrganismes(this)" checked/> Organismes <i class="fa fa-square" aria-hidden="true" style="color:rgb(245, 76, 76);"></i>
 				</div>
 			</div>
 		
 	</div>
 
+	
 	<div id="popup1" class="overlay">
 		<div class="popup">
 			<div class="btn-group btn-group-md" role="group" style="width: 80%;">
@@ -122,58 +134,59 @@
 						<button class="btn btn-outline-primary" type="submit" style="margin-left: 5px;">Sauvegarder</button>
 					</div>
 				</form>
+				<div id="form-bacs">
+					<form class="form" style="margin-left: 10px; width: 80%;" >
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="bac">Bac:</label>
+								<select name="code_bac" id="bacs" class="form-control">
 
-				<form method="POST" class="form" id="form-bacs" style="margin-left: 10px; width: 80%;">
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label for="bac">Bac:</label>
-							<select name="code_bac" id="bacs" class="form-control" onchange="selectedBac(this)">
-
-							</select>
+								</select>
+							</div>
+							<div class="form-group col-md-6">
+								<label for="volume">Volume</label>
+								<input type="number" name="volume" id="volume"  class="form-control ">
+							</div>
+						</div>	
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="typemat">Type Matière</label>
+								<select name="nature" id="typemat" class="form-control">
+									<option value="Plastique" selected>Plastique</option>
+									<option value="Métalique">Métalique</option>
+									<option value="Galvanisé">Galvanisé</option>
+								</select>
+							</div>
+							<div class="form-group col-md-6">
+								<label for="nature_dechet">Nature déchets</label>
+								<input type="text" name="nature_dechet" id="typedechet" class="form-control ">
+							</div>
 						</div>
-						<div class="form-group col-md-6">
-							<label for="volume">Volume</label>
-							<input type="number" name="volume" id="volume"  class="form-control ">
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="etat">Etat:</label>
+								<select name="etat" id="etat" class="form-control">
+									<option value="Bon">Bon</option>
+									<option value="Moyen">Moyen</option>
+									<option value="Dégradé">Dégradé</option>
+								</select>
+							</div>
+							<div class="form-group col-md-6">
+								<label for="taux">Taux remplissage:</label>
+								<input type="number" step="0.1" min="0" max="100" name="taux_remplissage" id="taux_remplissage" class="form-control ">
+							</div>
 						</div>
-					</div>	
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label for="typemat">Type Matière</label>
-							<select name="typemat" id="typemat" class="form-control">
-								<option value="Plastique" selected>Plastique</option>
-								<option value="Métalique">Métalique</option>
-								<option value="Galvanisé">Galvanisé</option>
-							</select>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="dateinstal">Date installation:</label>
+								<input type="date" name="date" id="date_installation" class="form-control">
+							</div>
 						</div>
-						<div class="form-group col-md-6">
-							<label for="typedechet">Nature déchets</label>
-							<input type="text" name="typedechet" id="typedechet" class="form-control ">
-						</div>
+					</form>
+					<div class="form-group" style="margin-top: 20px; margin-left: 5px;">
+						<button type="button" class="btn btn-outline-primary" style="width: 200px;" onclick="editBac()">Sauvegarder</button>
 					</div>
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label for="etat">Etat:</label>
-							<select name="etat" id="etat" class="form-control">
-								<option value="Bon">Bon</option>
-								<option value="Moyen">Moyen</option>
-								<option value="Dégradé">Dégradé</option>
-							</select>
-						</div>
-						<div class="form-group col-md-6">
-							<label for="taux">Taux remplissage:</label>
-							<input type="number" step="0.1" min="0" max="100" name="taux_remplissage" id="taux_remplissage" class="form-control ">
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label for="dateinstal">Date installation:</label>
-							<input type="date" name="date_installation" id="date_installation" class="form-control">
-						</div>
-						<div class="form-group" style="margin-top: 20px; margin-left: 5px;">
-							<button class="btn btn-outline-primary" type="submit" style="width: 200px;">Sauvegarder</button>
-						</div>
-					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -191,7 +204,7 @@
 		}
 	}
 
-	$('#form-bacs').hide("slow");
+	$('#form-bacs').hide();
 
 	
 </script>
@@ -228,35 +241,20 @@
             "fillOpacity": 0.7 //
         };
     }
+
+	function getPointColor(s){
+		return  s == 'C013-A11' ? '#ff0000':
+				s == 'C013-B11' ? '#ffa500':
+				s == 'C013-C11' ? '#ffff00':
+				s == 'C013-A12' ? '#008000':
+				s == 'C013-A22' ? '#0000ff':
+				s == 'C013-C21' ? '#4b0082':
+				s == 'C013-C22' ? '#ee82ee':
+				s == 'C013-A21' ? '#6b8464':
+				s == 'C013-C12' ? '#cc1a58':
+				 '#4dccff';
+	}
 	
-  	$.ajax({url:"{{path('getPoints')}}",
-		success: function(response){
-			var myIcon = L.icon({
-				iconUrl: '{{asset("img/leaflet/marker.png")}}',
-				iconSize: [30, 30],
-				iconAnchor: [0,0],
-				popupAnchor: [9, -20]
-			});
-
-			function onEachFeature(feature, layer) {
-				var fonction = "getPoint('code')";
-				fonction = fonction.replace("code", feature.properties.code_point);
-				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white"><a href="#popup1">edit</a></button>');
-			}
-
-			window.points = JSON.parse(response);
-
-			window.lyrPoints = L.geoJSON(window.points, {
-				pointToLayer: function x(features, coordinates) {
-							return L.marker(coordinates, {icon: myIcon});
-					},
-				onEachFeature: onEachFeature
-				}).addTo(map);
-		},
-		error: function e(error){
-			alert("Error: "+ error);
-		}
-	});
 
 	$.ajax({url:"{{path('getSecteurs')}}",
 		success: function(response){
@@ -276,7 +274,77 @@
 			alert("erreur");
 		}
 	});
+	$.ajax({url:"{{path('getQuartiers')}}",
+		success: function(response){
 
+			function onEachFeature(feature, layer) {
+				layer.bindPopup('<b>Code: ' + feature.properties.code + '</b><p><b>Désignation:</b>'+ feature.properties.name + '</p><p><b>Type:</b>' + feature.properties.type +'</p>');
+			}
+
+			var quartiers = JSON.parse(response);
+
+			window.lyrQuartiers = L.geoJSON(quartiers.features, {	
+				onEachFeature: onEachFeature,
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("erreur");
+		}
+	});
+
+	$.ajax({url:"{{path('getOrganismes')}}",
+		success: function(response){
+
+			function onEachFeature(feature, layer) {
+				layer.bindPopup('<b>Code: ' + feature.properties.code + '</b><p><b>Désignation:</b>'+ feature.properties.name + '</p><p><b>Type:</b>' + feature.properties.type +'</p>');
+			}
+
+			var organismes = JSON.parse(response);
+
+			window.lyrOrganismes = L.geoJSON(organismes.features, {	
+				color: 'red',	
+				fillColor: 'red',	
+				onEachFeature: onEachFeature,
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("erreur");
+		}
+	});
+	
+
+	$.ajax({url:"{{path('getPoints')}}",
+		success: function(response){
+			var myIcon = L.icon({
+				iconUrl: '{{asset("img/leaflet/marker.png")}}',
+				iconSize: [30, 30],
+				iconAnchor: [0,0],
+				popupAnchor: [9, -20]
+			});
+
+			function onEachFeature(feature, layer) {
+				var fonction = "getPoint('code')";
+				fonction = fonction.replace("code", feature.properties.code_point);
+				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p><a href="#popup1"><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white">edit</button></a>');
+			}
+
+			window.points = JSON.parse(response);
+
+			window.lyrPoints = L.geoJSON(window.points, {
+				pointToLayer: function x(features, coordinates) {
+							return L.circleMarker(coordinates, {color: getPointColor(features.properties.secteur),
+                                                fillColor: getPointColor(features.properties.secteur),
+                                                fillOpacity: 1,
+												radius: 5
+                                                });
+					},
+				onEachFeature: onEachFeature
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+	});
 	
 
 	$.ajax({url:"{{path('getDepotss')}}",
@@ -286,7 +354,7 @@
 			}
 
 			window.depots = JSON.parse(response);
-			var lyrDepots = L.geoJSON(window.depots, {
+			window.lyrDepots = L.geoJSON(window.depots, {
 				pointToLayer: function x(features, coordinates) {
 							return L.marker(coordinates);
 					},
@@ -313,6 +381,30 @@
 		}
 		else{
 			map.removeLayer(window.lyrSecteurs);
+		}
+	}
+	function showQuartiers(element){
+		if(element.checked){
+			map.addLayer(window.lyrQuartiers);
+		}
+		else{
+			map.removeLayer(window.lyrQuartiers);
+		}
+	}
+	function showOrganismes(element){
+		if(element.checked){
+			map.addLayer(window.lyrOrganismes);
+		}
+		else{
+			map.removeLayer(window.lyrOrganismes);
+		}
+	}
+	function showDepots(element){
+		if(element.checked){
+			map.addLayer(window.lyrDepots);
+		}
+		else{
+			map.removeLayer(window.lyrDepots);
 		}
 	}
 	
@@ -410,6 +502,7 @@ var lc = L.control.locate({
 		}
 	};
 
+	
 
 	function getPoint(code){
 		var form_point = document.getElementById("form-point");
@@ -424,8 +517,6 @@ var lc = L.control.locate({
 		});
 		
 		$('#bacs').empty();
-
-		
 
 		window.bacs;
 		var url = "{{path('getBacs', {code_point: 'code'})}}";
@@ -456,17 +547,10 @@ var lc = L.control.locate({
 		var selectedBac = $(this).children("option:selected").val();
 		window.bacs.forEach(function(obj){
 			if (obj.code == selectedBac) {
-				var form_bacs = document.getElementById("form-bacs");
-				var bac_edit_url = "{{path('editPoint', {code: 'code_bac'})}}";
-				form_bacs.setAttribute("action", bac_edit_url.replace("code_bac", obj.code));
 				
 				document.getElementById("volume").setAttribute("value", obj.volume);
 				document.getElementById("typedechet").setAttribute("value", obj.typedechet);
-				for (let i = 0; i < 3; i++) {
-					if ((document.getElementById("typemat").getElementsByTagName("option")[i].value).toLowerCase() == obj.typemat) {
-						document.getElementById("typemat").getElementsByTagName("option")[i].selected = 'selected';
-					}	
-				}
+				document.getElementById("typemat").getElementsByTagName("option").value = obj.typemat.charAt(0).toUpperCase() + obj.typemat.slice(1);
 				document.getElementById("etat").value = obj.etat;
 				document.getElementById("taux_remplissage").setAttribute("value", obj.tauxrempli);
 				document.getElementById("date_installation").setAttribute("value", obj.dateinstal);
@@ -475,7 +559,32 @@ var lc = L.control.locate({
 		
 	});
 
-	
+	function editBac(){
+		var data = JSON.stringify({
+					"code_bac": parseInt(document.getElementById("bacs").value),
+                    "volume": parseInt(document.getElementById("volume").value),
+                    "nature_dechet": document.getElementById("typedechet").value,
+                    "nature": document.getElementById("typemat").value,
+                    "taux_remplissage": parseFloat(document.getElementById("taux_remplissage").value),
+                    "date": document.getElementById("date_installation").value,
+                    "etat": document.getElementById("etat").value
+                });
+		
+
+        $.ajax({
+            url: '{{path("editMapBac")}}',
+            type: 'POST',
+            contentType: 'JSON',
+            data: data,
+            success: function(response) { 
+				alert("Bac n°" + document.getElementById("bacs").value + "a été modifié avec succes.");
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+				alert("Erreur: " + errorThrown);
+            }
+        });
+	}	
 
 </script>
 </body>

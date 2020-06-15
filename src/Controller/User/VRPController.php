@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VRPController extends AbstractController{
 
-    private $orders;
-    private $depots;
-    private $routes;
+    private $orders = null;
+    private $depots = null;
+    private $routes = null;
     
 
   public function __construct(){
@@ -30,6 +30,7 @@ class VRPController extends AbstractController{
     public function analyse(){
         $parcs = $this->app->Parc->all();
         $cets = $this->app->CET->all();
+        $vehicles = $this->app->Vehicle->vehiculesEnMarche();
         $depots = [];
         foreach ($parcs as $parc) {
             array_push($depots, $parc);
@@ -37,7 +38,7 @@ class VRPController extends AbstractController{
         foreach ($cets as $cet){
             array_push($depots, $cet);
         }
-        return $this->render('public/analyseVrp.html.twig', ["depots"=>$depots]);
+        return $this->render('public/analyseVrp.html.twig', ["depots"=>$depots, "vehicles" => $vehicles]);
     }
     /**
      * @Route("/dashboard/maps/VRP/getOrders", name="getOrders")
@@ -57,8 +58,8 @@ class VRPController extends AbstractController{
                 "DeliveryQuantities" => $point['quantited'],
                 "Name" => $point['code_point'],
                 "ServiceTime" => 4,
-                "TimeWindowStart1" => 1355245200000,
-                "TimeWindowEnd1" => 1355274000000,
+                "TimeWindowStart1" => $point["debut_fenetre_temps"],
+                "TimeWindowEnd1" => $point["fin_fenetre_temps"],
                 "MaxViolationTime1" => 0
             ];
             $feature = ["geometry"=>$geometry, "attributes"=>$attributes];
@@ -85,8 +86,8 @@ class VRPController extends AbstractController{
               unset($parc['geojson']);
               $attributes = [
                   "Name" => "Parc Babez",
-                  "TimeWindowStart1" => 1355241600000,
-                  "TimeWindowEnd1" => 1355274000000
+                  "TimeWindowStart1" => 1355212800000,
+                  "TimeWindowEnd1" => 1355245200000
                 ];
 		  	$feature = ["geometry"=>$geometry, "attributes"=>$attributes];
 		  	array_push($features, $feature);
@@ -101,8 +102,8 @@ class VRPController extends AbstractController{
               unset($cet['geojson']);
               $attributes = [
                   "Name" => $cet['designation'],
-                  "TimeWindowStart1" => 1355241600000,
-                  "TimeWindowEnd1" => 1355274000000
+                  "TimeWindowStart1" => 1355212800000,
+                  "TimeWindowEnd1" => 1355245200000
                 ];
         $feature = ["type"=>"Feature", "geometry"=>$geometry, "attributes"=>$attributes];
         array_push($features, $feature);
@@ -126,10 +127,10 @@ class VRPController extends AbstractController{
                 $attributes = [
                     "Name"=>"Truck_".$j,
                     "StartDepotName"=>"Parc Babez",
-                    "EndDepotName"=>"CET CORSO",
+                    "EndDepotName"=>"Parc Babez",
                     "StartDepotServiceTime"=>60,
-                    "EarliestStartTime"=>1355241600000,
-                    "LatestStartTime"=>1355241600000,
+                    "EarliestStartTime"=>1355212800000,
+                    "LatestStartTime"=>1355212800000,
                     "Capacities"=> "".$vehicle['volume']*1000 ."",
                     "CostPerUnitTime"=>0.2,
                     "CostPerUnitDistance"=>1.5,
@@ -150,19 +151,18 @@ class VRPController extends AbstractController{
     /**
 	 * @Route("/dashboard/maps/VRP", name="vrpService")
 	 */
-    public function index(Request $request){
+    public function index(){
         $features = [];
-        $data = json_decode($request->getContent(), true);
-        $depots = isset($data['depots']) ? $data['depots']: null;
-        $vehicules = isset($data['vehicles']) ? $data['vehicles'] : null;
-        $points = isset($data['points']) ? $data['points'] : null;
-        if($depots != null && $vehicules!=null && $points != null){
-            $this->orders = $this->transformeOrders($points)->getContent();
-            $this->depots = $this->transformeDepots($depots)->getContent();
-            $this->routes = $this->transformeRoutes($vehicules)->getContent();
+        $sleep = 10;
+        if ($this->orders == null or $this->depots == null or $this->routes == null) {
+            $this->orders = $this->getOrders()->getContent();
+            $this->depots = $this->getDepots()->getContent();
+            $this->routes = $this->getRoutes()->getContent();
+            $sleep = 20;
         }
+
         $url = 'https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob?';
-        $token = 'w02yUBjLyYhQO1216vX7oDmkBuRoyQLAVFA5R4I73_5CeWrUzIVELDvarDA2XRVcJ0DOxfeXxDGf53YwgfX4TdeGIV2SZINLXZmS7DwazTmnnlMZyg25dFycZH6GKKu5h1jCM1LTmNicRyjchJOiRQ..';
+        $token = 'jQfj8wwN4SX1G6qogf9gsmxSgc82_K-WggDHwl7EttwXZllwDlIkXhrMhv1r_31Q-13jibKaEjsITUhnqc7YaECQ6E_bhBJ-GOOIX-oPyiQTD_qpWrFBor9IUTS-aFEGry6Xx_2vfZhqa4kecIWvoA';
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -173,7 +173,7 @@ class VRPController extends AbstractController{
         curl_close($curl);
         $jobId = json_decode($response,true)['jobId'];
         
-        sleep(15);
+        sleep($sleep);
 
         //Request for routes
         $routesUrl = "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/jobs/".$jobId."/results/out_routes?";
@@ -186,6 +186,7 @@ class VRPController extends AbstractController{
         curl_close($curl);
         
         $result = json_decode($response,true);
+        
         $features = [];
         foreach($result['value']['features'] as $row){
             $type = "MultiLineString";
@@ -195,10 +196,30 @@ class VRPController extends AbstractController{
                 $feature = ["type"=>"Feature", "geometry"=>$geometry, "properties"=>$row['attributes']];
                 array_push($features, $feature);
             }
-            
           }
           $featureCollection = ["type"=>"FeatureCollection", "features"=>$features];
-        return new Response(json_encode($featureCollection));
+
+          $stopsUrl = "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/jobs/".$jobId."/results/out_stops?";
+                   
+          $curl = curl_init();
+          curl_setopt($curl, CURLOPT_URL, $stopsUrl);
+          curl_setopt($curl, CURLOPT_POST, 1);
+          curl_setopt($curl, CURLOPT_POSTFIELDS, 'f=json&token='.$token.'');
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+          $response = curl_exec($curl);
+          curl_close($curl);
+          $result = json_decode($response,true);
+          
+          $features = [];
+          foreach($result['value']['features'] as $row){
+              $type = "points";
+              $feature = ["type"=>"Feature", "properties"=>$row['attributes']];
+              array_push($features, $feature);
+              
+            }
+            $featureCollection1 = ["type"=>"FeatureCollection", "features"=>$features];
+            $result = ["routes" => $featureCollection, "stops" => $featureCollection1];
+        return new Response(json_encode($result));
     }
 
     /**
@@ -214,6 +235,7 @@ class VRPController extends AbstractController{
             $this->depots = $this->transformeDepots($depots)->getContent();
             $this->routes = $this->transformeRoutes($vehicules)->getContent();
         }
+        return $this->index();
     }
 
 
@@ -298,5 +320,50 @@ class VRPController extends AbstractController{
 		}
         $featureCollection = ["features"=>$features];
 		return new Response(json_encode($featureCollection));
+    }
+
+
+    /**
+     * @Route("admin/maps/VRP/saveResults", methods={"POST","GET"}, name="saveVrpResults")
+     */
+    public function saveResults(Request $request){
+        $data = json_decode($request->getContent(), true);
+        $stops = isset($data['stops']) ? $data['stops']: null;
+        $secteurs = ['C013-A11', 'C013-B11', 'C013-C11', 'C013-A12', 'C013-B12', 'C013-C12', 'C013-A21', 'C013-C21', 'C013-B21', 'C013-A22', 'C013-C22'];
+        $points = [];
+
+        foreach($stops["features"] as $stop){   
+            $code = $stop["properties"]["Name"];
+            $vehicle = intval(explode("_", $stop["properties"]['RouteName'])[1]);
+            $secteur = $secteurs[$vehicle-1];
+            $sequence = intval($stop["properties"]['Sequence']);
+            $result = ["code" => $code, "secteur"=>$secteur, "ordrecollecte"=>$sequence];
+            array_push($points, $result);
+        }
+
+        foreach($points as $point){
+            $code = $point["code"];
+            unset($point["code"]);
+            $this->app->Points->update($code, $point);
+        }
+        return new Response("Données mise à jour avec succes.");
+    }
+
+    /**
+     * @Route("admin/maps/editPointTime", methods={"POST","GET"}, name="editPointTime")
+     */
+    public function editPointTime(Request $request){
+        $date = "Tue 11 December 2012";
+        $data = json_decode($request->getContent(),true);
+        $code = isset($data["code_point"])? $data["code_point"]: null;
+        unset($data["code_point"]);
+        $dft = [$date, "".$data["debut_fenetre_temps"].""];
+        $fft = [$date, "".$data["fin_fenetre_temps"].""];
+        $data = ["debut_fenetre_temps"=> strtotime(implode(" ", $dft))*1000, "fin_fenetre_temps"=>strtotime(implode(" ", $fft))*1000];
+        if ($code != null) {
+            $result = $this->app->Points->update($code, $data);
+            return new Response("Point de collecte modifié avec succes.");
+        }
+        return new Response("Point de collecte non modifié.");
     }
 }

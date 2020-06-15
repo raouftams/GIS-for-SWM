@@ -1,5 +1,6 @@
 {% extends "base.html.twig" %}
-
+{% block title %}Ajouter tournée{%endblock%}
+{% block header %}Ajouter tournée {%endblock%}
 {% block body %}
 {% if result != null %}
 <div class="alert alert-success">
@@ -8,35 +9,155 @@
 {% endif %}
 <form method="POST" action="{{path('addTournee')}}">
   <div class="form-row">
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-4">
       <label for="inputCode">Date:</label>
-      <input type="date" class="form-control" name="date">
-    </div>
-    <div class="form-group col-md-6">
+      <input type="date" class="form-control" name="date" id="date">
+	</div>
+	
+	<div class="form-group col-md-4">
+		<label>Heure démarrage:</label>
+		<input type="time" name="heure_demarrage_parc" id="heure" class="form-control">
+	</div>
+
+    <div class="form-group col-md-4">
       <label for="inputLibelle">Secteur:</label>
-      <input type="text" class="form-control" name="secteur">
-    </div>
+	  <select name="secteur" id="secteurs" class="form-control" onchange="setVehicles()">
+			<option selected>Choisir Secteur</option>
+        {% for secteur in secteurs %}
+          <option value="{{secteur.secteur}}">{{secteur.secteur}}</option>
+        {% endfor %}
+      </select>
+	</div>
   </div>
   <div class="form-row">
     <div class="form-group col-md-4">
         <label for="inputLatitude">véhicule</label>
-        <input type="text" name="vehicle" class="form-control" >
+        <select name="vehicle" id="vehicules" class="form-control">
+          {%for vehicle in vehicles %}
+            <option value="{{vehicle.code}}">Benne {{vehicle.volume}}</option>
+          {% endfor %}
+        </select>
       </div>
     <div class="form-group col-md-4">
         <label for="inputLatitude">CET</label>
         <select name="cet" id="cet" class="form-control">
-            <option value="">CET CORSO</option>
-            <option value="">CET HAMICI</option>
+            <option value="CET01">CET CORSO</option>
+            <option value="CET02">CET HAMICI</option>
         </select>
     </div>
     <div class="form-group col-md-4">
       <label for="inputLongitude">Equipe</label>
-      <select name="equipe" id="equpe" class="form-control">
-          <option value="1">1</option>
+      <select name="equipe" id="equipe" class="form-control">
+          	{% for equipe in equipes %}
+				<option value="{{equipe.id}}">{{equipe.id}}</option>
+			{% endfor %}
       </select>
     </div>
+  </div>
+  <div class="form-row">
+	  <div class="form-group col-md-4">
+		  <label >Quantité prévue:</label>
+		  <input type="number" step="0.01" min="0" name="qte_prevue" class="form-control">
+	  </div>
   </div>
   <button type="submit" class="btn btn-primary">Ajouter</button>
 </form>
 
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+	  $.ajax({url: "{{path('getSecteursVehiclesEquipes')}}",
+			success: function(response){
+				result = JSON.parse(response);
+
+				window.vehicules = result.vehicules;
+				window.secteurs = result.secteurs;
+				window.equipes = result.equipes;
+			},
+			error: function e(error){
+				alert("Error: "+ error);
+			}
+		});
+
+		var url = '{{path("tourneesEnAttente")}}';
+		$.ajax({
+			url: url,
+			success: function(response){
+				window.tournees = JSON.parse(response);
+			},
+			error: function(error){
+				alert("Erreur: " + error);
+			}
+		});
+
+    function setVehicles(){
+		
+
+		$('#vehicules').empty();
+		$('#equipe').empty();
+
+		var select_vehicle = document.getElementById("vehicules");
+		var secteur = document.getElementById("secteurs").value;
+		var date = document.getElementById("date").value;
+		var heure = document.getElementById("heure").value;
+		var select_equipe = document.getElementById("equipe");
+
+		window.secteurs.forEach(function(obj) {
+			if(obj.secteur == secteur){
+				window.vehicules.forEach(function(vehicle){
+					if((vehicle.volume)*1000 >= obj.qte){
+		
+						var existe = false;
+						window.tournees.forEach(function(tournee){
+							if(tournee.vehicle == vehicle.code){
+								existe = true;
+								window.date_tournee = new Date(tournee.date);
+							}
+						});
+						var date_saisie = new Date(date);
+						if(existe == true && date_saisie.getTime() != window.date_tournee.getTime()){
+							opt = document.createElement('option');
+							opt.appendChild( document.createTextNode("benne" + vehicle.volume));
+							opt.value = vehicle.code;
+							select_vehicle.appendChild(opt);
+						}else{ 
+							if(existe == false){
+								opt = document.createElement('option');
+								opt.appendChild( document.createTextNode("benne" + vehicle.volume));
+								opt.value = vehicle.code;
+								select_vehicle.appendChild(opt);
+							}	
+						}
+					}
+				});
+			}
+		});
+		var existe = false;
+		window.equipes.forEach(function(equipe){
+			existe = false;
+			window.tournees.forEach(function(tournee){
+				if (equipe.id == tournee.equipe) {
+					existe = true;
+					window.date_tournee = new Date(tournee.date);
+				}
+			});
+			var date_saisie = new Date(date);
+			if (existe == true && date_saisie.getTime() != window.date_tournee.getTime()) {
+				opt = document.createElement('option');
+				opt.appendChild( document.createTextNode(equipe.id));
+				opt.value = equipe.id;
+				select_equipe.appendChild(opt);
+			}else{
+				if (existe == false) {
+					opt = document.createElement('option');
+					opt.appendChild( document.createTextNode(equipe.id));
+					opt.value = equipe.id;
+					select_equipe.appendChild(opt);	
+				}
+			}
+		});
+
+	} 
+  </script>
 {% endblock %}

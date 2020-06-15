@@ -1,7 +1,9 @@
 {% extends "base.html.twig" %}
+{% block title %}Points de collecte {%endblock%}
 {% block stylesheets %}
   <link rel="stylesheet" href="{{asset('css/table.css')}}">
 {% endblock %}
+{% block header %}Points de collecte{%endblock%}
 {% block body %}
 <div class="row">
 
@@ -11,10 +13,10 @@
 		<option value="tout">Tout</option>
 		<option value="C013-A11">C013-A11</option>
 	</select>
-		<button class="btn btn-outline-warning" style="float:left;" type="submit" value="filtrer">Filtrer</button>
+		<button class="btn btn-outline-warning btn-sm" style="float:left; margin-top: 2%;" type="submit" value="filtrer"><i class="fas fa-filter"></i></button>
 	</form>
 	<div class="col md-4">
-		<a class="btn btn-success btn-add" href="{{path('addPoint')}}" value="add" type="submit">Ajouter</a>
+		<a class="btn btn-success btn-add btn-sm" href="{{path('addPoint')}}" value="add" type="submit"><i class="fas fa-plus"></i></a>
 	</div>	
 </div>
  

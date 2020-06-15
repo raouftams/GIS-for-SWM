@@ -17,6 +17,12 @@ class VehicleTable extends Table{
       ');
     }
 
+    /**
+     * @return array
+     */
+    public function vehiculesEnMarche(){
+      return $this->query('SELECT code, volume From "public".vehicule where etat = ?',['En marche']);
+    }
 
     /**
      * retourne un tableau d'attribut d'un point donné

@@ -34,6 +34,21 @@ class User implements UserInterface, Serializable
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $id_equipe = 0;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date_inscription;
+
+    public function __construct()
+    {
+        $this->date_inscription = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,5 +134,29 @@ class User implements UserInterface, Serializable
             $this->username,
             $this->password,
         ) = unserialize($serialized, ['allowed_class' => false]);
+    }
+
+    public function getIdEquipe(): ?int
+    {
+        return $this->id_equipe;
+    }
+
+    public function setIdEquipe(int $id_equipe): self
+    {
+        $this->id_equipe = $id_equipe;
+
+        return $this;
+    }
+
+    public function getDateInscription(): ?\DateTimeInterface
+    {
+        return $this->date_inscription;
+    }
+
+    public function setDateInscription(\DateTimeInterface $date_inscription): self
+    {
+        $this->date_inscription = $date_inscription;
+
+        return $this;
     }
 }

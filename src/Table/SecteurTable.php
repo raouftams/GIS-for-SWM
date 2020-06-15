@@ -17,6 +17,7 @@ class SecteurTable extends Table{
       ');
     }
 
+
   }
 
  ?>

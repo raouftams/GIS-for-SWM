@@ -55,7 +55,6 @@
 			$attributes[] = $v;
 		}
 		$sql_part = implode(',', $sql_parts);
-		var_dump($sql_part);
 		return $this->query("INSERT INTO {$this->table} Values ($sql_part)", $attributes, true);
     }
 

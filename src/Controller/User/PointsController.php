@@ -47,18 +47,20 @@ class PointsController extends AbstractController{
     public function Add(){
       if (!empty($_POST)) {
         $point = $this->app->Points->add([
-          'code_point' => $_POST['code'],
-          'libelle' => $_POST['libelle'],
-          'X' => $_POST['longitude'],
-          'Y' => $_POST['latitude'],
-          'adresse' => $_POST['adresse'],
-          'activites' => $_POST['activite'],
           'secteur' => $_POST['secteur'],
+          'code_point' => $_POST['code'],
+          'X' => floatval($_POST['longitude']),
+          'libelle' => $_POST['libelle'],
+          'Y' => floatval($_POST['latitude']),
+          'adresse' => $_POST['adresse'],
+          'activites' => $_POST['activite']
+          
         ]);
+        $geom = $this->app->Points->addgeom($_POST['code'], $_POST['longitude'], $_POST['latitude']);
         return $this->index();
       }
       
-      return $this->render('admin/points/edit.html.twig',[
+      return $this->render('admin/points/add.html.twig',[
         "point" => []
       ]);
     }

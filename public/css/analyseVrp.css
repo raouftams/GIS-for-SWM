@@ -1,0 +1,70 @@
+body{width: 100%;}
+		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 40px; width: 70%; float:left;}
+		.analysis{ border: 1px solid transparent; width: 28%; float: right; margin-top: 45px; margin-right: 15px;}
+		.control{border: 1px solid transparent; position: sticky; }
+		.navbar {position: fixed;}
+		.btn-analyse{width: 100%; position: relative;}
+		#loading-image {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 100;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(192, 192, 192, 0.5);
+			background-image: url("https://i.stack.imgur.com/MnyxU.gif");
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+		.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 500ms;
+    visibility: hidden;
+    opacity: 0;
+    overflow: auto;
+  }
+  .overlay:target {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    width: 40%;
+	position: relative;
+  }
+  
+  .popup .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+  .popup .close:hover {
+    color: #06D85F;
+  }
+  .popup .content {
+    max-height: 30%;
+  }
+  
+  @media screen and (max-width: 700px){
+    .box{
+      width: 70%;
+    }
+    .popup{
+      width: 70%;
+    }
+  }

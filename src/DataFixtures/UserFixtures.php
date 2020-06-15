@@ -27,6 +27,7 @@ class UserFixtures extends Fixture
         $user->setUsername("User");
         $user->setPassword($this->encoder->encodePassword($user, 'user'));
         $user->setRoles(['ROLE_USER']);
+        $user->setIdEquipe(1);
         $manager->persist($user);
         $manager->flush();
 

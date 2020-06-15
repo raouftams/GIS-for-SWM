@@ -3,8 +3,11 @@
 namespace App\Controller\User;
 
 use App\Controller\AppController;
+use Exception;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BacController extends AbstractController{
 
@@ -73,6 +76,51 @@ class BacController extends AbstractController{
             "result" => null,
             "bac" => $bac
         ]);
+    }
+
+    /**
+     * @Route("/admin/edit-map-bac", name="editMapBac")
+     */
+    public function editFromMap(Request $request){
+
+      $data = json_decode($request->getContent(), true);
+      
+      $code = intval($data['code_bac']);
+      $volume = $data['volume'];
+      $nature = $data['nature'];
+      $taux_remplissage = $data['taux_remplissage'];
+      $date = $data['date'];
+      $etat = $data['etat'];
+      $nature_dechet = $data['nature_dechet'];
+      
+        $bac = $this->app->Bacs->edit($code, [
+          'volume' => intval($volume),
+          'dateinstal' => $date,
+          'tauxrempli' => floatval($taux_remplissage),
+          'typemat' => $nature,
+          'etat' => $etat,
+          'typedechet' => $nature_dechet
+        ]);
+      
+      return new Response("Bac modifié avec succes");
+                 
+  }
+
+    /**
+     * @Route("/admin/edit-tournee-bac", name="editTourneeBac")
+     */
+    public function editFromTournee(Request $request){
+      $data = json_decode($request->getContent(), true);
+      $code = intval($data['code_bac']);
+      $taux_remplissage = $data['taux_remplissage'];
+      $etat = $data['etat'];
+      
+        $bac = $this->app->Bacs->edit($code, [
+          'tauxrempli' => floatval($taux_remplissage),
+          'etat' => $etat
+        ]);
+      
+      return new Response("Bac n°" + $code + "modifé avec succes");
     }
 
     /**

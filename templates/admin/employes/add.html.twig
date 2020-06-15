@@ -1,0 +1,87 @@
+{% extends "base.html.twig" %}
+{% block title %}Ajouter employé{%endblock%}
+{% block header %}Ajouter employé {%endblock%}
+{% block body %}
+{% if result != null %}
+<div class="alert alert-success">
+  {{result}}
+</div>
+{% endif %}
+<form method="POST" action="{{path('addEmploye')}}">
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="inputCode">Matricule: </label>
+      <input type="text" class="form-control" name="matricule">
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputLibelle">Nom: </label>
+      <input type="text" class="form-control" name="nom">
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputLibelle">Prénom: </label>
+      <input type="text" class="form-control" name="prenom">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+        <label for="inputLatitude">Adresse:</label>
+        <input type="text" name="adresse" class="form-control" >
+      </div>
+    <div class="form-group col-md-4">
+      <label for="inputLatitude">Date de naissance:</label>
+      <input type="date" name="date_naissance" class="form-control" >
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputLongitude">Téléphone:</label>
+      <input type="text" name="telephone" class="form-control" >
+    </div>
+  </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Grade:</label>
+            <input type="text"  class="form-control" name="grade" >
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Fonction</label>
+            <select name="fonction" class="form-control">
+                <option value="Chauffeur">Chauffeur</option>
+                <option value="Eboueur">Eboueur</option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputAddress">Heure de pause: </label>
+          <input type="time" class="form-control" name="heure_pause" >
+      </div>
+        
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputAddress">Date début contrat: </label>
+        <input type="date" class="form-control" name="debut_contrat" >
+      </div>
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Date fin contrat:</label>
+            <input type="date" class="form-control" name="fin_contrat">
+        </div>
+        
+        <div class="form-group col-md-4">
+            <label for="inputAddress">equipe:</label>
+            <select name="equipe" id="etat" class="form-control">
+                <option value="1">1</option>
+            </select>
+        </div>         
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label>Date début congé:</label>
+        <input type="date" name="debut_conge" class="form-control">
+      </div>
+      <div class="form-group col-md-4">
+        <label>Date fin congé:</label>
+        <input type="date" name="fin_conge" class="form-control">
+      </div>
+    </div>
+  <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>
+
+{% endblock %}

@@ -18,6 +18,8 @@ class MapController extends AbstractController{
 		$this->app->loadModel('CET');
 		$this->app->loadModel('Route');
 		$this->app->loadModel('Bacs');
+		$this->app->loadModel('Quartier');
+		$this->app->loadModel('Organisme');
 		
 	}
 
@@ -67,7 +69,47 @@ class MapController extends AbstractController{
 		$featureCollection = ["type"=>"FeatureCollection", "features"=>$features];
 		return new Response(json_encode($featureCollection)); 
 	}
+
+	/**
+	 * @Route("/dashboard/maps/getQuartiers", name="getQuartiers")
+	 */
+	public function getQuartier(){
+		$quartiers = $this->app->Quartier->all();
+		$features = [];
+        foreach($quartiers as $quartier){
+		  unset($quartier['geom']);
+		  for ($i=0; $i <count($quartier) ; $i++) { 
+			  unset($quartier[$i]);
+		  }
+		  $geometry=json_decode($quartier['geojson']);
+		  unset($quartier['geojson']);
+          $feature = ["type"=>"Feature", "geometry"=>$geometry, "properties"=>$quartier];
+          array_push($features, $feature);
+        }
+		$featureCollection = ["type"=>"FeatureCollection", "features"=>$features];
+		return new Response(json_encode($featureCollection)); 
+	}
 	
+	/**
+	 * @Route("/dashboard/maps/getOrganisme", name="getOrganismes")
+	 */
+	public function getOrganisme(){
+		$organismes = $this->app->Organisme->all();
+		$features = [];
+        foreach($organismes as $organisme){
+		  unset($organisme['geom']);
+		  for ($i=0; $i <count($organisme) ; $i++) { 
+			  unset($organisme[$i]);
+		  }
+		  $geometry=json_decode($organisme['geojson']);
+		  unset($organisme['geojson']);
+          $feature = ["type"=>"Feature", "geometry"=>$geometry, "properties"=>$organisme];
+          array_push($features, $feature);
+        }
+		$featureCollection = ["type"=>"FeatureCollection", "features"=>$features];
+		return new Response(json_encode($featureCollection)); 
+	}
+
 	/**
 	 * @Route("/dashboard/maps/getDepots", name="getDepotss")
 	 */

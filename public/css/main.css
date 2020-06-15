@@ -9,16 +9,13 @@ nav{
 	position: fixed;
 	height: 100%;
 	width: 15%;
-	margin-top: 3%;
-	background-color: #343a40!important;
+	background-color: #272b52!important;
 	padding: auto;
 	padding-top: 20px;
-	float: left;
-	border-bottom-right-radius: 30px;
-	
+	float: left;	
 }
 nav>hr{
-	background-color: #fff;
+	background-color: white;
 	width: 80%;
 	margin-top: -20px;
 }
@@ -44,7 +41,7 @@ nav>div>button{
 .interface{
 	right: 0;
 	margin: 40px;
-	margin-top: 5%;
+	margin-top: 2%;
 	position: absolute;
 	height: auto;
 	width: 80%;
@@ -63,4 +60,43 @@ footer{
 	margin-left: 20%;
 	border-top-left-radius: 30px;
 	border-top-right-radius: 30px;
+}
+
+.btn-menu{
+	border: 1px solid transparent;
+	width: 100%;
+	height: 40px;
+	color: white;
+	text-align: justify;
+	padding-left: 40px !important;
+	margin-top: 20px;
+	padding-top: 7px;
+}
+.btn-menu:hover{
+	background-color: white;
+	color: #0989d9;
+}
+
+.btn-sub-menu{
+	border: 1px solid transparent;
+	width: 80%;
+	height: 25px;
+	color: white;
+	text-align: justify;
+	padding-left: 40px !important;
+	margin-top: 10px;
+	margin-left: 15%;
+}
+.btn-sub-menu:hover{
+	background-color: white;
+	color: #010530;
+}
+
+
+.page-title{
+	text-align: center;
+	font-size: 24px;
+	padding-left: 5px;
+	margin-top: 0px!important;
+
 }

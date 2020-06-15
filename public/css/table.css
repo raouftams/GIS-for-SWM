@@ -1,0 +1,10 @@
+.tableFixHead    { overflow-y: auto; height: 425px; }
+.tableFixHead thead th { position: sticky; top: 0;}
+/* Just common table stuff. Really. */
+table  { border-collapse: collapse; width: 100%;}
+
+td {background-color: #ffffff;}
+
+.btn-add{
+    float: right;
+}

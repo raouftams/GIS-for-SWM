@@ -12,7 +12,7 @@ class PointsTable extends Table{
      * @return array tableau
      */
     public function all(){
-      return $this->query('SELECT code_point, libelle, adresse, modecollecte, activites, quantited, X, Y,geom, ST_AsGeoJson(geom, 5) as geojson
+      return $this->query('SELECT code_point, libelle, adresse, modecollecte, activites,secteur, quantited,debut_fenetre_temps, fin_fenetre_temps, X, Y,geom, ST_AsGeoJson(geom, 5) as geojson
       FROM "public".points_collecte
       ');
     }
@@ -55,6 +55,32 @@ class PointsTable extends Table{
     }
 
     /**
+     * @return boolean
+     */
+    public function update($code, $fields){
+      $sql_parts = [];
+      $attributes = [];
+      foreach ($fields as $k => $v) {
+        $sql_parts[] = "$k = ?";
+        $attributes[] = $v;
+      }
+      $attributes[] = $code;
+      $sql_part = implode(',', $sql_parts);
+      return $this->query("UPDATE {$this->table} SET $sql_part WHERE code_point = ?", $attributes, true);
+    }
+
+    /**
+     * @return boolean
+     * cette fonction crée une geometry point à partir des cordonnées données
+     */
+    public function addgeom($code, $x, $y){
+      return  $this->query('UPDATE "public".points_collecte
+      SET geom = ST_SetSRID(ST_MakePoint('. $x .','. $y.'), 4326)
+      WHERE code_point = ?
+      ', [$code]);
+    }
+
+    /**
      * @return array
      */
     public function getLocations(){
@@ -72,6 +98,16 @@ class PointsTable extends Table{
       FROM "public".points_collecte 
       WHERE secteur in (SELECT secteur FROM "public".tournee WHERE id_tournee = ?)'
       , [$id]);
+    }
+
+    /**
+     * @return array
+     */
+    public function getSecteursQte(){
+      return $this->query('SELECT secteur, sum(quantited) as qte
+      FROM "public".points_collecte
+      GROUP BY secteur
+      ');
     }
   }
 

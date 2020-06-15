@@ -1,4 +1,6 @@
 {% extends "base.html.twig" %}
+{% block title %}Ajouter véhicule{%endblock%}
+{% block header %}Ajouter véhicule {%endblock%}
 
 {% block body %}
 {% if result != null %}
@@ -61,8 +63,12 @@
                 <option value="En panne">En panne</option>
             </select>
         </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
         <label for="inputAddress">date</label>
-            <input type="date"  class="form-control col-md-6" name="date" >
+        <input type="date"  class="form-control" name="date" >
+      </div>
     </div>
   <button type="submit" class="btn btn-primary">Ajouter</button>
 </form>

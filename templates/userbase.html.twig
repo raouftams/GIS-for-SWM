@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Accueil</title>
+    <!-- jQuery -->
+    <script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+    <!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+
+	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+	<!-- Material Design Bootstrap -->
+	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/table.css')}}">
+        
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <a href="#" class="navbar-brand">
+            Tableau de bord
+        </a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="{{path('userIndex')}}" ><i class="fas fa-tachometer-alt"></i>&nbsp; Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link">Contact</a>
+            </div>
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link"href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a>
+            </div>
+        </div>
+    </nav>
+	
+
+        <div class="container mt-4">
+            <div class="interface">
+              <div id="main_content">
+                <h2>Tournées à effectuer</h2><br>
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Secteur</th>
+                        <th scope="col">Véhicule</th>
+                        <th scope="col">CET</th>
+                        <th scope="col" style="margin-left: 40px;">Date</th>
+                        <th scope="col" style="margin-left: 40px;">Heure</th>
+                        <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                
+            
+                        <tbody>
+                        {% for tournee in tournees %}
+                            <tr>
+                                <td scope="row">{{ tournee.id_tournee }}</td>
+                                <td> {{ tournee.secteur }} </td>
+                                <td>{{ tournee.marque }} {{tournee.volume}}m&#179;</td>
+                                <td>{{ tournee.designation }}</td>
+                                <td>{{ tournee.date }}</td>
+                                <td>{{ tournee.heure_demarrage_parc }}</td>
+
+                                <td class="th-sm">
+                                    <div class="btn-group" style="text-align:center;">
+                                        <a class="btn btn-sm btn-primary" href="{{path('tourneeDetail', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+            </div>
+        </div>
+
+</body>
+</html>
+
+

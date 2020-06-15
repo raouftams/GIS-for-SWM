@@ -1,7 +1,9 @@
 {% extends "base.html.twig" %}
+{% block title %}Tournées{%endblock%}
 {% block stylesheets %}
   <link rel="stylesheet" href="{{asset('css/table.css')}}">
 {% endblock %}
+{% block header %}Tournées{%endblock%}
 {% block body %}
 <div class="row">
 
@@ -11,10 +13,10 @@
 		<option value="tout">Tout</option>
 		<option value="C013-A11">C013-A11</option>
 	</select>
-		<button class="btn btn-outline-warning" style="float:left;" type="submit" value="filtrer">Filtrer</button>
+		<button class="btn btn-outline-warning btn-sm" style="float:left; margin-top:2%;" type="submit" value="filtrer"><i class="fas fa-filter"></i></button>
 	</form>
 	<div class="col md-4">
-		<a class="btn btn-success btn-add" href="{{path('addPoint')}}" value="add" type="submit">Ajouter</a>
+		<a class="btn btn-success btn-add btn-sm" href="{{path('addTournee')}}" value="add" type="submit"><i class="fas fa-plus"></i></a>
 	</div>	
 </div>
  
@@ -37,16 +39,16 @@
 		{% for tournee in tournees %}
 			<tr>
 				<td scope="row">{{ tournee.id_tournee }}</td>
-				<td> {{ tournee.secteur }} </td>
-				<td>{{ tournee.marque }}</td>
-				<td>{{ tournee.equipe }}</td>
-				<td>{{ tournee.designation }}</td>
-                <td>{{ tournee.qte_realise }}</td>
+				<td class="th-sm" style="text-align: center;"> {{ tournee.secteur }} </td>
+				<td class="th-sm" style="text-align: center;">{{ tournee.marque }}</td>
+				<td class="th-sm" style="text-align: center;">{{ tournee.equipe }}</td>
+				<td class="th-sm" style="text-align: center;">{{ tournee.designation }}</td>
+                <td class="th-sm" style="text-align: center;">{{ tournee.qte_realise }}</td>
                 
 				<td class="th-sm">
 					<div class="btn-group" style="float: right;">
 						<a class="btn btn-sm btn-warning" href=""><i class="fa fa-edit"></i></a>
-						<a class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+						<a class="btn btn-sm btn-danger" href="{{path('deleteTournee', {id : tournee.id_tournee})}}"><i class="fas fa-trash-alt"></i></a>
                         <a class="btn btn-sm btn-primary" href="{{path('tourneeDetail', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
 					</div>
 				</td>

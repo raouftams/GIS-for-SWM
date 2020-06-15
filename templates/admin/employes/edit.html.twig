@@ -1,0 +1,95 @@
+{% extends "base.html.twig" %}
+{% block title %}Modifier employé{%endblock%}
+{% block header %}Modifier employé {%endblock%}
+{% block body %}
+{% if result != null %}
+<div class="alert alert-success">
+  {{result}}
+</div>
+{% endif %}
+<form method="POST" action="{{path('editEmploye', {matricule: employe.matricule})}}">
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="inputCode">Matricule: </label>
+      <input type="text" class="form-control" name="matricule" value="{{employe.matricule}}">
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputLibelle">Nom: </label>
+      <input type="text" class="form-control" name="nom"  value="{{employe.nom}}">
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputLibelle">Prénom: </label>
+      <input type="text" class="form-control" name="prenom" value="{{employe.prenom}}">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+        <label for="inputLatitude">Adresse:</label>
+        <input type="text" name="adresse" class="form-control"  value="{{employe.adresse}}">
+      </div>
+    <div class="form-group col-md-4">
+      <label for="inputLatitude">Date de naissance:</label>
+      <input type="date" name="date_naissance" class="form-control"  value="{{employe.date_naissance}}">
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputLongitude">Téléphone:</label>
+      <input type="text" name="telephone" class="form-control"  value="{{employe.telephone}}">
+    </div>
+  </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Grade:</label>
+            <input type="text"  class="form-control" name="grade"  value="{{employe.grade}}">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Fonction</label>
+            <select name="fonction" class="form-control">
+                <option value="Chauffeur">Chauffeur</option>
+                <option value="Eboueur">Eboueur</option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputAddress">Heure de pause: </label>
+          <input type="time" class="form-control" name="heure_pause"  value="{{employe.heure_pause}}">
+      </div>
+        
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="inputAddress">Date début contrat: </label>
+        <input type="date" class="form-control" name="debut_contrat"  value="{{employe.debut_contrat}}">
+      </div>
+        <div class="form-group col-md-4">
+            <label for="inputAddress">Date fin contrat:</label>
+            <input type="date" class="form-control" name="fin_contrat" value="{{employe.fin_contrat}}">
+        </div>
+        
+        <div class="form-group col-md-4">
+            <label for="inputAddress">equipe:</label>
+            <select name="equipe" id="etat" class="form-control">
+                <option value="1">1</option>
+            </select>
+        </div>         
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label>Date début congé:</label>
+        <input type="date" name="debut_conge" class="form-control" value="{{employe.debut_conge}}">
+      </div>
+      <div class="form-group col-md-4">
+        <label>Date fin congé:</label>
+        <input type="date" name="fin_conge" class="form-control" value="{{employe.fin_conge}}">
+      </div>
+    </div>
+  <button type="submit" class="btn btn-primary">Sauvegarder</button>
+</form>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var employe = '{{employe|json_encode}}';
+        document.getElementById("fonction").value = employe.fonction;
+        document.getElementById("equipe").value = employe.equipe;
+    </script>
+{% endblock %}

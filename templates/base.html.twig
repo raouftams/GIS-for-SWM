@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
 		<link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
 		<!-- Font Awesome -->
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
@@ -15,55 +15,52 @@
 		<link rel="stylesheet" href="{{asset('css/main.css')}}">
         {% block stylesheets %}{% endblock %}
     </head>
-    <body style="background-color: rgb(238, 236, 236);">
-        <div class="navbar navbar-dark fixed-top bg-dark">
-			<a class="navbar-brand" href="#">Dashboard</a>
-			<a href="{{path('logout')}}" style="float: right;">
-				<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-					width="25" height="25"
-					viewBox="0 0 172 172"
-					style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#e74c3c"><path d="M86,21.33203l-3.86328,3.69531l-21.5,21.5l7.72656,7.72656l12.26172,-12.26172v65.50781h10.75v-65.50781l12.26172,12.26172l7.72656,-7.72656l-21.5,-21.5zM48.87891,33.25781c-16.56592,11.67383 -27.37891,30.96924 -27.37891,52.74219c0,35.56739 28.93262,64.5 64.5,64.5c35.56739,0 64.5,-28.93261 64.5,-64.5c0,-21.77295 -10.81299,-41.06836 -27.37891,-52.74219l-6.21484,8.73438c13.81543,9.72119 22.84375,25.7832 22.84375,44.00781c0,29.75146 -23.99854,53.75 -53.75,53.75c-29.75146,0 -53.75,-23.99854 -53.75,-53.75c0,-18.22461 9.02832,-34.26562 22.84375,-44.00781z"></path></g></g>
-				</svg>
-			</a>
-		</div>
-        <div class="row1" id="navbar">
+    <body style="background-color: #f2f2f2;">
+        
+
+		<div class="row1" id="navbar">
           	<div class="col-xs-2">
-            	<nav class="aside bg-dark">
-					<hr>
+            	<nav class="aside " >
+					<h2 class="page-title" style="color:white;"><b>{% block header %} {%endblock%}</b></h2>
+					
 					<div class="btn-group-vertical" style="width: 96%;">
-						
-					<a class="btn btn-dark" href="{{path('dashboard')}}" style="padding-left: 0px;">
+			
+					<a class="btn-menu" href="{{path('dashboard')}}" style="padding-left: 0px; ">
 						<i class="fas fa-tachometer-alt"></i>
-						 	&nbsp; Home <span class="sr-only">(current)</span>
+						 	&nbsp;<b> Home </b><span class="sr-only">(current)</span>
 					</a> 
 
-					<a class="btn btn-dark" style="padding-left: 0px;" href="{{path('charts')}}">
+					<a class="btn-menu" style="padding-left: 0px;" href="{{path('charts')}}">
 						<i class="far fa-chart-bar"></i>
-						&nbsp; Chart 
+						&nbsp; <b> Chart </b>
 					</a> 
 
-					<a class="btn btn-dark dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;">
+					<a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;color:white; ">
 						<i class="fas fa-table"></i>
-						&nbsp; Tables
+						&nbsp; <b>Tables</b>
 					</a>
                     	<div class="collapse" id="submenu1" aria-expanded="false" style="width: 100%;">
 							<ul class="flex-column pl-2 nav">
-								<a class="nav-item md btn btn-light" href="{{path('pointsIndex')}}"><small>Points</small></a>
-								<a class="nav-item btn btn-light" href="{{path('vehiclesIndex')}}"><small>Véhicules</small></a>
-								<a class="nav-item btn btn-light" href="{{path('bacsIndex')}}"><small>Bacs</small></a>
+								<a class="nav-item md btn-sub-menu" href="{{path('tournees')}}"><small>Tournees</small></a>
+								<a class="nav-item md btn-sub-menu" href="{{path('pointsIndex')}}"><small>Points</small></a>
+								<a class="nav-item btn-sub-menu" href="{{path('vehiclesIndex')}}"><small>Véhicules</small></a>
+								<a class="nav-item btn-sub-menu" href="{{path('bacsIndex')}}"><small>Bacs</small></a>
+								<a class="nav-item btn-sub-menu" href="{{path('employesIndex')}}"><small>Employés</small></a>
 							</ul>
 						</div>
 						
-					<a class="btn btn-dark" href="{{path('maps')}}" style="padding-left: 0px;">
+					<a class="btn-menu" href="{{path('maps')}}" style="padding-left: 0px;">
 						<i class="fas fa-map-marked-alt"></i>
-						&nbsp; Maps 
+						&nbsp; <b>Maps</b> 
 					</a> 
-
-					<a class="btn btn-dark" style="padding-left: 0px;">
+					{% if is_granted("ROLE_ADMIN")%}
+					<a class="btn-menu" style="padding-left: 0px;" href="{{path('analyseVrp')}}">
 						<i class="fas fa-edit"></i>
-						&nbsp; Form 
+						&nbsp; <b>Analyse </b>
 					</a>
-					<a class="btn btn-dark" href="">users</a>
+					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>users</b></a>
+					{% endif %}
+					<a class="btn-menu" href="{{path('logout')}}"><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</a>
 					</div>
 				</nav>
 			</div>
