@@ -55,11 +55,11 @@ class VRPController extends AbstractController{
             $geometry=["x"=>$geo['coordinates'][0],"y"=>$geo['coordinates'][1]];
             unset($point['geojson']);
             $attributes = [
-                "DeliveryQuantities" => $point['quantited'],
+                "PickupQuantities" => $point['volumetota'],
                 "Name" => $point['code_point'],
                 "ServiceTime" => 4,
-                "TimeWindowStart1" => $point["debut_fenetre_temps"],
-                "TimeWindowEnd1" => $point["fin_fenetre_temps"],
+                "TimeWindowStart1" => $point["debut_fenetre_temps1"],
+                "TimeWindowEnd1" => $point["fin_fenetre_temps1"],
                 "MaxViolationTime1" => 0
             ];
             $feature = ["geometry"=>$geometry, "attributes"=>$attributes];
@@ -127,17 +127,16 @@ class VRPController extends AbstractController{
                 $attributes = [
                     "Name"=>"Truck_".$j,
                     "StartDepotName"=>"Parc Babez",
-                    "EndDepotName"=>"Parc Babez",
-                    "StartDepotServiceTime"=>60,
-                    "EarliestStartTime"=>1355212800000,
+                    "EndDepotName"=>"CET CORSO",
+                    "EarliestStartTime"=>1355209200000,
                     "LatestStartTime"=>1355212800000,
-                    "Capacities"=> "".$vehicle['volume']*1000 ."",
+                    "Capacities"=> "".$vehicle['volume']*1250 ."",
                     "CostPerUnitTime"=>0.2,
                     "CostPerUnitDistance"=>1.5,
-                    "MaxOrderCount"=>30,
-                    "MaxTotalTime" => 360,
-                    "MaxTotalTravelTime" => 120,
-                    "MaxTotalDistance" => 80
+                    "MaxOrderCount"=>60,
+                    "MaxTotalTime" => 500,
+                    "MaxTotalTravelTime" => 500,
+                    "MaxTotalDistance" => 500
                   ];
                 $feature = ["attributes"=>$attributes];
                 array_push($features, $feature);
@@ -147,58 +146,95 @@ class VRPController extends AbstractController{
         $featureCollection = ["features"=>$features];
 		return new Response(json_encode($featureCollection));
     }
-       
+    
+    /**
+     * @Route("/dashboard/maps/VRP/routeRenewals", name="routesRenew")
+     */
+    public function routeRenewals(){
+        $features =[];
+        for ($i=1; $i <= 10 ; $i++) { 
+            $attributes = [
+                "DepotName" => "CET CORSO",
+                "RouteName" => "Truck_".$i,
+                "ServiceTime" => 20
+            ];
+            $feature = ["attributes"=>$attributes];
+            array_push($features, $feature);
+        }
+        $featureCollection = ["features"=>$features];
+        return new Response(json_encode($featureCollection));
+    }
+
+    public function breaks(){
+        $features =[];
+        for ($i=1; $i <= 10 ; $i++) { 
+            $attributes = [
+                "RouteName" => "Truck_".$i,
+                "Precedence" => 1,
+                "ServiceTime" => 60,
+                "TimeWindowStart" => 1355223600000,
+                "TimeWindowEnd" => 1355227200000,
+                "MaxViolationTime" => 0
+            ];
+            $feature = ["attributes"=>$attributes];
+            array_push($features, $feature);
+        }
+        $featureCollection = ["features"=>$features];
+        return new Response(json_encode($featureCollection));
+    }
+
     /**
 	 * @Route("/dashboard/maps/VRP", name="vrpService")
 	 */
     public function index(){
+        set_time_limit(0);
         $features = [];
-        $sleep = 10;
+
         if ($this->orders == null or $this->depots == null or $this->routes == null) {
             $this->orders = $this->getOrders()->getContent();
             $this->depots = $this->getDepots()->getContent();
             $this->routes = $this->getRoutes()->getContent();
-            $sleep = 20;
         }
 
+        $routeRenewals = $this->routeRenewals()->getContent();
+        $breaks = $this->breaks()->getContent();
         $url = 'https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob?';
-        $token = 'jQfj8wwN4SX1G6qogf9gsmxSgc82_K-WggDHwl7EttwXZllwDlIkXhrMhv1r_31Q-13jibKaEjsITUhnqc7YaECQ6E_bhBJ-GOOIX-oPyiQTD_qpWrFBor9IUTS-aFEGry6Xx_2vfZhqa4kecIWvoA';
-
+        $token = 'e6Jpx5wGJALBa3pvl3QhkAM56l6RX9GGiR_8aUmJo3V-kvKwnKV733dYLZM4YLJ7EdVJU_JijITCvp_f7dKPBl1gOfzImNxMNJQnTM-TVHZmGg0vkZ7k5rJ2MapPkYx6U_fcqn6Yx_gl75TktvH8UA..';
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, 'orders='. str_replace("'","",$this->orders) . '&depots='. str_replace("'","",$this->depots) . '&routes='. str_replace("'","",$this->routes) . '&time_units=Minutes&distance_units=Kilometers&uturn_policy=NO_UTURNS&populate_directions=true&directions_language=en&default_date=1355212800000&f=json&token='.$token.'');
+        curl_setopt($curl, CURLOPT_POSTFIELDS, 'orders='. str_replace("'","",$this->orders) . '&depots='. str_replace("'","",$this->depots) . '&routes='. str_replace("'","",$this->routes) . '&route_renewals='. str_replace("'","",$routeRenewals) . '&breaks='. str_replace("'","",$breaks) .'&time_units=Minutes&distance_units=Kilometers&uturn_policy=NO_UTURNS&populate_directions=true&directions_language=en&default_date=1355212800000&f=json&token='.$token.'');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($curl);
         curl_close($curl);
         $jobId = json_decode($response,true)['jobId'];
         
-        sleep($sleep);
-
-        //Request for routes
-        $routesUrl = "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/jobs/".$jobId."/results/out_routes?";
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $routesUrl);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, 'f=json&token='.$token.'');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl);
-        curl_close($curl);
+        sleep(50);
         
-        $result = json_decode($response,true);
+            //Request for routes
+            $routesUrl = "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/jobs/".$jobId."/results/out_routes?";
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $routesUrl);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, 'f=json&token='.$token.'');
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($curl);
+            curl_close($curl);
+            $result = json_decode($response,true);
+            
         
         $features = [];
-        foreach($result['value']['features'] as $row){
-            $type = "MultiLineString";
-            if(array_key_exists('geometry',$row)){
-                $coordinates=$row['geometry']['paths'];
-                $geometry = ['type' => $type, 'coordinates' => $coordinates];
-                $feature = ["type"=>"Feature", "geometry"=>$geometry, "properties"=>$row['attributes']];
-                array_push($features, $feature);
+            foreach($result['value']['features'] as $row){
+                $type = "MultiLineString";
+                if(array_key_exists('geometry',$row)){
+                    $coordinates=$row['geometry']['paths'];
+                    $geometry = ['type' => $type, 'coordinates' => $coordinates];
+                    $feature = ["type"=>"Feature", "geometry"=>$geometry, "properties"=>$row['attributes']];
+                    array_push($features, $feature);
+                }
             }
-          }
-          $featureCollection = ["type"=>"FeatureCollection", "features"=>$features];
-
+            $featureCollection = ["type"=>"FeatureCollection", "features"=>$features];
+        
           $stopsUrl = "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/jobs/".$jobId."/results/out_stops?";
                    
           $curl = curl_init();

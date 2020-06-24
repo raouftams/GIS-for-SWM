@@ -24,6 +24,7 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+	
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
 
@@ -67,9 +68,127 @@
 		</div>
     </nav>
 	
+	<div id="map"></div>
 	
-    <div id="map"></div>
+	<div class="analysis">
+			<div class="vrp-form" id="vrpDiv">
+				<h3 style="text-align: center;" class="text-info">Problème de tournée de véhicules</h3>
+				<hr>
+				<div class="btn-group" style="width: 100%;">
+					<button class="btn btn-outline-info" id="points-click">Points</button>
+					<button class="btn btn-outline-info" id="depots-click">Depôts</button>
+					<button class="btn btn-outline-info" id="vehicles-click">Véhicules</button>
+				</div>
+				<div id="les-ordres" >
+					<form onsubmit="select(); return false;" id="ordersForm">
+						<fieldset>
+						<legend>Ordres:</legend>
+						<div class="form-group col-md-10">
+							<label for="Couche">Couche</label>
+							<select class="form-control Depot" id="Coucheo">
+								<option value="" disabled selected>Point de collecte</option>
+							</select>
+							<button class="btn btn-warning btn-sm">+</button>
+							</div>                     
+						</fieldset>
+					</form>
+				</div>   
+				
+
+				<div id="les-depots" style="display: none;">	
+					<form id="depotsForm">
+						<fieldset>
+						<legend>Depot:</legend>
+						<div class="form-group col-md-10">
+							<label for="Couche">Couche:</label>
+							<select class="form-control Depot" id="Couche">
+							{% for depot in depots %}
+								<option value="{{depot.code}}"  selected>{{depot.designation}}</option>
+							{% endfor %}
+							</select>
+							</div>
+
+							<div class="form-group col-md-10">
+								<label for="hd">Heure de debut </label>
+								<input type="time" id="hd" class="form-control Depot" placeholder="Select time">
+							</div>
+							<div class="form-group col-md-10">
+								<label for="hf">Heure de fin </label>
+								<input type="time" id="hf" class="form-control Depot" placeholder="Select time" >
+							</div>
+
+							<button type="button" class="btn btn-warning" onclick="AjouterDepot()">+</button>
+						</fieldset>
+					</form>
+				</div>
+
+				<div id="les-vehicules" style="display: none;">
+					<form id="vehicleForm">
+						<fieldset>
+							<legend>Vehicules</legend>
+							<div class="form-group col-md-10">
+								<label for="Volume">Volume</label>
+								<select class="form-control" id="Volume">
+								<option value="" disabled selected>Choix du Volume</option>
+								{% for vehicle in vehicles %}
+									<option value="{{vehicle.volume}}">Benne {{vehicle.volume}}m&#179;</option>
+								{% endfor %}
+								</select>
+							</div>
+							<div class="form-group col-md-10">
+								<label for="DepotDepart">Depot de depart:</label>
+								<select class="form-control" id="DepotDepart">
+								<option value="" disabled selected>Choix du Depot</option>
+								</select>
+							</div>
+							<div class="form-group col-md-10">
+								<label for="DepotFin">Depot de fin de tournée </label>
+								<select class="form-control" id="DepotFin">
+								<option value="" disabled selected>Choix du Depot</option>
+								</select>
+							</div>
+							<div class="form-group col-md-10">
+								<label for="HeureDebut">Heure de debut </label>
+								<input type="time" id="HeureDebut" class="form-control" placeholder="Select time">
+							</div>
+							<div class="form-group col-md-10">
+								<label for="HeureFin">Heure de fin </label>
+								<input type="time" id="HeureFin" class="form-control" placeholder="Select time">
+							</div>
+							<div class="form-group col-md-10">
+								<label class="col-form-label" for="ChargeHoraire">Charge horaire max</label>
+								<input type="time" id="ChargeHoraire" class="form-control" placeholder="Select time">
+							</div>
+							<div class="form-group col-md-10">
+								<label class="col-form-label" for="NbrMaxOrdres">Nombre max d'ordres a visiter</label>
+								<input type="number" min="0" class="form-control" placeholder="0" id="NbrMaxOrdres">
+							</div>
+							<div class="form-group col-md-10">
+								<label class="col-form-label" for="costUnitTime">Coûts par une unité de temps:</label>
+								<input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitTime">
+							</div>
+							<div class="form-group col-md-10">
+								<label class="col-form-label" for="costUnitDistance">Coûts par une unité de distance:</label>
+								<input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitDistance">
+							</div>
+							<button type="button" class="btn btn-warning"onclick="AjouterVehicule()">+</button>
+						</fieldset>
+					</form>
+				</div>
+				<br>
+				<button class="btn btn-info btn-sm" style="border: 1px solid white; border-radius: 50px;"><i class="fas fa-chevron-right"></i></button>
+				<div id="btn-analyse" style="text-align:center;">
+					<button type="button" id="btn-analyse" class="btn btn-info btn-lg" style="width: 70%;" onclick="makeRequest()" >ANALYSER</button>      
+				</div>
+				<div id="btn-save-recalculate" style="display: none; text-align: center;">
+					<button type="button" id="btn-save" class="btn btn-success" onclick="saveResult()" >Sauvegarder</button>
+					<button type="button" id="btn-recalculate" class="btn btn-warning" onclick="recalculate()" >Recalcul</button>
+					<a href="#popup-result"><button class="btn btn-unique" onclick="setDataToTable()" >Resultats</button></a>
+				</div>
+			</div>
+	</div>
 	
+
 	<div id="popup1" class="overlay">
 		<div class="popup">
 			<a class="close" href="#">&times;</a><br>
@@ -91,117 +210,33 @@
 		</div>
 	</div>
 
-	<div class="analysis">
-		<div class="vrp-form" id="vrpDiv">
-			<h3>Analyse Vrp</h3>
-			<hr>
-			<form onsubmit="select(); return false;" id="ordersForm">
-				<fieldset>
-				<legend>Ordres:</legend>
-				<div class="form-group">
-					<label for="Couche">Couche</label>
-					<select class="form-control Depot" id="Coucheo">
-						<option value="" disabled selected>Point de collecte</option>
-					</select>
-					<button class="btn btn-warning btn-sm">+</button>
-					</div>                     
-				</fieldset>
-			</form>   
-			<hr> 
-			<form id="depotsForm">
-				<fieldset>
-				<legend>Depot:</legend>
-				<div class="form-group">
-					<label for="Couche">Couche:</label>
-					<select class="form-control Depot" id="Couche">
-					{% for depot in depots %}
-						<option value="{{depot.code}}"  selected>{{depot.designation}}</option>
-					{% endfor %}
-					</select>
-					</div>
-					
-					<div class="form-group">
-					<label for="hd">Heure de debut </label>
-					<input type="time" id="hd" class="form-control Depot" placeholder="Select time">
-					</div>
-					<div class="form-group">
-					<label for="hf">Heure de fin </label>
-					<input type="time" id="hf" class="form-control Depot" placeholder="Select time" >
-					</div>
-					
-					<button type="button" class="btn btn-warning" 
-					onclick="AjouterDepot()"
-					>+</button>
-				</fieldset>
-				</form>
-				<hr>
-				<form id="vehicleForm">
-				<fieldset>
-					<legend>Vehicules</legend>
-					<div class="form-group">
-						<label for="Volume">Volume</label>
-						<select class="form-control" id="Volume">
-						<option value="" disabled selected>Choix du Volume</option>
-						{% for vehicle in vehicles %}
-							<option value="{{vehicle.volume}}">Benne {{vehicle.volume}}m&#179;</option>
-						{% endfor %}
-						</select>
-					</div>
-					<div class="form-group">
-						<label for="DepotDepart">Depot de depart:</label>
-						<select class="form-control" id="DepotDepart">
-						<option value="" disabled selected>Choix du Depot</option>
+	<div id="popup-result" class="overlay">
+		<div class="popup" style="width: 80%;">
+			<h3 class="text-info">Résultats de l'analyse</h3>
+			<a class="close" href="#">&times;</a><br>
+			<div class="content" id="content">
+				<table class="table">
+					<thead >
+						<th>Véhicule</th>
+						<th>Nombre d'ordres</th>
+						<th>Nombre de tournées</th>
+						<th>Temps total (en Min)</th>
+						<th>Distance totale (en Km)</th>
+						<th>Heure début</th>
+						<th>Début secteur</th>
+						<th>Fin secteur</th>
+						<th>Heure Fin</th>
+						<th>Quantité déchets</th>					
+					</thead>
+					<tbody id="result-table">
 						
-						</select>
-					</div>
-					<div class="form-group">
-						<label for="DepotFin">Depot de fin de tournée </label>
-						<select class="form-control" id="DepotFin">
-						<option value="" disabled selected>Choix du Depot</option>
-						</select>
-					</div>
-					
-					<div class="form-group">
-						<label for="HeureDebut">Heure de debut </label>
-						<input type="time" id="HeureDebut" class="form-control" placeholder="Select time">
-					</div>
-					<div class="form-group">
-						<label for="HeureFin">Heure de fin </label>
-						<input type="time" id="HeureFin" class="form-control" placeholder="Select time">
-					</div>
-					<div class="form-group">
-						<label class="col-form-label" for="ChargeHoraire">Charge horaire max</label>
-						<input type="time" id="ChargeHoraire" class="form-control" placeholder="Select time">
-					</div>
-					<div class="form-group">
-						<label class="col-form-label" for="NbrMaxOrdres">Nombre max d'ordres a visiter</label>
-						<input type="number" min="0" class="form-control" placeholder="0" id="NbrMaxOrdres">
-					</div>
-					<div class="form-group">
-						<label class="col-form-label" for="costUnitTime">Coûts par une unité de temps:</label>
-						<input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitTime">
-					</div>
-					<div class="form-group">
-						<label class="col-form-label" for="costUnitDistance">Coûts par une unité de distance:</label>
-						<input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitDistance">
-					</div>
-					
-					<button type="button" class="btn btn-warning"
-					onclick="AjouterVehicule()">+</button>
-					
-				</fieldset>
-				</form>
-				<hr>
-				<br>
-				<div id="btn-analyse">
-					<button type="button" id="btn-analyse" class="btn btn-info btn-lg" onclick="makeRequest()" >ANALYSER</button>      
-				</div>
-				<div id="btn-save-recalculate" style="display: none;">
-					<button type="button" id="btn-save" class="btn btn-success" onclick="saveResult()" >Sauvegarder</button>
-					<button type="button" id="btn-recalculate" class="btn btn-warning" onclick="recalculate()" >Recalcul</button>
-				</div>
+					</tbody>
+				</table>
+				
+			</div>
 		</div>
-    </div>
+	</div>
+
 
 	<div id="loading-image"></div>
 
@@ -211,7 +246,7 @@
 	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
 	L.esri.basemapLayer('Topographic').addTo(map);
 	
-    // retourne code hex d'un coulour pour les routes obtenues avec vrp
+    // retourne code hex d'une couleur pour les routes obtenues avec vrp
 	function getRouteColor(r){
 		return r == 1 ? '#ff0000':
 				r == 2 ? '#ffa500':
@@ -379,9 +414,9 @@
                     window.i++;
                 }
 				var result = JSON.parse(response);
-                var routes = result.routes;
+                window.routes = result.routes;
 				window.stops = result.stops;
-                window.lyrRoutes = L.geoJSON(routes.features, {
+                window.lyrRoutes = L.geoJSON(window.routes.features, {
                     onEachFeature: onEachFeature,
                     }).addTo(map);
 				
@@ -389,11 +424,13 @@
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
             {
-              alert('Error: ' +  errorThrown);
+			  alert('Error: ' +  errorThrown);
+			  $('#loading-image').hide();
             }
         });
     }
 	
+	// fonction de mise à jour des données des points de collecte selon les résultat du VRP
 	function saveResult(){
 		$('#loading-image').show();
 
@@ -416,9 +453,69 @@
 			}
 		})
 	}
+
+	function setDataToTable(){
+		var body = document.getElementById("result-table");
+		$('#result-table').empty();
+		 
+		window.routes.features.forEach(function(obj){
+			var qte = 0;
+			var max = 0;
+			var startTime = 0, endTime = 0;
+			window.stops.features.forEach(function (order){
+				if(obj.properties.Name == order.properties.RouteName){
+					qte = qte + Number(order.properties.PickupQuantities);
+					if(order.properties.Sequence == 2){
+						startTime = (new Date(order.properties.ArriveTime)).toString().split(" ")[4];
+					}else{
+						if(order.properties.Sequence == obj.properties.OrderCount){
+							endTime = new Date(order.properties.DepartTime).toString().split(" ")[4];
+						}
+					}
+				}
+			});
+			var tr = document.createElement('tr');
+			var td = document.createElement('td');
+			td.appendChild( document.createTextNode(obj.properties.Name));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(obj.properties.OrderCount));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(obj.properties.RenewalCount+1));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(Math.round(obj.properties.TotalTime)));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(Math.round(obj.properties.TotalDistance)));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode((new Date(obj.properties.StartTime)).toString().split(" ")[4]));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(startTime));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(endTime));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode((new Date(obj.properties.EndTime)).toString().split(" ")[4]));
+			tr.appendChild(td);
+			
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(qte));
+			tr.appendChild(td);
+			
+			
+			body.appendChild(tr);
+		});
+		
+	}
 </script>
 
 <script>
+	
 	
 	function recalculate(){
 		map.removeLayer(window.lyrRoutes);
@@ -426,12 +523,13 @@
 		$('#btn-analyse').show();
 	}
 
+	// get point's time windows
 	function getPointCode(code){
 		window.code = code;
 		window.points.features.forEach(function(point){
 			if(point.properties.code_point == code){
-				var dateDebut = new Date(point.properties.debut_fenetre_temps);
-				var dateFin = new Date(point.properties.fin_fenetre_temps);
+				var dateDebut = new Date(point.properties.debut_fenetre_temps1);
+				var dateFin = new Date(point.properties.fin_fenetre_temps1);
 				var dft = dateDebut.toString().split(" ")[4];
 				var fft = dateFin.toString().split(" ")[4];
 				document.getElementById("debut_fenetre_temps").value = dft;
@@ -440,6 +538,7 @@
 		});
 	}
 
+	// save time windows of a point in database
 	function savePointData(){
 		var data = JSON.stringify({
 			code_point: window.code,
@@ -462,6 +561,29 @@
 		});
 	}
 
+</script>
+
+<script>
+	//UI script
+	
+	$("#points-click").click(function(){
+		$("#les-depots").hide();
+		$("#les-vehicules").hide();
+		$("#les-ordres").show();
+	});
+
+	$("#depots-click").click(function(){
+		$("#les-ordres").hide();
+		$("#les-vehicules").hide();
+		$("#les-depots").show();
+	});
+
+	$("#vehicles-click").click(function(){
+		$("#les-depots").hide();
+		$("#les-ordres").hide();
+		$("#les-vehicules").show();
+	});
+		
 </script>
 </body>
 </html>
