@@ -211,22 +211,27 @@
 	</div>
 
 	<div id="popup-result" class="overlay">
-		<div class="popup" style="width: 80%;">
+		<div class="popup" style="width: 90%;">
 			<h3 class="text-info">Résultats de l'analyse</h3>
 			<a class="close" href="#">&times;</a><br>
 			<div class="content" id="content">
 				<table class="table">
 					<thead >
 						<th>Véhicule</th>
-						<th>Nombre d'ordres</th>
-						<th>Nombre de tournées</th>
-						<th>Temps total (en Min)</th>
-						<th>Distance totale (en Km)</th>
-						<th>Heure début</th>
-						<th>Début secteur</th>
-						<th>Fin secteur</th>
+						<th>Nombre de points</th>
+						<th>Temps total (Min)</th>
+						<th>Distance totale (Km)</th>
+						<th>Heure démarrage parc</th>
+						<th>Début collecte</th>
+						<th>Fin collecte</th>
+						<th>Arrivé au cet</th>
+						<th>Départ de cet</th>
+						<th>Temps transport</th>
+						<th>Distance transport</th>
+						<th>Temps collecte</th>
+						<th>Distance collecte</th>
+						<th>Quantité déchets (Tonne)</th>
 						<th>Heure Fin</th>
-						<th>Quantité déchets</th>					
 					</thead>
 					<tbody id="result-table">
 						
@@ -416,6 +421,7 @@
 				var result = JSON.parse(response);
                 window.routes = result.routes;
 				window.stops = result.stops;
+				window.plan = result.plan;
                 window.lyrRoutes = L.geoJSON(window.routes.features, {
                     onEachFeature: onEachFeature,
                     }).addTo(map);
@@ -434,7 +440,7 @@
 	function saveResult(){
 		$('#loading-image').show();
 
-		var data = JSON.stringify({stops: window.stops});
+		var data = JSON.stringify({plan: window.plan});
 		$.ajax({
 			url: "{{path('saveVrpResults')}}",
 			type: 'POST',
@@ -457,59 +463,68 @@
 	function setDataToTable(){
 		var body = document.getElementById("result-table");
 		$('#result-table').empty();
-		 
-		window.routes.features.forEach(function(obj){
-			var qte = 0;
-			var max = 0;
-			var startTime = 0, endTime = 0;
-			window.stops.features.forEach(function (order){
-				if(obj.properties.Name == order.properties.RouteName){
-					qte = qte + Number(order.properties.PickupQuantities);
-					if(order.properties.Sequence == 2){
-						startTime = (new Date(order.properties.ArriveTime)).toString().split(" ")[4];
-					}else{
-						if(order.properties.Sequence == obj.properties.OrderCount){
-							endTime = new Date(order.properties.DepartTime).toString().split(" ")[4];
-						}
-					}
+		var i = 1;
+		window.plan.forEach(function(obj){
+			
+			nbRotations = obj.rotations.length;
+			obj.rotations.forEach(function(rotation){
+				var tr = document.createElement('tr');
+				tr.setAttribute("rowspan", nbRotations);
+				if(i%2 == 0){
+				}else{
+					tr.setAttribute("class","bg-light");
 				}
+				var td = document.createElement('td');
+				td.appendChild( document.createTextNode(obj.vehicle));
+				tr.appendChild(td);
+
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode(rotation.nombre_points));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode(Math.round(rotation.temps_total)));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode(Math.round(rotation.distance_totale)));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode((new Date(rotation.demarrage_parc)).toString().split(" ")[4]));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode((new Date(rotation.debut_secteur)).toString().split(" ")[4]));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode((new Date(rotation.fin_secteur)).toString().split(" ")[4]));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode((new Date(rotation.arrive_cet)).toString().split(" ")[4]));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode((new Date(rotation.depart_cet)).toString().split(" ")[4]));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode(rotation.temps_transport.toFixed(2)));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode(rotation.distance_transport.toFixed(2)));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode(rotation.temps_collecte.toFixed(2)));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode(rotation.distance_collecte.toFixed(2)));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode(rotation.quantite_dechets));
+				tr.appendChild(td);
+				td = document.createElement('td');
+				td.appendChild( document.createTextNode((new Date(rotation.fin_rotation)).toString().split(" ")[4]));
+				tr.appendChild(td);
+				body.appendChild(tr);
 			});
-			var tr = document.createElement('tr');
-			var td = document.createElement('td');
-			td.appendChild( document.createTextNode(obj.properties.Name));
-			tr.appendChild(td);
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode(obj.properties.OrderCount));
-			tr.appendChild(td);
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode(obj.properties.RenewalCount+1));
-			tr.appendChild(td);
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode(Math.round(obj.properties.TotalTime)));
-			tr.appendChild(td);
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode(Math.round(obj.properties.TotalDistance)));
-			tr.appendChild(td);
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode((new Date(obj.properties.StartTime)).toString().split(" ")[4]));
-			tr.appendChild(td);
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode(startTime));
-			tr.appendChild(td);
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode(endTime));
-			tr.appendChild(td);
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode((new Date(obj.properties.EndTime)).toString().split(" ")[4]));
-			tr.appendChild(td);
+			i = i+1;
 			
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode(qte));
-			tr.appendChild(td);
-			
-			
-			body.appendChild(tr);
-		});
+		});	
 		
 	}
 </script>
