@@ -301,7 +301,7 @@ class TourneeController extends AbstractController{
      */
     public function getRoute($id){
         $url = 'https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob?';
-        $token = '3VN9HYA-LxMwlLtS6LwcS2QPMQ9wvbgach9IMtHch_cicUlfYiMx4imbVOXT10AvnbqBL6YV5L-vfFq6GlPQrqFd5eu90YwkA1-UGWgqk65AX_W4GNMWvqoB_woBDpKnMnWGjWXue2_jN-RyzyaAUQ';    
+        $token = 'Y95DYK_uq3IALG1bMwOW1-CdPauYiYI4s1s7Hr4EaZlwMi2C9ZMxU45kraDjm2M89eY3hyk-Qgkmz6CvNQMRdqKy05wjjvSXkJXcrGssHo68IgTYuhe-3Jc6azTjVK85SrNSIgUmMY03kwa5iFXXTw';    
         $stops = $this->getStops($id)->getContent();
         $depots = $this->getVrpDepots($id)->getContent();
         $routes = $this->getVrpRoutes($id)->getContent();

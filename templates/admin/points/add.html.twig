@@ -1,46 +1,242 @@
-{% extends "base.html.twig" %}
-{% block title %}Ajouter point de collecte{%endblock%}
-{% block header %}Ajouter point de collecte {%endblock%}
-{% block body %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ajouter point de collecte</title>
+		<link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+		<!-- Google Fonts Roboto -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+		<!-- Material Design Bootstrap -->
+		<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+		<link rel="stylesheet" href="{{asset('css/main.css')}}">
+		<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
 
-<form method="POST" action="">
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputCode">Code</label>
-      <input type="text" class="form-control" id="inputCode" name="code">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputLibelle">Libelle</label>
-      <input type="text" class="form-control" id="inputLibelle" name="libelle">
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputLatitude">Latitude</label>
-      <input type="number" step="0.000000000000001" name="latitude" class="form-control" id="inputLatitude">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputLongitude">Longitude</label>
-      <input type="number" step="0.000000000000001" name="longitude" class="form-control" id="inputLongitude" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputAddress">Address</label>
-    <input type="text" class="form-control" name="adresse" id="inputAddress" placeholder="RN 05 COTE DOUZI 04">
-  </div>
-    <div class="form-group col-md-4">
-      <label for="inputSecteur">Secteur</label>
-      <select id="inputsecteur" name="secteur" class="form-control">
-        <option selected>Choose...</option>
-        <option value="C013-A11">C013-A11</option>
-      </select>
-    </div>
-    <div class="form-group">
-    <label for="inputAddress">activité</label>
-    <input type="text" class="form-control" name="activite" id="inputAddress" placeholder="artisanale, industriel">
-  </div>
-  </div>
-  <button type="submit" class="btn btn-primary">Sign in</button>
-</form>
+		<style>
+    	  .map {
+    	    height: 200px;
+    	    width: 100%;
+    	  }
+    	</style>
+    </head>
+    <body style="background-color: #f2f2f2;">
+        
 
-{% endblock %}
+		<div class="row1" id="navbar">
+          	<div class="col-xs-2">
+            	<nav class="aside " >
+					<h2 class="page-title" style="color:white;"><b>Ajouter point de collecte</b></h2>
+					
+					<div class="btn-group-vertical" style="width: 96%;">
+			
+					<a class="btn-menu" href="{{path('dashboard')}}" style="padding-left: 0px; ">
+						<i class="fas fa-tachometer-alt"></i>
+						 	&nbsp;<b> Home </b><span class="sr-only">(current)</span>
+					</a> 
+
+					<a class="btn-menu" style="padding-left: 0px;" href="{{path('charts')}}">
+						<i class="far fa-chart-bar"></i>
+						&nbsp; <b> Chart </b>
+					</a> 
+
+					<a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;color:white; ">
+						<i class="fas fa-table"></i>
+						&nbsp; <b>Tables</b>
+					</a>
+                    	<div class="collapse" id="submenu1" aria-expanded="false" style="width: 100%;">
+							<ul class="flex-column pl-2 nav">
+								<a class="nav-item md btn-sub-menu" href="{{path('tournees')}}"><small>Tournees</small></a>
+								<a class="nav-item md btn-sub-menu" href="{{path('pointsIndex')}}"><small>Points</small></a>
+								<a class="nav-item btn-sub-menu" href="{{path('vehiclesIndex')}}"><small>Véhicules</small></a>
+								<a class="nav-item btn-sub-menu" href="{{path('bacsIndex')}}"><small>Bacs</small></a>
+								<a class="nav-item btn-sub-menu" href="{{path('employesIndex')}}"><small>Employés</small></a>
+							</ul>
+						</div>
+						
+					<a class="btn-menu" href="{{path('maps')}}" style="padding-left: 0px;">
+						<i class="fas fa-map-marked-alt"></i>
+						&nbsp; <b>Maps</b> 
+					</a> 
+					{% if is_granted("ROLE_ADMIN")%}
+					<a class="btn-menu" style="padding-left: 0px;" href="{{path('analyseVrp')}}">
+						<i class="fas fa-edit"></i>
+						&nbsp; <b>Analyse </b>
+					</a>
+					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>users</b></a>
+					{% endif %}
+					<a class="btn-menu" href="{{path('logout')}}"><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</a>
+					</div>
+				</nav>
+			</div>
+        </div>
+        <div class="col-xs-9">
+          <div class="interface">
+            <div id="main_content">
+				<form method="POST" action="">
+					<div class="form-row">
+					  <div class="form-group col-md-6">
+						<label for="inputCode">Code</label>
+						<input type="text" class="form-control" id="inputCode" name="code">
+					  </div>
+					  <div class="form-group col-md-6">
+						<label for="inputLibelle">Libelle</label>
+						<input type="text" class="form-control" id="inputLibelle" name="libelle">
+					  </div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="inputAddress">Selectionner ou insérer une adresse</label>
+					  		<select name="select-adresse" id="adresse" class="form-control">
+								<option value="">Selectionner </option>
+						    </select>
+						</div>
+						<div class="form-group col-md-6">
+					  		<input type="text" class="form-control" style="margin-top: 6%;" name="adresse" id="inputAddress" placeholder="Insérer une adresse">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="inputSecteur">Secteur</label>
+							<select id="inputsecteur" name="secteur" class="form-control">
+							  <option selected>Choose...</option>
+							  <option value="C013-A11">C013-A11</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputAddress">activité</label>
+						<input type="text" class="form-control" name="activite" placeholder="artisanale, industriel">
+					</div>
+				  
+					<button type="submit" class="btn btn-primary">Ajouter</button>
+				  </form>
+              <div id="map" class="map"></div>
+            </div>
+          </div>
+        </div>
+        
+        <script>
+            function processAjaxData(response, urlPath){
+                document.getElementById("main_content").innerHTML = response.html;
+                document.title = response.pageTitle;
+                window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
+            }
+            window.onpopstate = function(e){
+                if(e.state){
+                    document.getElementById("main_content").innerHTML = e.state.html;
+                    document.title = e.state.pageTitle;
+                }
+            };
+
+		</script>
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<script src="{{asset('js/leaflet/leaflet.js')}}"></script>
+		<script src="{{asset('js/leaflet/esriservices/esri-leaflet.js')}}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+		<script src=" https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
+
+		<!-- jQuery -->
+		<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+		<!-- Bootstrap tooltips -->
+		<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+		<!-- Bootstrap core JavaScript -->
+		<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+		<!-- MDB core JavaScript -->
+		<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+		
+		<script type="text/javascript">
+
+		  	 //Instanciation d'une maps avec le fond topographiqe d'ESRI
+	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
+	L.esri.basemapLayer('Topographic').addTo(map);
+
+	// requete pour charger les points de collecte
+  	$.ajax({url:"{{path('getPoints')}}",
+		success: function(response){
+			var myIcon = L.icon({
+				iconUrl: '{{asset("img/leaflet/marker.png")}}',
+				iconSize: [30, 30],
+			});
+
+			function onEachFeature(feature, layer) {
+				var code = feature.properties.code_point;
+				var fonction = "getPointCode('code_point')";
+				fonction = fonction.replace("code_point", code);
+				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p><a href="#popup1"><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white">Modifier</button></a>');
+			}
+
+			window.points = JSON.parse(response);
+            Points = window.points;
+			window.lyrPoints = L.geoJSON(window.points, {
+				pointToLayer: function x(features, coordinates) {
+							return L.circleMarker(coordinates, {
+								color: 'black',
+								fillColor: 'black',
+								fillOpacity: 0.7,
+								radius: 5
+							});
+					},
+				onEachFeature: onEachFeature
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+	});
+
+	var drawPluginOptions = {
+        position: 'topright',
+        draw: {
+            Polygone: false,
+            polyline: false,
+            circle: false, // Turns off this drawing tool
+            rectangle: false,
+            marker: false
+        },
+        edit: false
+    };
+    var drawControl = new L.Control.Draw(drawPluginOptions);
+    map.addControl(drawControl);
+    var editableLayers = new L.FeatureGroup();
+    map.addLayer(editableLayers);
+
+    // gérer les dessin sur la map
+    map.on('draw:created', function(e) {
+        var type = e.layerType;
+		console.log(type);
+        var point = e.layer.getLatLng();
+		console.log(""+point.lat +","+point.lng +"");
+		editableLayers.addLayer(e.layer);
+		
+		$.ajax({
+			url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates",
+			type: "GET",
+			data: {f: 'json', location: ""+point.lng +","+point.lat +"", category:"education, food, parks and outdoors, hotel, Arts and Entertainment, Metro Station", token: "8ZZcyRvgH1RZjAyPojm4QBupawxGJM9hbvGOyoafpJ01HUnKQgGro0JQWuSA_SLoADkyz9LeNeszmTvR8GG7ikC0buvlq5K33ewMqlN846s-mk3R_Zh9oozDktdM4K5ykXfz7pWRC23bFx4EVYvgew..", outFields: "Palce_addr, PlaceName", maxLocations: 5, langCode: "fr", forStorage: true, featureTypes:"StreetAdresses"},
+			success: function(response){
+				console.log(response);
+				var selAdd = document.getElementById("adresse");
+				response.candidates.forEach(function(obj){
+					var opt = document.createElement("option");
+					opt.appendChild( document.createTextNode(obj.address));
+					opt.value = obj.address;
+					selAdd.appendChild(opt);
+				});		
+					
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+    });
+
+	
+			
+		</script>
+    </body>
+</html>
