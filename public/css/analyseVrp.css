@@ -1,9 +1,10 @@
 body{width: 100%;}
-		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 40px; width: 70%; float:left;}
-		.analysis{ border: 1px solid transparent; width: 28%; float: right; margin-top: 45px; margin-right: 15px;}
+		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 40px; width: 60%; float:left;}
+		.analysis{ border: 1px solid transparent; width: 38%; float: right; margin-top: 45px; margin-right: 15px; resize: both;}
 		.control{border: 1px solid transparent; position: sticky; }
 		.navbar {position: fixed;}
-		.btn-analyse{width: 100%; position: relative;}
+    .btn-analyse{width: 100%; position: relative;}
+    .analysis form {margin-left: 8px; }
 		#loading-image {
 			display: none;
 			position: fixed;

@@ -22,18 +22,39 @@ class SecteurTable extends Table{
 	 * @return boolean
 	 */
 	public function exist($code){
-		$result = $this->query('SELECT count(1) FROM "public".secteur where code = ?',[$code]);
-		if($result == 0){
+		$result = $this->query('SELECT count(1) as cpt FROM "public".secteurs where code = ?',[$code]);
+
+		if($result[0]["cpt"] == 0){
 			return false;
 		}
 		return true;
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getUsedSecteur(){
+		return $this->query('SELECT code, horaire, qtedechet, vehicule 
+		FROM "public".secteurs
+		WHERE vehicule  Is NOT NULL
+		');
+	}
+
+	/**
 	 * 
 	 */
 	public function add($fields){
-		return $this->create($fields);
+		$sql_parts = [];
+		$attributes = [];
+		$val = [];
+      	foreach ($fields as $k => $v) {
+			$sql_parts[] = "$k";
+			$val[] = "?";
+      		$attributes[] = $v;
+		}
+		$val = implode(',',$val);
+		$sql_part = implode(',', $sql_parts);
+		return $this->query("INSERT INTO {$this->table} ($sql_part) values ($val)", $attributes,true);
 	}
 
 

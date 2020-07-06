@@ -1,0 +1,37 @@
+{% extends "base.html.twig" %}
+{%block title %}Plan de collecte{% endblock %}
+{%block header %}Plan de collecte{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{asset('css/table.css')}}">
+
+{% endblock %}
+
+{%block body %}
+
+<h2 class="text-center">Plan de collecte</h2>
+<a class="btn btn-info" href="{{path('analyseVrp')}}">Nouveau plan</a>
+<div class="tableFixHead">
+	<table class="table">
+		<thead class="bg-primary text-white">
+            <th>Secteur</th>
+            <th>Matériel</th>
+            <th>Quantité prévue</th>
+            <th>Horaire</th>
+
+		</thead>
+		<tbody>
+		{% for d in data %}
+			<tr>
+				<td>{{d.secteur}}</td>
+                <td>{{d.vehicule}}</td>
+                <td>{{d.quantite_prevue}}</td>
+                <td>{{d.horaire}}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+  	</table>
+</div>
+
+
+{% endblock %}

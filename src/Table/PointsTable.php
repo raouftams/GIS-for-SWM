@@ -69,6 +69,18 @@ class PointsTable extends Table{
       return $this->query("UPDATE {$this->table} SET $sql_part WHERE code_point = ?", $attributes, true);
     }
 
+    public function updateAll($fields){
+      $sql_parts = [];
+      $attributes = [];
+      foreach ($fields as $k => $v) {
+        $sql_parts[] = "$k = ?";
+        $attributes[] = $v;
+      }
+      $sql_part = implode(',', $sql_parts);
+      return $this->query("UPDATE {$this->table} SET $sql_part", $attributes, true);
+    
+    }
+
     /**
      * @return boolean
      * cette fonction crée une geometry point à partir des cordonnées données

@@ -1,8 +1,9 @@
-.tableFixHead    { overflow-y: auto; height: 425px; }
-.tableFixHead thead th { position: sticky; top: 0;}
-/* Just common table stuff. Really. */
-table  { border-collapse: collapse; width: 100%;}
-
+.tableFixHead  { overflow-y: auto; height: 500px; }
+	.tableFixHead thead th { position: sticky; top: 0; }
+	
+	table  { border-collapse: collapse; width: 100%; }
+	th, td { padding: 8px 16px; }
+	th     { background:rgb(22, 129, 250); color: white; }
 td {background-color: #ffffff;}
 
 .btn-add{

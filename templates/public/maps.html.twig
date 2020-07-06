@@ -274,6 +274,7 @@
 			alert("erreur");
 		}
 	});
+
 	$.ajax({url:"{{path('getQuartiers')}}",
 		success: function(response){
 
@@ -409,17 +410,17 @@
 	}
 	
 	var drawPluginOptions = {
-  position: 'topright',
-  draw: {
-    polygon: false,
-    // disable toolbar item by setting it to false
-    polyline: false,
-    circle: false, // Turns off this drawing tool
-    rectangle: false,
-    marker: false,
-    },
-  edit: false
-};
+		  position: 'topright',
+		  draw: {
+		    polygon: false,
+		    // disable toolbar item by setting it to false
+		    polyline: false,
+		    circle: false, // Turns off this drawing tool
+		    rectangle: false,
+		    marker: false,
+		    },
+		  edit: false
+		};
 var drawControl = new L.Control.Draw(drawPluginOptions);
 map.addControl(drawControl);
 var editableLayers = new L.FeatureGroup();

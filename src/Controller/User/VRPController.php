@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class VRPController extends AbstractController{
 
@@ -196,7 +197,7 @@ class VRPController extends AbstractController{
 
         $routeRenewals = $this->routeRenewals()->getContent();
         $url = 'https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob?';
-        $token = 'nF1zZfY1k9S1y8ggC2k6LHuqC-mllujMe3rQbJeffPKY79Kt7Z1aHc2EFqSw4rqdgiKJYbfANuO-7FHtQSyJqyvK0xZXxWsQ2c531nQSS83bLRqUp-e4dpU1Amx6W9cuDJoljkOj6PgfBgOwiSeuO_bdatSv1071x9LJsXfUO_95jrBQX1iXrINHqj60CiNYSNaHJNqMU_oTJxympA3ilm1VwYAli_BGq0amZu-o7pY.';
+        $token = '5N8gkbhlqOva3TqeqNlMxVYxdcUMj0qm9G14Hk3g31UDAeDt4viqBb7q-mL4L3Gmylf8rRs5P54BM-6JUr28ucGIo9-7nO_taQWrEW8Mdvx7Vg6LdexLDNqheEyd3UCdSrKN_8pP9lVaUFQE-YPi5pXE0tDBS2_WvxzWrQO9GcsBSJK5wKYpxZlMum4f676LNNiYOD2MfzdPRd39ImZtlm3e_7tzjxp75VF_pK4zOZY.';
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_POST, 1);
@@ -449,8 +450,7 @@ class VRPController extends AbstractController{
     }
 
     private function transformeRoutes($vehicles){
-        $features = [];
-        $j = 1;
+        $features = [];$j = 1;
 		foreach($vehicles as $vehicle){
             $attributes = [
                 "Name"=>"Truck_".$j,
@@ -480,7 +480,7 @@ class VRPController extends AbstractController{
      * @Route("admin/maps/VRP/saveResults", methods={"POST","GET"}, name="saveVrpResults")
      */
     public function saveResults(Request $request){
-        $plan = json_decode('        
+        $json = json_decode('        
         {
           "plan": [
             {
@@ -7247,30 +7247,38 @@ class VRPController extends AbstractController{
               ]
             }
           ]
-        }',true);
+		}',true);
+		$data = json_decode($request->getContent(), true);
+	
+		$plan = $data["plan"];
         $secteurs = ['C013-A11', 'C013-B11', 'C013-C11', 'C013-A12', 'C013-B12', 'C013-C12', 'C013-A21', 'C013-B21', 'C013-C21', 'C013-A22', 'C013-B22','C013-D11','C013-D12','C013-D21','C013-D22', 'C013-E11','C013-E12','C013-E21','C013-E22'];
         
         $i = 0;
-        $unsavedRotations = [];
-        foreach($plan["plan"] as $value){
+		$unsavedRotations = [];
+		$initialiser = $this->app->Points->updateAll(["circuitsecondaire"=>null]);
+        foreach($plan as $value){
             $nom = explode("_",$value["vehicle"]);
-            $codeVehicle = $nom[2];
-            foreach($value as $rotation){
+            $codeVehicle = $nom[1];
+            foreach($value["rotations"] as $rotation){
                 if($this->checkRotation($rotation)){
                     if($i < count($secteurs)){
+						$date = date("Y-m-d H:i:s",$rotation["demarrage_parc"]/1000);
+						$date_array = explode(" ",$date);
+						$demarrage = $date_array[1];
                         if($this->app->Secteur->exist($secteurs[$i])== false){
-                            $this->app->Secteur->add(["code"=>$secteurs[$i], "vehicule"=>$codeVehicle]);
+                            $this->app->Secteur->add(["code"=>$secteurs[$i], "vehicule"=>$codeVehicle, "horaire"=>$demarrage, "qtedechet"=>$rotation["quantite_dechets"]]);
                         }else{
-                            $this->app->Secteur->update($secteurs[$i],["vehicule"=>$codeVehicle, "horaire1"=>$rotation["demarrage_parc"]]);
+                            $this->app->Secteur->update($secteurs[$i],["vehicule"=>$codeVehicle, "horaire"=>$demarrage,"qtedechet"=>$rotation["quantite_dechets"]]);
                         }
                         foreach($rotation["ordres"] as $stop){
                             $codePoint = explode("_",$stop["properties"]["Name"])[0];
-                            $frequence = explode("_",$stop["properties"]["Name"])[1];
+							$frequence = explode("_",$stop["properties"]["Name"]);
+							$frequence = end($frequence);
                             $sequence = intval($stop["properties"]['Sequence']);
                             if($frequence == 1){
                                 $savePoint = $this->app->Points->update($codePoint,["ordrecollecte"=>$sequence, "secteur"=>$secteurs[$i], "circuitprincipal"=>$secteurs[$i]]);
                             }else{
-                                $savePoint = $this->app->Points->update($codePoint,["ordrecollecte"=>$sequence, "circuitsecondaire"=>$secteurs[$i]]);
+                                $savePoint = $this->app->Points->update($codePoint,["circuitsecondaire"=>$secteurs[$i]]);
                             }
                         }
                         
@@ -7282,14 +7290,14 @@ class VRPController extends AbstractController{
             }
             
         }
-        var_dump($unsavedRotations);
         return new Response("Données mises à jour avec succes.");
     }
 
     public function checkRotation($rotation){
         $cpt = 0;
         foreach($rotation["ordres"] as $point){
-            $frequence = explode("_", $point["properties"]["Name"])[1];
+			$frequence = explode("_", $point["properties"]["Name"]);
+			$frequence = end($frequence);
             if($frequence > 1){
                 $cpt++;
             }
