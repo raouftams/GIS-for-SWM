@@ -50,9 +50,9 @@ body::-webkit-scrollbar {
     }
 
     .form-row{
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
-
+    
     #btn-analyse{
       width: 40%; 
       position: fixed;
@@ -60,7 +60,17 @@ body::-webkit-scrollbar {
       left: 60%; 
       border: 1px solid #2f8adf;
       background-color: #2f8adf;
-      height: 40px;
+      height: 50px;
+    }
+    #btn-save-recalculate{
+      width: 40%; 
+      position: fixed;
+      bottom: 0; 
+      left: 60%; 
+      border: 1px solid transparent;
+      height: 50px;
+      margin-top: 5px;
+      background-color: white;
     }
 
     .btn-ajouter{
@@ -136,4 +146,4 @@ body::-webkit-scrollbar {
     .popup{
       width: 70%;
     }
-  }
+  } 
