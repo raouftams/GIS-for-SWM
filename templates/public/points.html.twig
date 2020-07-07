@@ -2,6 +2,11 @@
 {% block title %}Points de collecte {%endblock%}
 {% block stylesheets %}
   <link rel="stylesheet" href="{{asset('css/table.css')}}">
+  <style>
+	body::-webkit-scrollbar{
+		display: none;
+	}
+  </style>
 {% endblock %}
 {% block header %}Points de collecte{%endblock%}
 {% block body %}
@@ -21,7 +26,7 @@
 </div>
  
 <table class="table">
-	<thead class="thead-dark">
+	<thead>
 		<tr>
 		<th scope="col">Code</th>
 		<th scope="col">Libelle</th>
@@ -44,7 +49,7 @@
 				<td>{{ point.activites }}</td>
 				<td>
 					<div class="btn-group">
-						<button class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
+						<button class="btn btn-sm btn-info"><i class="fa fa-edit"></i></button>
 						<button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
 					</div>
 				</td>

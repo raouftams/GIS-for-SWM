@@ -1,9 +1,77 @@
-body{width: 100%;}
-		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 40px; width: 60%; float:left;}
-		.analysis{ border: 1px solid transparent; width: 38%; float: right; margin-top: 45px; margin-right: 15px; resize: both;}
+body{width: 100%; }
+
+body::-webkit-scrollbar {
+  display: none;
+}
+		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 50px; width: 60%; float:left;}
+		.analysis{ border: 1px solid transparent; width: 38%; float: right; margin-top: 60px; margin-right: 15px; resize: both;}
 		.control{border: 1px solid transparent; position: sticky; }
-		.navbar {position: fixed;}
-    .btn-analyse{width: 100%; position: relative;}
+		.navbar {position: fixed; height: 50px; box-shadow:none; border-bottom: 2px solid rgb(223, 222, 222); background-color: rgb(253, 253, 253);}
+    .navbar-brand{padding-top: 15px; color: #2274BF;}
+
+    .nav-link{
+      color: rgb(132, 132, 132);
+      border: 2px solid transparent;
+    }
+    .nav-link:hover{
+      color: #2274BF;
+      border-bottom: 2px solid #2274BF;
+      background-color: rgb(248, 248, 248);
+    }
+
+    .logout:hover{
+      color: #e02222;
+      border-bottom: 2px solid #e02222;
+      background-color: rgb(248, 248, 248);
+    }
+
+    .parameters-links{
+      text-align: center;
+    }
+
+    .parameters-link, .parameters-link2{
+      border:2px solid transparent;
+      color: #2274BF !important;
+    }
+    .parameters-link2{
+      margin-left: 20%;
+    }
+
+    .parameters-link:hover, .parameters-link2:hover{
+      color: #579ad8 !important;
+      border-bottom: 2px solid #579ad8;
+    }
+
+    legend{
+      text-align: center;
+      color: rgb(129, 129, 129);
+      border: 1px solid transparent;
+      margin-bottom: 10px;
+    }
+
+    .form-row{
+      margin-bottom: 10px;
+    }
+
+    #btn-analyse{
+      width: 40%; 
+      position: fixed;
+      bottom: 0; 
+      left: 60%; 
+      border: 1px solid #2f8adf;
+      background-color: #2f8adf;
+      height: 40px;
+    }
+
+    .btn-ajouter{
+      border: 1px solid transparent;
+      float: right;
+      box-shadow: none;
+      position: absolute;
+      top: 16.5%;
+      right: 0%;
+    }
+
     .analysis form {margin-left: 8px; }
 		#loading-image {
 			display: none;
@@ -14,7 +82,7 @@ body{width: 100%;}
 			width: 100%;
 			height: 100%;
 			background-color: rgba(192, 192, 192, 0.5);
-			background-image: url("https://i.stack.imgur.com/MnyxU.gif");
+			background-image: url('../img/loading.gif');
 			background-repeat: no-repeat;
 			background-position: center;
 		}
@@ -55,7 +123,7 @@ body{width: 100%;}
     color: #333;
   }
   .popup .close:hover {
-    color: #06D85F;
+    color: #e02222;
   }
   .popup .content {
     max-height: 30%;

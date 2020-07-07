@@ -15,13 +15,13 @@
 		<link rel="stylesheet" href="{{asset('css/main.css')}}">
         {% block stylesheets %}{% endblock %}
     </head>
-    <body style="background-color: #f2f2f2;">
+    <body>
         
 
 		<div class="row1" id="navbar">
           	<div class="col-xs-2">
             	<nav class="aside " >
-					<h2 class="page-title" style="color:white;"><b>{% block header %} {%endblock%}</b></h2>
+					<h2 class="page-title" style="color:#2274BF;"><strong>{% block header %} {%endblock%}</strong></h2>
 					
 					<div class="btn-group-vertical" style="width: 96%;">
 			
@@ -35,7 +35,7 @@
 						&nbsp; <strong> Chart </strong>
 					</a> 
 
-					<a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;color:white; ">
+					<a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;  color: rgb(132, 132, 132); ">
 						<i class="fas fa-table"></i>
 						&nbsp; <strong>Tables</strong>
 					</a>
@@ -64,8 +64,8 @@
 						<i class="fas fa-edit"></i>
 						&nbsp; <strong>Plan Collecte </strong>
 					</a>
-					<a class="btn-menu" href="{{path('logout')}}"><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</a>
 					</div>
+					<a class="btn-logout" href="{{path('logout')}}" style="color:#e02222;" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</a>
 				</nav>
 			</div>
         </div>

@@ -13,3 +13,7 @@
     border-top-right-radius: 15px;
     background-color: #2ab02f;
 }
+
+.card-employe{
+    border-right: 3px solid #2274BF !important;
+}

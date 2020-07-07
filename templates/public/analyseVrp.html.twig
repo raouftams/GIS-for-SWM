@@ -37,8 +37,8 @@
 	
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" style="height: 40px;">
-		<h2 class="navbar-brand" >Analyse</h2>
+	<nav class="navbar navbar-expand-lg fixed-top">
+		<h2 class="navbar-brand" >Analyse VRP</h2>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 		  <span class="navbar-toggler-icon"></span>
 		</button>
@@ -65,6 +65,10 @@
 			  <a class="nav-link disabled" href="#">Analyse</a>
 			</li>
 		  </ul>
+		  	<ul class="navbar-nav ml-auto">
+          		<li class="nav-item"><a class="nav-link logout" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
+          		</li>
+        	</ul>
 		</div>
     </nav>
 	
@@ -72,23 +76,21 @@
 	
 	<div class="analysis">
 			<div class="vrp-form" id="vrpDiv">
-				<h3 style="text-align: center;" class="text-info">Problème de tournée de véhicules</h3>
-				<hr>
-				<div class="btn-group" style="width: 100%;">
-					<button class="btn btn-outline-info" id="points-click">Points</button>
-					<button class="btn btn-outline-info" id="depots-click">Depôts</button>
-					<button class="btn btn-outline-info" id="vehicles-click">Véhicules</button>
+				<div class="parameters-links">
+					<a class="parameters-link font-weight-bold" id="points-click">Points</a>
+					<a class="font-weight-bold parameters-link2 " id="depots-click">Depôts</a>
+					<a class="parameters-link2 font-weight-bold" id="vehicles-click">Véhicules</a>
 				</div>
+				<hr>
 				<div id="les-ordres" >
 					<form onsubmit="select(); return false;" id="ordersForm">
 						<fieldset>
-						<legend>Ordres:</legend>
-						<div class="form-group col-md-10">
-							<label for="Couche">Couche</label>
-							<select class="form-control Depot" id="Coucheo">
+						<legend>Les ordres <button class="btn btn-warning btn-md btn-ajouter">+</button></legend>
+						<div class="form-row">
+							<label for="Couche" class="col-sm-4 col-form-label">Couche</label>
+							<select class="form-control Depot col-md-8" id="Coucheo">
 								<option value="" disabled selected>Point de collecte</option>
 							</select>
-							<button class="btn btn-warning btn-sm">+</button>
 							</div>                     
 						</fieldset>
 					</form>
@@ -98,26 +100,24 @@
 				<div id="les-depots" style="display: none;">	
 					<form id="depotsForm">
 						<fieldset>
-						<legend>Depot:</legend>
-						<div class="form-group col-md-10">
-							<label for="Couche">Couche:</label>
-							<select class="form-control Depot" id="Couche">
+						<legend>Les dépôts <button type="button" class="btn btn-warning btn-md btn-ajouter" onclick="AjouterDepot()">+</button></legend>
+						<div class="form-row">
+							<label for="Couche" class="col-sm-4 col-form-label">Dépôt:</label>
+							<select class="form-control Depot col-md-8" id="Couche">
 							{% for depot in depots %}
 								<option value="{{depot.code}}"  selected>{{depot.designation}}</option>
 							{% endfor %}
 							</select>
 							</div>
 
-							<div class="form-group col-md-10">
-								<label for="hd">Heure de debut </label>
-								<input type="time" id="hd" class="form-control Depot" placeholder="Select time">
+							<div class="form-row">
+								<label for="hd" class="col-sm-4 col-form-label" >Heure de debut </label>
+								<input type="time" id="hd" class="form-control Depot col-md-8" placeholder="Select time">
 							</div>
-							<div class="form-group col-md-10">
-								<label for="hf">Heure de fin </label>
-								<input type="time" id="hf" class="form-control Depot" placeholder="Select time" >
+							<div class="form-row">
+								<label for="hf" class="col-sm-4 col-form-label">Heure de fin </label>
+								<input type="time" id="hf" class="form-control Depot col-md-8" placeholder="Select time" >
 							</div>
-
-							<button type="button" class="btn btn-warning" onclick="AjouterDepot()">+</button>
 						</fieldset>
 					</form>
 				</div>
@@ -125,60 +125,58 @@
 				<div id="les-vehicules" style="display: none;">
 					<form id="vehicleForm">
 						<fieldset>
-							<legend>Vehicules</legend>
-							<div class="form-group col-md-10">
-								<label for="Volume">Volume</label>
-								<select class="form-control" id="Volume">
+							<legend>Les véhicules <button type="button" class="btn btn-warning btn-md btn-ajouter" onclick="AjouterVehicule()">+</button></legend>
+							<div class="form-row">
+								<label for="Volume" class="col-sm-4 col-form-label">Volume</label>
+								<select class="form-control col-md-8" id="Volume">
 								<option value="" disabled selected>Choix du Volume</option>
 								{% for vehicle in vehicles %}
 									<option value="{{vehicle.volume}}">Benne {{vehicle.volume}}m&#179;</option>
 								{% endfor %}
 								</select>
 							</div>
-							<div class="form-group col-md-10">
-								<label for="DepotDepart">Depot de depart:</label>
-								<select class="form-control" id="DepotDepart">
+							<div class="form-row">
+								<label for="DepotDepart" class="col-sm-4 col-form-label">Depot de depart:</label>
+								<select class="form-control col-md-8" id="DepotDepart">
 								<option value="" disabled selected>Choix du Depot</option>
 								</select>
 							</div>
-							<div class="form-group col-md-10">
-								<label for="DepotFin">Depot de fin de tournée </label>
-								<select class="form-control" id="DepotFin">
+							<div class="form-row">
+								<label for="DepotFin" class="col-sm-4 col-form-label">Depot de fin de tournée </label>
+								<select class="form-control col-md-8" id="DepotFin">
 								<option value="" disabled selected>Choix du Depot</option>
 								</select>
 							</div>
-							<div class="form-group col-md-10">
-								<label for="HeureDebut">Heure de debut </label>
-								<input type="time" id="HeureDebut" class="form-control" placeholder="Select time">
+							<div class="form-row">
+								<label for="HeureDebut" class="col-sm-4 col-form-label">Heure de debut </label>
+								<input type="time" id="HeureDebut" class="form-control col-md-8" placeholder="Select time">
 							</div>
-							<div class="form-group col-md-10">
-								<label for="HeureFin">Heure de fin </label>
-								<input type="time" id="HeureFin" class="form-control" placeholder="Select time">
+							<div class="form-row">
+								<label for="HeureFin" class="col-sm-4 col-form-label">Heure de fin </label>
+								<input type="time" id="HeureFin" class="form-control col-md-8" placeholder="Select time">
 							</div>
-							<div class="form-group col-md-10">
-								<label class="col-form-label" for="ChargeHoraire">Charge horaire max</label>
-								<input type="time" id="ChargeHoraire" class="form-control" placeholder="Select time">
+							<div class="form-row">
+								<label class="col-sm-4 col-form-label" for="ChargeHoraire">Charge horaire max</label>
+								<input type="time" id="ChargeHoraire" class="form-control col-md-8" placeholder="Select time">
 							</div>
-							<div class="form-group col-md-10">
-								<label class="col-form-label" for="NbrMaxOrdres">Nombre max d'ordres a visiter</label>
-								<input type="number" min="0" class="form-control" placeholder="0" id="NbrMaxOrdres">
+							<div class="form-row">
+								<label class="col-sm-4 col-form-label" for="NbrMaxOrdres">Nombre max d'ordres a visiter</label>
+								<input type="number" min="0" class="form-control col-md-8" placeholder="0" id="NbrMaxOrdres">
 							</div>
-							<div class="form-group col-md-10">
-								<label class="col-form-label" for="costUnitTime">Coûts par une unité de temps:</label>
-								<input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitTime">
+							<div class="form-row">
+								<label class="col-sm-4 col-form-label" for="costUnitTime">Coûts par une unité de temps:</label>
+								<input type="number" min="0" step="0.1" class="form-control col-md-8" placeholder="0" id="costUnitTime">
 							</div>
-							<div class="form-group col-md-10">
-								<label class="col-form-label" for="costUnitDistance">Coûts par une unité de distance:</label>
-								<input type="number" min="0" step="0.1" class="form-control" placeholder="0" id="costUnitDistance">
+							<div class="form-row">
+								<label class="col-sm-4 col-form-label" for="costUnitDistance">Coûts par une unité de distance:</label>
+								<input type="number" min="0" step="0.1" class="form-control col-md-8" placeholder="0" id="costUnitDistance">
 							</div>
-							<button type="button" class="btn btn-warning"onclick="AjouterVehicule()">+</button>
 						</fieldset>
 					</form>
 				</div>
 				<br>
-				<button class="btn btn-info btn-sm" style="border: 1px solid white; border-radius: 50px;"><i class="fas fa-chevron-right"></i></button>
 				<div id="btn-analyse" style="text-align:center;">
-					<button type="button" id="btn-analyse" class="btn btn-info btn-lg" style="width: 70%;" onclick="makeRequest()" >ANALYSER</button>      
+					<button type="button" id="btn-analyse" class="text-white font-weight-bold"  onclick="makeRequest()" >ANALYSER</button>      
 				</div>
 				<div id="btn-save-recalculate" style="display: none; text-align: center;">
 					<button type="button" id="btn-save" class="btn btn-success" onclick="saveResult()" >Sauvegarder</button>
@@ -211,7 +209,7 @@
 	</div>
 
 	<div id="popup-result" class="overlay">
-		<div class="popup" style="width: 90%;">
+		<div class="popup" style="width: 99%;">
 			<h3 class="text-info">Résultats de l'analyse</h3>
 			<a class="close" href="#">&times;</a><br>
 			<div class="content" id="content">

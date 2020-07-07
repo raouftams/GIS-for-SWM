@@ -37,23 +37,13 @@
 	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
 	<link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
 	<link rel="stylesheet" href="{{asset('css/popup.css')}}">
-
-	<style>
-		body{width: 100%;}
-		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 60px; width: 70%; float:left;}
-		.analysis{ border: 1px solid transparent; width: 28%; float: right; margin-top: 70px; margin-right: 15px;}
-		.control{border: 1px solid transparent; position: sticky; }
-		.navbar {position: fixed;}
-		.btn-analyse{width: 100%; position: relative;}
-		h3{text-align: center; border: 1px solid transparent; color: white; font-size: 24px;background-color: #0989d9; border-top-left-radius: 3px; border-top-right-radius: 3px;}
-		.lyrDiv{border: 1px solid transparent; margin-left: 2%;}
-	</style>
+	<link rel="stylesheet" href="{{asset('css/maps.css')}}">
 	
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-		<h2 class="navbar-brand" >Analyse</h2>
+	<nav class="navbar navbar-expand-lg fixed-top ">
+		<h2 class="navbar-brand" >Données SIG</h2>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 		  <span class="navbar-toggler-icon"></span>
 		</button>
@@ -82,16 +72,18 @@
 				</li>
 			</ul>
 			<ul class="navbar-nav ml-auto">
-          		<li class="nav-item"><a class="nav-link" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
+          		<li class="nav-item"><a class="nav-link logout" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
           		</li>
         	</ul>
 		</div>
-    </nav>
+	</nav>
+
 	<div id="map"></div>
 	<div class="data"></div>
 
 	<div class="analysis">
-		<h3>Menu contrôle</h3>
+		<h3 class="font-weight-bold">Menu contrôle</h3>
+		<hr>
 			<div id="layerDiv">
 				<div>
 					<input type="checkbox" name="points" id="points", value="points de Collecte" onchange="reactTo(this)" checked /> Points de collecte <i class="fa fa-circle" aria-hidden="true" style="color: rgb(107, 194, 107);"></i>

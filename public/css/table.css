@@ -3,7 +3,7 @@
 	
 	table  { border-collapse: collapse; width: 100%; }
 	th, td { padding: 8px 16px; }
-	th     { background:rgb(22, 129, 250); color: white; }
+	th     { background:#2274BF; color: white; }
 td {background-color: #ffffff;}
 
 .btn-add{
