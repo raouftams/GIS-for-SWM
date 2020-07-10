@@ -59,7 +59,7 @@
     }
 
     public function delete($id){
-      return $this->query("DELETE FROM {$this->table} WHERE id = ?", [$id], true);
+      return $this->query("DELETE FROM {$this->table} WHERE code = ?", [$id], true);
     }
 
 

@@ -1,0 +1,30 @@
+table{
+    margin-left: 20px;
+}
+
+th,td{
+   padding-bottom: 10px; 
+}
+
+td{
+    padding-left: 20px;
+}
+.info-div{
+    border: 1px solid transparent;
+    background-color: rgb(255, 255, 255);
+}
+.bare-info {
+    border: 1px solid transparent;
+    background-color: rgb(48, 125, 214);
+}
+
+h3{
+    color: white;
+    float: left;
+    font-weight: 400;
+}
+
+.btn-imprimer{
+    display: inline;
+    margin-left: 68%;
+}

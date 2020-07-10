@@ -30,13 +30,30 @@ class TourneeController extends AbstractController{
     }
 
     /**
-     * @Route("/user/tournee/{id}", methods={"POST","GET"}, name="tourneeDetail")
+     * @Route("/user/tournee/{id}/maps", methods={"POST","GET"}, name="tourneeMaps")
      */
-    public function detail($id){
+    public function map($id){
         $tournee = $this->app->Tournee->findWithId($id);
         $tournee = $tournee[0];
-        return $this->render('public/tournee/tourneeDetail.html.twig', ["tournee" => $tournee, "id_tournee" => $id]);
+        return $this->render('public/tournee/tourneeMaps.html.twig', ["tournee" => $tournee, "id_tournee" => $id]);
     }
+
+    /**
+     * @Route("/user/tournee/{id}/details", methods={"POST","GET"}, name="tourneeDetail")
+     */
+    public function detail($id){
+      $bon = $this->app->Tournee->getBonTransport($id);
+      $ticket = $this->app->Tournee->getTicketPesee($id);
+      for ($i=0; $i <count($bon[0]) ; $i++) { 
+        unset($bon[0][$i]);
+      }
+      for ($i=0; $i <count($bon[0]) ; $i++) { 
+        unset($ticket[0][$i]);
+      }
+      $vehicle = $this->app->Vehicle->getVehicle($bon[0]["vehicule"]);
+      $vehicleName = "".$vehicle["code"]." ".$vehicle["matricule"]." ".$vehicle["genre"]; 
+      return $this->render('public/tournee/tourneeDetail.html.twig', ["bon" => $bon[0], "vehicle"=>$vehicleName, "ticket"=>$ticket[0], "id_tournee" => $id]);
+  }
 
     /**
      * @Route("/user/tournee/{id}/update", methods={"POST","GET"}, name="updateTournee")
@@ -52,7 +69,7 @@ class TourneeController extends AbstractController{
       }
       return new Response("azul");
       
-    }
+    } 
 
     /**
      * @Route("user/editTourneeUser", name="userEditTournee")
@@ -115,6 +132,7 @@ class TourneeController extends AbstractController{
             "cet" => $_POST['cet'],
             "equipe" => intval($_POST['equipe'])
         ]);
+        $tournee = $this->app->Tournee->initialiser($tournee[0]["max"]);
         
           return $this->render('public/tournee/add.html.twig',[
             "secteurs" => $secteurs,

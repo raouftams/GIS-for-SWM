@@ -3,7 +3,7 @@ body{width: 100%; }
 body::-webkit-scrollbar {
   display: none;
 }
-		#map{border: 1px solid transparent; position: fixed; height: 680px; margin-top: 50px; width: 60%; float:left;}
+		#map{border: 1px solid transparent; position: fixed; height: 100%; margin-top: 50px; width: 60%; float:left;}
 		.analysis{ border: 1px solid transparent; width: 38%; float: right; margin-top: 60px; margin-right: 15px; resize: both;}
 		.control{border: 1px solid transparent; position: sticky; }
 		.navbar {position: fixed; height: 50px; box-shadow:none; border-bottom: 2px solid rgb(223, 222, 222); background-color: rgb(253, 253, 253);}
@@ -44,6 +44,9 @@ body::-webkit-scrollbar {
 
     legend{
       text-align: center;
+    }
+    legend a{
+      text-decoration: none;
       color: rgb(129, 129, 129);
       border: 1px solid transparent;
       margin-bottom: 10px;
@@ -74,15 +77,22 @@ body::-webkit-scrollbar {
     }
 
     .btn-ajouter{
-      border: 1px solid transparent;
+      border: 1px solid #01a9b4;
+      background-color: #01a9b4;
+      color: white;
       float: right;
       box-shadow: none;
       position: absolute;
       top: 16.5%;
       right: 0%;
     }
+    .btn-ajouter:hover{
+      color: white;
+    }
+
 
     .analysis form {margin-left: 8px; }
+
 		#loading-image {
 			display: none;
 			position: fixed;

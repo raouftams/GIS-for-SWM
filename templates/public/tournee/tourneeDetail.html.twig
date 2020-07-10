@@ -1,416 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Tournee</title>
-	<!-- jQuery -->
-	<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
-	<!-- Bootstrap tooltips -->
-	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
-	<!-- Bootstrap core JavaScript -->
-	<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
-	<!-- MDB core JavaScript -->
-	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+{% extends "base.html.twig" %}
+{% block title %}Détails tournée{% endblock %}
+{% block header %}Détails tournée{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{asset('css/tourneeDetails.css')}}">
+{% endblock %}
 
-	<script src="{{asset('js/leaflet/leaflet.js')}}"></script>
+{% block body %}
 
-	<script src="{{asset('js/leaflet/esriservices/esri-leaflet.js')}}"></script>
-    <script src="{{asset('js/leaflet/locate/L.Control.Locate.min.js')}}"></script>
-    
+<a href="{{path('tourneeMaps', {id:id_tournee})}}" class="btn btn-info btn-md">Maps</a>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+<div id="bon_transport" class="info-div">
+    <div class="bare-info">
+        <legend>
+            <h3>Bon de transport</h3>
+            <button type="button" class="btn btn-success btn-sm btn-imprimer" onclick="imprimer('bon_transport');">Imprimer</button>
+        </legend>
+    </div>
+    <table class="mt-4">
+        <tbody>
+            <tr>
+                <th class="font-weight-bold">Code:</th>
+                <td>{{bon.code}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Secteur:</th>
+                <td>{{bon.secteur}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Véhicule:</th>
+                <td>{{vehicle}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Date:</th>
+                <td>{{bon.date}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Heure début:</th>
+                <td>{{bon.heure_debut}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Equipe:</th>
+                <td>{{bon.equipe}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="ticket_pesee" class="info-div mt-4">
+    <div class="bare-info">
+        <legend>
+            <h3>Ticket de pesée</h3>
+            <button type="button" class="btn btn-success btn-sm btn-imprimer" onclick="imprimer('ticket_pesee')">Imprimer</button>
+        </legend>
+    </div>
+    <table class="mt-4">
+        <tbody>
+            <tr>
+                <th class="font-weight-bold">Code:</th>
+                <td>{{ticket.code}}</td>
 
-	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-	<!-- Material Design Bootstrap -->
-	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
-	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
-    <link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
-	<link rel="stylesheet" href="{{asset('css/popup.css')}}">
-	<link rel="stylesheet" href="{{asset('css/maps.css')}}">
-    <style>
-        #map{border:1px solid transparent; height: 100%; width: 100%; margin-top: 50px; position: fixed;}
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg fixed-top">
-		<a class="navbar-brand" href="#">Tournee</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-		  <span class="navbar-toggler-icon"></span>
-		</button>
-		{% if is_granted('ROLE_SUPERUSER')%}
-			<div class="collapse navbar-collapse" id="navbarNav">
-			  <ul class="navbar-nav">
-				<li class="nav-item active">
-				  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-table"></i> &nbsp; Table
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
-					  <a class="dropdown-item" href='{{path("bacsIndex")}}'>Bacs</a>
-					  <a class="dropdown-item" href='{{path("vehiclesIndex")}}'>Véhicules</a>
-					  <a class="dropdown-item" href='{{path("tournees")}}'>Tournees</a>
-					  <a class="dropdown-item" href='{{path("employesIndex")}}'>Employés</a>
-					</div>
-				  </li>
-				<li class="nav-item">
-				  <a class="nav-link" href="{{path('maps')}}"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
-				</li>
-				<li class="nav-item">
-				  <a class="nav-link" href="{{path('analyseVrp')}}">Analyse</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#popup-tournee">edit tournee</a>
-				  </li>
-			  </ul>
-			</div>
-		{%endif %}
-		{% if is_granted('ROLE_USER') and not is_granted('ROLE_SUPERUSER')%}
-			<ul class="navbar-nav mr-auto">
-          		<li class="nav-item active">
-          		  <a class="nav-link" href="{{path('userIndex')}}" ><i class="fas fa-tachometer-alt"></i>&nbsp; Home <span class="sr-only">(current)</span></a>
-          		</li>
-          		<li class="nav-item">
-          		  <a class="nav-link">contact</a>
-          		</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#popup-tournee">edit tournee</a>
-				</li>
-        	</ul>
-		{% endif%}
-		<ul class="navbar-nav ml-auto">
-          		<li class="nav-item"><a class="nav-link logout" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
-          		</li>
-        </ul>
-    </nav>
-	
-	<div class="page">
-		<div id="map"></div>
-		
-		<div id="popup1" class="overlay">
-		<div class="popup">
-			<a class="close" href="#">&times;</a><br>
-			<div class="content" id="content">
-				<div id="form-bacs">
-					<form class="form" style="margin-left: 10px; width: 80%;" >
-						<div class="form-row">
-							<div class="form-group col-md-12">
-								<label for="bac">Bac:</label>
-								<select name="code_bac" id="bacs" class="form-control">
+                <th style="padding-left: 200px;" class="font-weight-bold">Poids brute:</th>
+                <td>{{ticket.poids_brute}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">CET:</th>
+                <td>{{ticket.cet}}</td>
+                <th style="padding-left: 200px;" class="font-weight-bold">Poids net:</th>
+                <td>{{ticket.poids_net}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Date:</th>
+                <td>{{ticket.date_ticket}}</td>
+                <th style="padding-left: 200px;" class="font-weight-bold">Tare:</th>
+                <td>{{ticket.tare}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Heure pesée:</th>
+                <td>{{ticket.heure_ticket}}</td>
+                <th style="padding-left: 200px;" class="font-weight-bold">Taux compaction:</th>
+                <td>{{ticket.taux_compaction}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
 
-								</select>
-							</div>
-						</div>	
-						<div class="form-row">
-							<div class="form-group col-md-6">
-								<label for="etat">Etat:</label>
-								<select name="etat" id="etat" class="form-control">
-									<option value="Bon">Bon</option>
-									<option value="Moyen">Moyen</option>
-									<option value="Dégradé">Dégradé</option>
-								</select>
-							</div>
-							<div class="form-group col-md-6">
-								<label for="taux">Taux remplissage:</label>
-								<input type="number" step="0.1" min="0" max="100" name="taux_remplissage" id="taux_remplissage" class="form-control ">
-							</div>
-						</div>
-					</form>
-					<div class="form-group" style="margin-top: 20px; margin-left: 5px;">
-						<button type="button" class="btn btn-outline-primary" style="width: 200px; " onclick="editBac()">Sauvegarder</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		</div>
-
-		<div id="popup-tournee" class="overlay">
-		<div class="popup" style="width: 70%;">
-			<a class="close" href="#">&times;</a><br>
-			<div class="content" id="content">
-				<div id="tournee-form">
-					<form class="form">
-						<div class="form-row">
-							<div class="form-group col-md-6">
-								<label for="heuredemarrage">Heure démarrage du parc:</label>
-								<input type="time" name="heure_demarrage_parc" id="heure_demarrage_parc" class="form-control" value="{{tournee.heure_demarrage_parc}}">
-							</div>
-							<div class="form-group col-md-6">
-								<label for="heuredebut">Heure début secteur:</label>
-								<input type="time" name="heure_debut_secteur" id="heure_debut_secteur" class="form-control" value="{{tournee.heure_debut_secteur}}">
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-md-6">
-								<label for="heurefin">Heure fin secteur:</label>
-								<input type="time" name="heure_fin_secteur" id="heure_fin_secteur" class="form-control" value="{{tournee.heure_fin_secteur}}">
-							</div>
-							<div class="form-group col-md-6">
-								<label for="heurepesee">Heure de pesée:</label>
-								<input type="time" name="heure_pesee" id="heure_pesee" class="form-control" value="{{tournee.heure_pesee}}">
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-md-6">
-								<label for="dureeattente">Durée d'attente: <em>(en minutes)</em></label>
-								<input type="number" step="0.1" name="duree_attente" id="duree_attente" class="form-control" value="{{tournee.duree_attente}}">
-							</div>
-							<div class="form-group col-md-6">
-								<label for="tempstravail">Temps de travail: <em>(en heure)</em></label>
-								<input type="number" step="0.01" name="temps_travail" id="temps_travail" class="form-control" value="{{tournee.temps_travail}}">
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-md-6">
-								<label for="qterealise">Quantité réalisée: <em>(en Kg)</em></label>
-								<input type="number" step="0.1" name="qte_realise" id="qte_realise" class="form-control" value="{{tournee.qte_realise}}">
-							</div>
-							<div class="form-group col-md-6">
-								<label for="Kilometrage">Kilometrage: </label>
-								<input type="number" step="0.1" name="kilometrage" id="kilometrage" class="form-control" value="{{tournee.kilometrage}}">
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-md-6">
-								<label for="Carburant">Carburant</label>
-								<input type="number" step="0.1" name="carburant" id="carburant" class="form-control" value="{{tournee.carburant}}">
-							</div>
-						</div>
-					</form>
-					<div class="form-group" style="margin-top: 20px; margin-left: 5px;">
-						<button type="button" class="btn btn-primary" style="width: 200px; " onclick="editTournee()">Sauvegarder</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		</div>
-	</div>
-	<div id="loading-image"></div>
-</body>
-
-<script type="text/javascript">
-
-	function hideShow(button){
-		if(button == 'point'){
-			$( "#form-bacs" ).hide();
-			$("#form-point").show();	
-		}
-		else{
-			$( "#form-point" ).hide();
-			$("#form-bacs").show();
-		}
-	}
-
-
-	
-</script>
-
-<script type="text/javascript">
-	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
-	L.esri.basemapLayer('Topographic').addTo(map);
-
-    $.ajax({url:"{{path('routeService',{id : id_tournee })}}",
-		success: function(response){
-
-			function onEachFeature(feature, layer) {
-				layer.bindPopup('<b>Code: </b>');
-			}
-
-			var result = JSON.parse(response);
-			window.routes = result.featureCollection;
-			window.stops = result.featureCollectionStops;
-			window.lyrRoutes = L.geoJSON(window.routes.features, {
-				onEachFeature: onEachFeature,
-				}).addTo(map);
-				$('#loading-image').hide();
-		},
-		error: function e(error){
-			$('#loading-image').hide();
-			alert("erreur");
-		}
-	});
-
-	$.ajax({url:"{{path('getPointsTournee', {id: id_tournee})}}",
-		success: function(response){
-		
-			function onEachFeature(feature, layer) {
-				var fonction = "getPoint('code')";
-				var code = feature.properties.code_point;
-				fonction = fonction.replace("code", code);
-				layer.bindPopup('<b>Code: ' + code + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><p><b>Adresse: </b>' + feature.properties.adresse + '</p><p><b>Séquence: </b>'+ getSequence(code) + '</p><br><a href="#popup1"><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white">edit</button></a>');
-			}
-
-			window.points = JSON.parse(response);
-
-			window.lyrPoints = L.geoJSON(window.points, {
-				pointToLayer: function x(features, coordinates) {
-							return L.circleMarker(coordinates, {color: "black",
-                                                fillColor: "black",
-                                                fillOpacity: 1,
-												radius: 5
-                                                });
-					},
-				onEachFeature: onEachFeature
-				}).addTo(map);
-		},
-		error: function e(error){
-			alert("Error: "+ error);
-		}
-	});
-
-	$.ajax({url:"{{path('getDepotsTournee', {id: id_tournee})}}",
-		success: function(response){
-		
-			function onEachFeature(feature, layer) {
-				}
-
-			window.points = JSON.parse(response);
-
-			window.lyrPoints = L.geoJSON(window.points, {
-				pointToLayer: function x(features, coordinates) {
-							return L.circleMarker(coordinates, {color: "red",
-                                                fillColor: "red",
-                                                fillOpacity: 1,
-												radius: 5
-                                                });
-					},
-				onEachFeature: onEachFeature
-				}).addTo(map);
-		},
-		error: function e(error){
-			alert("Error: "+ error);
-		}
-	});
-
-	function getSequence(code){
-		window.sequence = -1;
-		var stops = window.stops.features;
-		stops.forEach(function(obj){
-			if(obj.properties.Name == code){
-				window.sequence = obj.properties.Sequence;
-			}
-		});
-		return window.sequence;
-	}
-
-</script>
+{% block javascripts %}
 <script>
-	function processAjaxData(response, urlPath){
-		document.getElementById("popup1").innerHTML = response.html;
-		document.title = response.pageTitle;
-		window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
-	}
-	window.onpopstate = function(e){
-		if(e.state){
-			document.getElementById("popup1").innerHTML = e.state.html;
-			document.title = e.state.pageTitle;
-		}
-	};
-
-	$('#loading-image').bind('ajaxStart', function(){
-    	$(this).show();
-	}).bind('ajaxStop', function(){
-    	$(this).hide();
-	});
-	
-
-	function getPoint(code){		
-		$('#bacs').empty();
-
-		window.bacs;
-		var url = "{{path('getBacs', {code_point: 'code'})}}";
-		$.ajax({url: url.replace("code", code),
-			success: function(response){
-				window.bacs = JSON.parse(response);
-
-				var select_bac = document.getElementById("bacs");
-
-				var opt = document.createElement('option');
-				opt.appendChild(document.createTextNode("Select Bac"));
-				select_bac.appendChild(opt);
-
-				window.bacs.forEach(function(obj){
-					opt = document.createElement('option');
-    				opt.appendChild( document.createTextNode(obj.code));
-					opt.value = obj.code;
-					select_bac.appendChild(opt);
-				});
-			},
-			error: function e(error){
-				alert("Error: "+ error);
-			}
-		});
-	}
-
-	$("#bacs").change(function(){
-		var selectedBac = $(this).children("option:selected").val();
-		window.bacs.forEach(function(obj){
-			if (obj.code == selectedBac) {
-				
-				document.getElementById("etat").value = obj.etat;
-				document.getElementById("taux_remplissage").setAttribute("value", obj.tauxrempli);
-			}
-		});
-		
-	});
-
-	function editBac(){
-		var data = JSON.stringify({
-                    "code_bac": document.getElementById("bacs").value,
-					"taux_remplissage": parseFloat(document.getElementById("taux_remplissage").value),
-                    "etat": document.getElementById("etat").value
-                });
-		
-
-        $.ajax({
-            url: '{{path("editTourneeBac")}}',
-            type: 'POST',
-            contentType: 'JSON',
-            data: data,
-            success: function(response) { 
-				alert("Bac n°" + document.getElementById("bacs").value + "a été modifié avec succes.");
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown)
-            {
-				alert("Le bac n° " + document.getElementById("bacs").value + " a été modifié avec succes.");
-            }
-        });
-	}	
-
-	function editTournee(){
-		var data = JSON.stringify({
-			"id_tournee": '{{id_tournee}}',
-			"heure_demarrage_parc": document.getElementById("heure_demarrage_parc").value,
-			"heure_debut_secteur": document.getElementById("heure_debut_secteur").value,
-			"heure_fin_secteur": document.getElementById("heure_fin_secteur").value,
-			"heure_pesee": document.getElementById("heure_pesee").value,
-			"duree_attente": document.getElementById("duree_attente").value,
-			"temps_travail": document.getElementById("temps_travail").value,
-			"qte_realise": document.getElementById("qte_realise").value,
-			"kilometrage": document.getElementById("kilometrage").value,
-			"carburant": document.getElementById("carburant").value
-		});
-		console.log(data);
-		
-		$.ajax({
-            url: '{{path("userEditTournee")}}',
-            type: 'POST',
-            contentType: 'JSON',
-            data: data,
-            success: function(response) { 
-				alert(response);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown)
-            {
-				alert(errorThrown);
-            }
-        });
-	}
-
+function imprimer(divName) {
+      var printContents = document.getElementById(divName).innerHTML;    
+   var originalContents = document.body.innerHTML;      
+   document.body.innerHTML = printContents;     
+   window.print();     
+   document.body.innerHTML = originalContents;
+   }
 </script>
-</html>
+{% endblock %}

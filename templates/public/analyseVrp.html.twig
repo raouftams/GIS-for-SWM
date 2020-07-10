@@ -125,7 +125,10 @@
 				<div id="les-vehicules" style="display: none;">
 					<form id="vehicleForm">
 						<fieldset>
-							<legend>Les véhicules <button type="button" class="btn btn-warning btn-md btn-ajouter" onclick="AjouterVehicule()">+</button></legend>
+							<legend> 
+								<a href="#popup-vehicles" onclick="setVehiclesToTable()" title="Table des véhicules">Les véhicules </a> 
+								<button type="button" title="Ajouter véhicule" class="btn btn-md btn-ajouter" onclick="AjouterVehicule()">+</button>
+							</legend>	
 							<div class="form-row">
 								<label for="Volume" class="col-sm-4 col-form-label">Volume</label>
 								<select class="form-control col-md-8" id="Volume">
@@ -204,6 +207,31 @@
 				<div class="form-group">
 					<button class="btn btn-primary" type="submit" style="margin-left: 5px;" onclick="savePointData()" >Sauvegarder</button>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="overlay" id="popup-vehicles">
+		<div class="popup" style="width: 80%;">
+			<h3>Table des véhicules:</h3>
+			<a class="close" href="#">&times;</a><br>
+			<div class="content" id="content">
+				<table class="table" id="vehicles-table">
+					<thead>
+						<th>Véhicule</th>
+						<th>Volume</th>
+						<th>Dépôt départ</th>
+						<th>Dépôt fin</th>
+						<th>Heure début</th>
+						<th>Charge horaire</th>
+						<th>Nombre max d'ordres</th>
+						<th>coûts par minute</th>
+						<th>coûts par Km</th>
+					</thead>
+					<tbody id="vehicles_table">
+
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -524,6 +552,59 @@
 			
 		});	
 		
+	}
+
+	function setVehiclesToTable(){
+		var body = document.getElementById("vehicles_table");
+		$(body).empty();
+		var i = 0;
+		Vehicules.forEach(function(vehicle) {
+			var tr = document.createElement('tr');
+			var td = document.createElement('td');
+			td.appendChild(document.createTextNode(i));
+			tr.appendChild(td); 
+			
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(vehicle.volume));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(vehicle.depotDepart));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(vehicle.depotFin));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(vehicle.heureDebut));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(vehicle.chargeHoraire));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(vehicle.nbrMaxOrdres));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(vehicle.costUnitTime));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(vehicle.costUnitDistance));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			var btn = document.createElement('button');
+			btn.setAttribute("type", "button");
+			btn.setAttribute("class", "btn btn-danger btn-sm");
+			btn.setAttribute("onclick", "deleteVehicle("+i+")");
+			btn.appendChild(document.createTextNode("delete"));
+			td.appendChild(btn);
+			tr.appendChild(td);
+
+			body.appendChild(tr);
+			i = i+1;
+		});
+	}
+
+	function deleteVehicle(index){
+		Vehicules.splice(index, 1);
+		setVehiclesToTable();
 	}
 </script>
 

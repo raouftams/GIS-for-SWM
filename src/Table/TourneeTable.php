@@ -1,6 +1,7 @@
 <?php
 namespace App\Table;
 use App\Core\Table\Table;
+use Symfony\Component\VarDumper\Exception\ThrowingCasterException;
 
 class TourneeTable extends Table{
 
@@ -32,7 +33,8 @@ class TourneeTable extends Table{
      * @return boolean 
      */
     public function ajouter($fields){
-        return $this->create($fields);
+        $ajout = $this->create($fields);
+        return $this->query('SELECT max(id_tournee) from "public".tournee');
     }
 
     /**
@@ -124,8 +126,69 @@ class TourneeTable extends Table{
     where t.date < current_date or (t.date = current_date and t.heure_demarrage_parc < current_time )');
   }
 
+  /**
+   * @return array
+   * retourne le bon de transport d'une tournée donnée
+   */
+  public function getBonTransport($id){
+    return $this->query('SELECT * FROM "public".bon_transport WHERE tournee = ?',[$id]);
+  }
 
+  /**
+   * @return array
+   * retourne le ticket de pesée d'une tournée donnée
+   */
+  public function getTicketPesee($id){
+    return $this->query('SELECT * FROM "public".ticket_pesee WHERE tournee = ?',[$id]);
+  }
 
+  /**
+   * @return boolean
+   * Initialisation du bon de transport et du ticket de pesée
+   */
+  public function initialiser($tournee){
+    $tournee = $this->query('SELECT id_tournee, "date", heure_demarrage_parc, vehicle, secteur, equipe, cet 
+    FROM "public".tournee
+    WHERE id_tournee = ?', [$tournee]);
+    $tournee = $tournee[0];
+    $bon = [
+      "code" => "BTR-".$tournee["id_tournee"],
+      "date" => $tournee["date"],
+      "heure_debut" => $tournee["heure_demarrage_parc"],
+      "vehicule" => $tournee["vehicle"],
+      "heure_fin" => null,
+      "equipe" => $tournee["equipe"],
+      "tournee" => $tournee["id_tournee"],
+      "secteur" => $tournee["secteur"]
+    ];
+    $ajout = $this->addBonTicket("bon_transport", $bon);
+
+    $ticket = [
+      "code" => "TP-".$tournee["id_tournee"],
+      "cet" => null,
+      "date_ticket" => null,
+      "heure_ticket" => null,
+      "poids_brute" => null,
+      "tare" => null,
+      "poids_net" => null,
+      "taux_compaction" => null,
+      "tournee" => $tournee["id_tournee"]
+    ];
+
+    return $this->addBonTicket("ticket_pesee", $ticket);
+
+  }
+
+  private function addBonTicket($table, $fields){
+    $sql_parts = [];
+		$attributes = [];
+		foreach ($fields as $k => $v) {
+			$sql_parts[] = "?";
+			$attributes[] = $v;
+		}
+		$sql_part = implode(',', $sql_parts);
+		return $this->query("INSERT INTO {$table} Values ($sql_part)", $attributes, true);
+  }
 
   }
 
