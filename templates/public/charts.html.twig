@@ -6,52 +6,192 @@
 {% block header %}Statistiques{%endblock%}
 {% block body %}
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" style=" margin-bottom: 23px;">
         <div class="col-5">
-            <div class="au-card m-b-30">
-                <div class="au-card-inner"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+            <div class="au-card m-b-30" >
+                <div class="au-card-inner">
+                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                            </div>
+                        </div>
+                    </div>
                     <h3 class="text-center font-weight-bold mb-4">Quantité de déchets par secteur</h3>
                     <hr>
-                    <canvas id="pieChart" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                    <canvas id="Chart1" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-5" >
+            <div class="au-card m-b-30">
+                <div class="au-card-inner">
+                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-center font-weight-bold mb-4">Quantité de déchets par mois</h3>
+                    <hr>
+                    <canvas id="Chart2" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style=" margin-bottom: 23px;">
+        <div  class="col-5">
+            <div class="au-card m-b-30">
+                <div class="au-card-inner" >
+                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-center font-weight-bold mb-4">Nombre de tournées par vehicules</h3>
+                    <hr>
+                    <canvas id="Chart3" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
             </div>
         </div>
         <div class="col-5">
             <div class="au-card m-b-30">
-                <div class="au-card-inner"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-                    <h3 class="text-center font-weight-bold mb-4">Génération des déchets</h3>
-                    <canvas id="lineChart" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                <div class="au-card-inner">
+                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-center font-weight-bold mb-4">Distance parcourus pour chaque vehicule</h3>
+                    <canvas id="Chart4" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style=" margin-bottom: 23px;">
+        <div class="col-5" >
+            <div class="au-card m-b-30" >
+                <div class="au-card-inner">
+                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-center font-weight-bold mb-4">Temps d'activité des vehicueles </h3>
+                    <hr>
+                    <canvas id="Chart5" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-5" >
+            <div class="au-card m-b-30">
+                <div class="au-card-inner">
+                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-center font-weight-bold mb-4">Nombre de tournées des equipes</h3>
+                    <hr>
+                    <canvas id="Chart6" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style=" margin-bottom: 23px;">
+        <div class="col-5" >
+            <div class="au-card m-b-30" >
+                <div class="au-card-inner">
+                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-center font-weight-bold mb-4">temps de travail des equipes</h3>
+                    <hr>
+                    <canvas id="Chart7" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-5" >
+            <div class="au-card m-b-30">
+                <div class="au-card-inner">
+                    <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-center font-weight-bold mb-4">Quantité ramassée de chaque vehicule</h3>
+                    <hr>
+                    <canvas id="Chart8" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block javascripts %}
-<script>var ctxP = document.getElementById("pieChart").getContext('2d');
-var myPieChart = new Chart(ctxP, {
-type: 'pie',
-data: {
-labels: ["C013-B11","C013-C11","C013-A12","C013-A22","C013-C21","C013-C22","C013-A21","C013-C12","C013-B12","C013-A11"],
-datasets: [{
-data: [{{qte}}],
-backgroundColor: ["#C0392B", "#E74C3C","#9B59B6", "#8E44AD","#2980B9","#3498DB", "#1ABC9C","#16A085", "#F1C40F","#F39C12"],
-hoverBackgroundColor: []
-    }]
-},
-options: {
-responsive: true,
-legend: {
-  position:'left' ,
-  labels: {
-    padding: 20,
-    boxWidth: 10
-  }
-}
-}
-});
+<script>
+$.ajax({url:"{{path('getdatachart')}}",
+		success: function(response){
+			
+			alert(response);
+			
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+    });
 </script>
-<script src="{{asset('js/linechart.js')}}"></script>
+<!-- 
+<script src="{{asset('js/chart2.js')}}"></script>
+<script src="{{asset('js/chart3.js')}}"></script>
+<script src="{{asset('js/chart4.js')}}"></script>
+<script src="{{asset('js/chart5.js')}}"></script>
+<script src="{{asset('js/chart6.js')}}"></script>
+<script src="{{asset('js/chart7.js')}}"></script>
+<script src="{{asset('js/chart8.js')}}"></script>
+-->
+<script src="{{asset('js/chart1.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<!-- jQuery -->
+	<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
 {% endblock %}
