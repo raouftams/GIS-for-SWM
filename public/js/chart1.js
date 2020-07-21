@@ -1,11 +1,17 @@
+var labels = [];
+var data = [];
+
 $.ajax({url:"http://127.0.0.1:8000/dashboard/charts/data1",
 		success: function(response){
 			
-			alert(response);
-			
+			var result = JSON.parse(response);
+			result.forEach(function(obj){
+                labels.push(obj.code);
+                data.push(obj.qtedechet);
+            });
 		},
 		error: function e(error){
-			alert("Error: "+ error);
+			alert("Error: "+ error );
 		}
     });
 
@@ -13,10 +19,10 @@ $.ajax({url:"http://127.0.0.1:8000/dashboard/charts/data1",
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["C013-A11","C013-A12","C013-A21","C013-A22","C013-B11","C013-B12","C013-C11","C013-C12","C013-C21","C013-C22"],
+            labels: labels,
             datasets: [{
                 label: 'Quantitée',
-                data: [1230,12355,15846,15621,415469,48968946,54869,8,35,259],
+                data: data,
                 backgroundColor: [
                     'rgba(204, 25, 5, 0.3)',
                     'rgba(175, 53, 42, 0.3)',

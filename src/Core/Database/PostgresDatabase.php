@@ -24,7 +24,7 @@ class PostgresDatabase extends Database{
   public function getPDO()
   {
     if ($this->pdo === null) {
-      $pdo = new PDO('pgsql:dbname=babezsig;host=127.0.0.1', 'postgres','admin');
+      $pdo = new PDO('pgsql:dbname=babezsig;host=127.0.0.1', 'postgres','raoufn23');
       $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       $this->pdo = $pdo;
     }

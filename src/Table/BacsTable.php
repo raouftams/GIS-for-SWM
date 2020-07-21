@@ -23,21 +23,10 @@ class BacsTable extends Table{
      * @return array tableau
      */
     public function qte(){
-      $qte = $this->query('SELECT secteur, sum(volume) As qte
-      FROM "public".bacs
-      GROUP BY secteur 
-      order by secteur
+      return $this->query('SELECT code, qtedechet 
+      FROM "public".secteurs
+      GROUP BY code
       ');
-      $values=[];
-      $secteurs = [];
-      for($i = 0;$i<sizeof($qte); $i++) {
-        $values[$i] = $qte[$i]['qte'];
-        $secteurs[$i] = $qte[$i]['secteur'];
-      }
-      $val = implode(",", $values);
-      $label = implode(',',$secteurs);
-
-      return $val.'+'.$label ;
     }
 
     
