@@ -12,7 +12,7 @@ class VehicleTable extends Table{
      * @return array tableau
      */
     public function all(){
-      return $this->query('SELECT code, marque, genre, volume, mise_en_marche, etat
+      return $this->query('SELECT code, marque, genre, volume, mise_en_marche, etat,matricule
       FROM "public".vehicule
       ');
     }

@@ -14,12 +14,13 @@ body::-webkit-scrollbar{
 nav{
 	position: fixed;
 	height: 100%;
-	width: 15%;
+	width: 18%;
 	background-color: white !important;
 	padding-top: 20px;
 	float: left;	
 	border: 1px solid transparent;
-	box-shadow: 5px 0 5px -2px #2274BF;
+	box-shadow: 3px 0 5px -2px #aaacad;
+	border-right: 3px solid #2274BF;
 }
 nav>hr{
 	background-color: white;
@@ -46,7 +47,7 @@ nav>div>button{
 	margin-top: 2%;
 	position: absolute;
 	height: auto;
-	width: 80%;
+	width: 77%;
 }
 
 

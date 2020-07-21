@@ -18,6 +18,7 @@ class TourneeController extends AbstractController{
     $this->app->loadModel('Points');
     $this->app->loadModel('Vehicle');
     $this->app->loadModel('Equipe');
+    $this->app->loadModel('Secteur');
     
   }
 
@@ -162,9 +163,15 @@ class TourneeController extends AbstractController{
 	 * @Route("/dashboard/tournees/addTournee/getSecteursVehiculesEquipes", name="getSecteursVehiclesEquipes")
 	 */
 	public function getSecteursVehicles(){
-		$secteurs = $this->app->Points->getSecteursQte();
-    $vehicules = $this->app->Vehicle->vehiculesEnMarche();
+		$secteurs = $this->app->Secteur->all();
+    $vehicules = $this->app->Vehicle->all();
     $equipes = $this->app->Equipe->all();
+    foreach($secteurs as $s){
+      for ($i=0; $i < count($s); $i++) { 
+        unset($s[$i]);
+      }
+    }
+    
 		$data = ["secteurs"=>$secteurs, "vehicules"=>$vehicules, "equipes"=>$equipes];
 		return new Response(json_encode($data));
 	}

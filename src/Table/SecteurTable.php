@@ -8,11 +8,10 @@ class SecteurTable extends Table{
     protected $table = 'secteurs';
 
     /**
-     * Retourne les points de collecte
      * @return array tableau
      */
     public function all(){
-      return $this->query('SELECT *, ST_AsGeoJson(geom, 5) as geojson
+      return $this->query('SELECT code, horaire, qtedechet, vehicule, ST_AsGeoJson(geom, 5) as geojson
       FROM "public".secteurs
       ');
     }
@@ -41,7 +40,7 @@ class SecteurTable extends Table{
 	}
 
 	/**
-	 * 
+	 * @return boolean
 	 */
 	public function add($fields){
 		$sql_parts = [];
@@ -55,6 +54,7 @@ class SecteurTable extends Table{
 		$val = implode(',',$val);
 		$sql_part = implode(',', $sql_parts);
 		return $this->query("INSERT INTO {$this->table} ($sql_part) values ($val)", $attributes,true);
+		
 	}
 
 
@@ -64,11 +64,16 @@ class SecteurTable extends Table{
       	foreach ($fields as $k => $v) {
       	  $sql_parts[] = "$k = ?";
       	  $attributes[] = $v;
-      	}
+		}
       	$attributes[] = $code;
       	$sql_part = implode(',', $sql_parts);
-      	return $this->query("UPDATE {$this->table} SET $sql_part WHERE code = ?", $attributes, true);
-    }
+		return $this->query("UPDATE {$this->table} SET $sql_part WHERE code = ?", $attributes, true);
+		
+	}
+	
+	public function updateGeom(){
+		return $this->query('SELECT * from update_geom()');
+	}
 }
   
 

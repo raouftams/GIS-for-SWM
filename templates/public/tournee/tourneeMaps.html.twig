@@ -29,17 +29,19 @@
 	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
     <link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
 	<link rel="stylesheet" href="{{asset('css/popup.css')}}">
-	<link rel="stylesheet" href="{{asset('css/maps.css')}}">
+	<link rel="stylesheet" href="{{asset('css/userMaps.css')}}">
+
     <style>
         #map{border:1px solid transparent; height: 100%; width: 100%; margin-top: 50px; position: fixed;}
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
+		<button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+  		  <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+  		</button>
 		<a class="navbar-brand" href="#">Tournee</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-		  <span class="navbar-toggler-icon"></span>
-		</button>
+		
 		{% if is_granted('ROLE_SUPERUSER')%}
 			<div class="collapse navbar-collapse" id="navbarNav">
 			  <ul class="navbar-nav">
