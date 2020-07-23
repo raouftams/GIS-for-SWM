@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="text-center font-weight-bold mb-4">Nombre de tournées par vehicules</h3>
+                    <h3 class="text-center font-weight-bold mb-4">Distance parcourus pour chaque vehicule</h3>
                     <hr>
                     <canvas id="Chart3" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
@@ -79,7 +79,8 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="text-center font-weight-bold mb-4">Distance parcourus pour chaque vehicule</h3>
+                    <h3 class="text-center font-weight-bold mb-4">Temps d'activité  des  vehicueles</h3>
+                    <hr>
                     <canvas id="Chart4" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
             </div>
@@ -99,7 +100,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="text-center font-weight-bold mb-4">Temps d'activité des vehicueles </h3>
+                    <h3 class="text-center font-weight-bold mb-4">Nombre de tournées des equipes</h3>
                     <hr>
                     <canvas id="Chart5" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
@@ -118,7 +119,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="text-center font-weight-bold mb-4">Nombre de tournées des equipes</h3>
+                    <h3 class="text-center font-weight-bold mb-4">temps de travail des equipes</h3>
                     <hr>
                     <canvas id="Chart6" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
@@ -139,7 +140,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="text-center font-weight-bold mb-4">temps de travail des equipes</h3>
+                    <h3 class="text-center font-weight-bold mb-4">Quantité ramassée par chaque vehicule</h3>
                     <hr>
                     <canvas id="Chart7" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
@@ -158,7 +159,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="text-center font-weight-bold mb-4">Quantité ramassée de chaque vehicule</h3>
+                    <h3 class="text-center font-weight-bold mb-4">Nombre de tournées par vehicules</h3>
                     <hr>
                     <canvas id="Chart8" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
@@ -169,29 +170,26 @@
 {% endblock %}
 
 {% block javascripts %}
-<script>
-$.ajax({url:"{{path('getdatachart1')}}",
-		success: function(response){
-			
-			alert(response);
-			
-		},
-		error: function e(error){
-			alert("Error: "+ error);
-		}
-    });
-</script>
-<!-- 
-<script src="{{asset('js/chart2.js')}}"></script>
+<!-- jQuery -->
+<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
 <script src="{{asset('js/chart3.js')}}"></script>
-<script src="{{asset('js/chart4.js')}}"></script>
+
+
+
+
+<script src="{{asset('js/chart1.js')}}"></script> 
+<script src="{{asset('js/chart2.js')}}"></script>
+
 <script src="{{asset('js/chart5.js')}}"></script>
 <script src="{{asset('js/chart6.js')}}"></script>
 <script src="{{asset('js/chart7.js')}}"></script>
 <script src="{{asset('js/chart8.js')}}"></script>
--->
-<script src="{{asset('js/chart1.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-<!-- jQuery -->
-	<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+
+<script src="{{asset('js/chart4.js')}}"></script>
+
+
+
 {% endblock %}

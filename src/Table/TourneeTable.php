@@ -19,6 +19,91 @@ class TourneeTable extends Table{
       ');
     }
 
+    
+    /**
+     * Retourne le nombre de tournées effectuées pour chaque vehicule
+     * @return array 
+     */
+    public function tourneevehicle(){
+      return $this->query('SELECT vehicle AS label, count(*) as data 
+      FROM "public".tournee 
+      GROUP BY label
+      order by label
+      ');
+    }
+
+    /**
+     * Retourne la totalité de la distance parcourue pour chaque vehicule
+     * @return array
+     */
+    public function distancevehicle(){
+      return $this->query('SELECT vehicle AS label , sum(kilometrage) as data 
+      FROM "public".tournee 
+      GROUP BY label
+      order by label
+      ');
+      
+    }
+
+    /**
+     * Retourne le temps d'activité des vehicules
+     * @return array
+     */
+    public function tempvehicle(){
+      return $this->query('SELECT vehicle as label, sum(temps_travail) as data
+      FROM "public".tournee 
+      GROUP BY label
+      order by label
+      ');
+    }
+    /**
+     * Retourne le nombre de tournées effectuées pour chaque equipe
+     * @return array
+     */
+    public function tourneeequipe(){
+      return $this->query('SELECT equipe as label, count(*) as data
+      FROM "public".tournee 
+      GROUP BY label
+      order by label
+      ');
+      }
+
+    /**
+     * Retourne le temps d'activité des vehicules
+     * @return array
+     */
+    public function tempsequipe(){
+      return $this->query('SELECT equipe as label, sum(temps_travail) as data
+      FROM "public".tournee 
+      GROUP BY label
+      order by label
+      ');
+    }
+
+    /**
+     * Retourne la quantité realisé pour chaque vehicule
+     * @return array
+     */
+    public function qtevehicle(){
+      return $this->query('SELECT vehicle as label, sum(qte_realise) as data
+      FROM "public".tournee 
+      GROUP BY label
+      order by label
+      ');
+    }
+
+    /**
+     * Retourne la quantitée de dechets rammasée selon les mois de l'année actuel 
+     * @return array
+     */
+    public function qtemois(){
+      return $this->query('SELECT  extract(month FROM date) AS label , sum(qte_realise) as data
+      FROM "public".tournee 
+      WHERE date_trunc(\'year\', date) = date_trunc(\'year\', current_date) 
+      GROUP BY label
+      ORDER BY label');
+    }   
+
     /**
      * @return array
      */

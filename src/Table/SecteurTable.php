@@ -29,6 +29,18 @@ class SecteurTable extends Table{
 		return true;
 	}
 
+    /**
+     * Retourne la quantité de déchets dans chaque point de collecte
+     * @return array tableau
+     */
+    public function qte(){
+		return $this->query('SELECT code as label, qtedechet as data
+		FROM "public".secteurs
+		GROUP BY label
+		order by label
+		');
+	  }
+  
 	/**
 	 * @return array
 	 */
