@@ -101,8 +101,8 @@ class VRPController extends AbstractController{
               unset($parc['geojson']);
               $attributes = [
                   "Name" => "Parc Babez",
-                  "TimeWindowStart1" => 1355212800000,
-                  "TimeWindowEnd1" => 1355245200000
+                  "TimeWindowStart1" => 1595228400000,
+                  "TimeWindowEnd1" => 1595271600000
                 ];
 		  	$feature = ["geometry"=>$geometry, "attributes"=>$attributes];
 		  	array_push($features, $feature);
@@ -117,8 +117,8 @@ class VRPController extends AbstractController{
               unset($cet['geojson']);
               $attributes = [
                   "Name" => $cet['designation'],
-                  "TimeWindowStart1" => 1355212800000,
-                  "TimeWindowEnd1" => 1355245200000
+                  "TimeWindowStart1" => 1595228400000,
+                  "TimeWindowEnd1" => 1595271600000
                 ];
         $feature = ["type"=>"Feature", "geometry"=>$geometry, "attributes"=>$attributes];
         array_push($features, $feature);
@@ -144,8 +144,8 @@ class VRPController extends AbstractController{
                   "Name"=>"".$name."" . $vehicle["volume"] ."_". $vehicle["code"] ."_" . $vehicle["matricule"] ."",
                   "StartDepotName"=>"Parc Babez",
                   "EndDepotName"=>"CET CORSO",
-                  "EarliestStartTime"=>1355209200000,
-                  "LatestStartTime"=>1355209200000,
+                  "EarliestStartTime"=>1595228400000,
+                  "LatestStartTime"=>1595228400000,
                   "Capacities"=> "".$vehicle['volume']*0.4 ."",
                   "CostPerUnitTime"=>0.2,
                   "CostPerUnitDistance"=>1.5,
@@ -196,11 +196,11 @@ class VRPController extends AbstractController{
 
         $routeRenewals = $this->routeRenewals()->getContent();
         $url = 'https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob?';
-        $token = 'ImIoRRqIZS8qx18xjx0E-nSQxbwdaxyAVy5M53FjFAaCJ_B-WorZRDFdGyBgtqts1QBXQ-QdjHT9oiPnrKYpDgYa9rBmPAK04BVR9lTGDgPSctovxXl3P_XAVWVNFwR27oHgcB3dwy61WJGo1gcGXg..';
+        $token = 'lVIqrY2u5yuvw-IodGL9nLDOq_62KjJuxfqNokikCb6bK5u8uzuetoxhw3tyFMMsFox48R3PK9Y-Fo0Vqmfc603GXxHK8bN8n_m9mJdQjNplMleHfHcboniy3vU89l-SxqUi_Dz2JIjD6diUQr_Rfg..';
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, 'orders='. str_replace("'","",$this->orders) . '&depots='. str_replace("'","",$this->depots) . '&routes='. str_replace("'","",$this->routes) . '&route_renewals='. str_replace("'","",$routeRenewals) . '&time_units=Minutes&distance_units=Kilometers&uturn_policy=NO_UTURNS&populate_directions=true&directions_language=en&default_date=1355212800000&f=json&token='.$token.'');
+        curl_setopt($curl, CURLOPT_POSTFIELDS, 'orders='. str_replace("'","",$this->orders) . '&depots='. str_replace("'","",$this->depots) . '&routes='. str_replace("'","",$this->routes) . '&route_renewals='. str_replace("'","",$routeRenewals) . '&restrictions=[Driving a Truck,Width Restriction]&time_impedance=TruckTravelTime&time_units=Minutes&distance_units=Kilometers&uturn_policy=NO_UTURNS&populate_directions=true&directions_language=en&default_date=1355212800000&f=json&token='.$token.'');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($curl);
         curl_close($curl);
@@ -485,7 +485,8 @@ class VRPController extends AbstractController{
         
         $i = 0;
 		$unsavedRotations = [];
-		$initialiser = $this->app->Points->updateAll(["circuitsecondaire"=>null]);
+        $initialiser = $this->app->Points->updateAll(["circuitsecondaire"=>null]);
+        $initsecteurs = $this->app->Secteur->initSecteurs();
         foreach($plan as $value){
             $nom = explode("_",$value["vehicle"]);
             $codeVehicle = $nom[1];

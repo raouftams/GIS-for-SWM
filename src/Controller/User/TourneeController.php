@@ -111,7 +111,7 @@ class TourneeController extends AbstractController{
      * @Route("/dashboard/tournees/addTournee", methods={"POST","GET"}, name="addTournee")
      */
     public function ajouter(){
-      $secteurs = $this->app->Points->getSecteursQte();
+      $secteurs = $this->app->Secteur->allTournee();
       $vehicules = $this->app->Vehicle->vehiculesEnMarche();
       $equipes = $this->app->Equipe->all();
       if (!empty($_POST)) {
@@ -163,12 +163,12 @@ class TourneeController extends AbstractController{
 	 * @Route("/dashboard/tournees/addTournee/getSecteursVehiculesEquipes", name="getSecteursVehiclesEquipes")
 	 */
 	public function getSecteursVehicles(){
-		$secteurs = $this->app->Secteur->all();
+		$secteurs = $this->app->Secteur->allTournee();
     $vehicules = $this->app->Vehicle->all();
     $equipes = $this->app->Equipe->all();
-    foreach($secteurs as $s){
-      for ($i=0; $i < count($s); $i++) { 
-        unset($s[$i]);
+    foreach($secteurs as $key => $value ){
+      for ($i=0; $i < count($value); $i++) { 
+        unset($secteurs[$key][$i]);
       }
     }
     
