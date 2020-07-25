@@ -28,6 +28,7 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+	<script src="{{asset('js/leaflet/Leaflet.Editable.js')}}"></script>
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
 
@@ -36,6 +37,7 @@
 	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
 	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
 	<link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
+	<link rel="stylesheet" href="{{asset('js/leaflet/Leaflet.Editable.js')}}">
 	<link rel="stylesheet" href="{{asset('css/popup.css')}}">
 	<link rel="stylesheet" href="{{asset('css/maps.css')}}">
 	
@@ -101,7 +103,7 @@
 					<input type="checkbox" name="organismes" id="organismes" onchange="showOrganismes(this)" checked/> Organismes <i class="fa fa-square" aria-hidden="true" style="color:rgb(245, 76, 76);"></i>
 				</div>
 			</div>
-		
+		<button class="btn btn-info btn-md" onclick="saveSectorization()">Sauvegarder</button>
 	</div>
 
 	
@@ -202,7 +204,7 @@
 </script>
 	
 <script type="text/javascript">
-	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
+	var map = L.map('map',{ drawControl: true, editable: true }).setView([36.7206251, 3.1854975], 13);
 	L.esri.basemapLayer('Topographic').addTo(map);
 	
 	function getColour(d){
@@ -247,20 +249,24 @@
 				 '#4dccff';
 	}
 	
+	var groupSecteurs = L.featureGroup();
 
 	$.ajax({url:"{{path('getSecteurs')}}",
 		success: function(response){
 
 			function onEachFeature(feature, layer) {
 				layer.bindPopup('<b>Code: ' + feature.properties.code + '</b>');
+				groupSecteurs.addLayer(layer);
 			}
 
 			var secteurs = JSON.parse(response);
-
+			
 			window.lyrSecteurs = L.geoJSON(secteurs.features, {		
 				style: densityStyle,
 				onEachFeature: onEachFeature,
-				}).addTo(map);
+			});
+			map.addLayer(groupSecteurs);
+
 		},
 		error: function e(error){
 			alert("erreur");
@@ -402,17 +408,21 @@
 	}
 	
 	var drawPluginOptions = {
-		  position: 'topright',
-		  draw: {
+		position: 'topright',
+		draw: {
 		    polygon: false,
 		    // disable toolbar item by setting it to false
 		    polyline: false,
 		    circle: false, // Turns off this drawing tool
 		    rectangle: false,
 		    marker: false,
-		    },
-		  edit: false
-		};
+		},
+		edit: {
+            featureGroup: groupSecteurs,
+            remove: false,
+            edit: true
+       	}
+	};
 var drawControl = new L.Control.Draw(drawPluginOptions);
 map.addControl(drawControl);
 var editableLayers = new L.FeatureGroup();
@@ -460,7 +470,10 @@ var lc = L.control.locate({
 }).addTo(map);
 
 	
-
+function saveSectorization(){
+	var monjson = groupSecteurs.toGeoJSON();
+	console.log(monjson);
+}
 	
 	
 	
