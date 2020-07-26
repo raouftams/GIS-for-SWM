@@ -106,6 +106,7 @@
 		<button class="btn btn-info btn-md" onclick="saveSectorization()">Sauvegarder</button>
 	</div>
 
+	<div id="json"></div>
 	
 	<div id="popup1" class="overlay">
 		<div class="popup">
@@ -471,10 +472,21 @@ var lc = L.control.locate({
 
 	
 function saveSectorization(){
-	var monjson = groupSecteurs.toGeoJSON();
-	console.log(monjson);
+	var secteursJson = groupSecteurs.toGeoJSON();
+	$.ajax({
+		url: "{{path('saveSectorization')}}",
+		type: 'POST',
+        contentType: 'JSON',
+        data: JSON.stringify(secteursJson),
+		success: function(response){
+			alert(response);
+		},
+		error: function(error){
+			alert("Erreur du serveur");
+		}
+	});
 }
-	
+
 	
 	
 	/*var legend = L.control({position: 'bottomleft'});

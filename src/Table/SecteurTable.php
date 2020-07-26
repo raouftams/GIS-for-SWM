@@ -86,6 +86,14 @@ class SecteurTable extends Table{
 	public function updateGeom(){
 		return $this->query('SELECT * from update_geom()');
 	}
+
+
+	public function updateSectorization($code, $data){
+		$data = "'" . $data . "'";
+		return $this->query("UPDATE secteurs 
+		set geom = (SELECT ST_GeomFromGeoJSON({$data})) 
+		where code = ? ",[$code]);
+	}
 }
   
 

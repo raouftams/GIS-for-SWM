@@ -4,6 +4,7 @@ namespace App\Controller\User;
 use App\Controller\AppController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MapController extends AbstractController{
@@ -168,5 +169,21 @@ class MapController extends AbstractController{
         }
 		$featureCollection = ["type"=>"FeatureCollection", "features"=>$features];
 		return new Response(json_encode($featureCollection)); 
+	}
+
+
+	/**
+	 * @Route("admin/maps/saveSectorization", methods={"POST","GET"}, name="saveSectorization")
+	 */
+	public function saveSectorization(Request $request){
+		$json = $request->getContent();
+		$data = json_decode($json, true);
+
+		foreach($data["features"] as $feature){
+			$this->app->Secteur->updateSectorization($feature["properties"]["code"], json_encode($feature["geometry"]));
+		}
+
+		return new Response("Données mises à jour");
+		
 	}
 }
