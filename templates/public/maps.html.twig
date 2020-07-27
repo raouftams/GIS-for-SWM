@@ -104,6 +104,19 @@
 				</div>
 			</div>
 		<button class="btn btn-info btn-md" onclick="saveSectorization()">Sauvegarder</button>
+
+		<div class="alert alert-success" role="alert" id="alert-success" style="display:none; bottom: 0px;">
+  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  				<span aria-hidden="true">&times;</span>
+			</button>
+			<div id="alert-success-content"></div>
+		</div>
+		<div class="alert alert-danger" role="alert" id="alert-danger" style="display:none; bottom: 0px;">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+		  </button>
+		  <div id="alert-danger-content"></div>
+	  </div>
 	</div>
 
 	<div id="json"></div>
@@ -185,6 +198,8 @@
 			</div>
 		</div>
 	</div>
+
+	
 
 <script type="text/javascript">
 
@@ -470,68 +485,72 @@
             edit: true
        	}
 	};
-var drawControl = new L.Control.Draw(drawPluginOptions);
-map.addControl(drawControl);
-var editableLayers = new L.FeatureGroup();
-map.addLayer(editableLayers);
+	var drawControl = new L.Control.Draw(drawPluginOptions);
+	map.addControl(drawControl);
+	var editableLayers = new L.FeatureGroup();
+	map.addLayer(editableLayers);
 
-map.on('draw:created', function(e) {
-  var type = e.layerType;
-  window.layer = e.layer;
+	map.on('draw:created', function(e) {
+	  var type = e.layerType;
+	  window.layer = e.layer;
 
-  if (type === 'marker') {
-    window.layer.bindPopup('A popup!');
-  }
+	  if (type === 'marker') {
+	    window.layer.bindPopup('A popup!');
+	  }
 
-  editableLayers.addLayer(window.layer);
+	  editableLayers.addLayer(window.layer);
 
-});
-
-
-function select(){
-	var selected = [];
-	window.lyrPoints.eachLayer(function (marker) {
-        if (!window.layer.contains(marker.getLatLng())) {
-            marker.remove();
-        }else{
-			var m = marker.toGeoJSON();
-			L.extend(m.properties, marker.properties);
-			selected.push(m);
-		}
-		map.removeLayer(window.layer);
-    });
-	console.log(selected);
-  }
+	});
 
 
-//Get Location from gps
-var lc = L.control.locate({
-    position: 'topright',
-    strings: {
-        title: "Show me where I am."
-	},
-	initialZoomLevel: false,
-	cacheLocation: true,
-	showCompass: false,
-	drawCircle: false
-}).addTo(map);
+	function select(){
+		var selected = [];
+		window.lyrPoints.eachLayer(function (marker) {
+	        if (!window.layer.contains(marker.getLatLng())) {
+	            marker.remove();
+	        }else{
+				var m = marker.toGeoJSON();
+				L.extend(m.properties, marker.properties);
+				selected.push(m);
+			}
+			map.removeLayer(window.layer);
+	    });
+		console.log(selected);
+	}
+
+
+	//Get Location from gps
+	var lc = L.control.locate({
+	    position: 'topright',
+	    strings: {
+	        title: "Show me where I am."
+		},
+		initialZoomLevel: false,
+		cacheLocation: true,
+		showCompass: false,
+		drawCircle: false
+	}).addTo(map);
 
 	
-function saveSectorization(){
-	var secteursJson = groupSecteurs.toGeoJSON();
-	$.ajax({
-		url: "{{path('saveSectorization')}}",
-		type: 'POST',
-        contentType: 'JSON',
-        data: JSON.stringify(secteursJson),
-		success: function(response){
-			alert(response);
-		},
-		error: function(error){
-			alert("Erreur du serveur");
-		}
-	});
-}
+	function saveSectorization(){
+		var secteursJson = groupSecteurs.toGeoJSON();
+		$.ajax({
+			url: "{{path('saveSectorization')}}",
+			type: 'POST',
+	        contentType: 'JSON',
+	        data: JSON.stringify(secteursJson),
+			success: function(response){
+				document.getElementById("alert-success-content").innerHTML = "Données mises à jour avec success.";
+				$('#alert-success').show();
+				setTimeout(function() {$('#alert-success').hide()},3000);
+			},
+			error: function(error){
+				document.getElementById("alert-danger-content").innerHTML = "Erreur du serveur.";
+				$('#alert-danger').show();
+				setTimeout(function() {$('#alert-danger').hide()},3000);
+			}
+		});
+	}
 
 	
 	
@@ -559,6 +578,7 @@ function saveSectorization(){
 		document.title = response.pageTitle;
 		window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
 	}
+	
 	window.onpopstate = function(e){
 		if(e.state){
 			document.getElementById("popup1").innerHTML = e.state.html;
