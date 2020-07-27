@@ -54,11 +54,11 @@ function checkdepot()
 
 function checkvehicule()
 {
-    var Volume = document.getElementById('Volume');
-    startFix(Volume);
-    if(Volume.value === '')
+    var Code = document.getElementById('code');
+    startFix(Code);
+    if(Code.value === '')
     {     
-        Volume.classList.add("is-invalid")
+        Code.classList.add("is-invalid")
         return 0;
     }
 
@@ -140,7 +140,7 @@ function checkvehicule()
     }
     
     var Vehicule = { 
-        volume : Volume.value,
+        code : Code.value,
         depotDepart : DepotDepart.value,
         depotFin : DepotFin.value,
         heureDebut : HeureDebut.value,

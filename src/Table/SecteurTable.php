@@ -94,6 +94,11 @@ class SecteurTable extends Table{
 		set geom = (SELECT ST_GeomFromGeoJSON({$data})) 
 		where code = ? ",[$code]);
 	}
+
+	public function initSecteurs(){
+		return $this->query('UPDATE secteurs 
+		set horaire = null, vehicule = null, geom = null, qtedechet= null');
+	}
 }
   
 

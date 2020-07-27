@@ -10,7 +10,7 @@
     <!-- jQuery -->
     <script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
 	<!-- MDB core JavaScript -->
-	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script> 
     <!-- Bootstrap tooltips -->
 	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
 	<!-- Bootstrap core JavaScript -->
@@ -130,11 +130,11 @@
 								<button type="button" title="Ajouter véhicule" class="btn btn-md btn-ajouter" onclick="AjouterVehicule()">+</button>
 							</legend>	
 							<div class="form-row">
-								<label for="Volume" class="col-sm-4 col-form-label">Volume</label>
-								<select class="form-control col-md-8" id="Volume">
-								<option value="" disabled selected>Choix du Volume</option>
+								<label for="Volume" class="col-sm-4 col-form-label">Véhicule</label>
+								<select class="form-control col-md-8" id="code">
+								<option value="" disabled selected>Choisir un véhicule</option>
 								{% for vehicle in vehicles %}
-									<option value="{{vehicle.volume}}">Benne {{vehicle.volume}}m&#179;</option>
+									<option value="{{vehicle.code}}">Benne {{vehicle.volume}}m&#179;</option>
 								{% endfor %}
 								</select>
 							</div>

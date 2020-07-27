@@ -272,23 +272,32 @@
             "color": '#000', //
             "fillOpacity": 0.7 //
         };
-    }
+	}
+	
+
 
 	function getPointColor(s){
 		return  s == 'C013-A11' ? '#ff0000':
-				s == 'C013-B11' ? '#ffa500':
-				s == 'C013-C11' ? '#ffff00':
 				s == 'C013-A12' ? '#008000':
+				s == 'C013-A21' ? '#6b8464':
 				s == 'C013-A22' ? '#0000ff':
+				s == 'C013-B11' ? '#ffa500':
+				s == 'C013-B12' ? '#2607ed':
+				s == 'C013-B21' ? '#07eda4':
+				s == 'C013-C11' ? '#ffff00':
+				s == 'C013-C12' ? '#cc1a58':
 				s == 'C013-C21' ? '#4b0082':
 				s == 'C013-C22' ? '#ee82ee':
-				s == 'C013-A21' ? '#6b8464':
-				s == 'C013-C12' ? '#cc1a58':
+				s == 'C013-D11' ? '#2e50d9':
+				s == 'C013-D12' ? '#54f719':
+				s == 'C013-D21' ? '#f76002':
+				s == 'C013-D22' ? '#c4128f':
+				s == 'C013-E11' ? '#0791ed':
 				 '#4dccff';
 	}
 	
 	var groupSecteurs = L.featureGroup();
-
+	
 	$.ajax({url:"{{path('getSecteurs')}}",
 		success: function(response){
 
@@ -414,10 +423,10 @@
 
 	function showSecteurs(element){
 		if(element.checked){
-			map.addLayer(window.lyrSecteurs);
+			map.addLayer(groupSecteurs);
 		}
 		else{
-			map.removeLayer(window.lyrSecteurs);
+			map.removeLayer(groupSecteurs);
 		}
 	}
 	function showQuartiers(element){
