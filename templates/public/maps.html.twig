@@ -123,23 +123,47 @@
 	
 	<div id="popup1" class="overlay">
 		<div class="popup">
+			<div class="alert alert-success" role="alert" id="alert-success-popup" style="display:none; bottom: 0px;">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+			  </button>
+			  <div id="alert-success-popup-content"></div>
+			</div>
+			<div class="alert alert-danger" role="alert" id="alert-danger-popup" style="display:none; bottom: 0px;">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<div id="alert-danger-popup-content"></div>
+			</div>
 			<div class="btn-group btn-group-md" role="group" style="width: 80%;">
 				<button class="btn btn-outline-unique btn-md" id="edit_point" onclick="hideShow('point')">Point</button>
 				<button class="btn btn-outline-unique btn-md" id="edit_bacs" onclick="hideShow('bacs')">Bacs</button>
 			</div>
 			<a class="close" href="#">&times;</a><br>
 			<div class="content" id="content">
-				<form method="POST" class="form" id="form-point">
-					<div class="form-group col-md-6">
-						<label for="libelle">Libellé:</label>
-						<input class="form-control" type="text" name="libelle" id="libelle">
+				<form class="form" id="form-point">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="libelle">Libellé:</label>
+							<input class="form-control" type="text" name="libelle" id="libelle">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="Adresse">Adresse:</label>
+							<input type="text" class="form-control" name="adresse" id="adresse">
+						</div>
 					</div>
-					<div class="form-group col-md-6">
-						<label for="Adresse">Adresse:</label>
-						<input type="text" class="form-control" name="adresse" id="adresse">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="libelle">Début fenêtre de temps:</label>
+							<input class="form-control" type="time" name="dft" id="debut_fenetre_temps1">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="Adresse">Fin fenêtre de temps:</label>
+							<input type="time" class="form-control" name="fft" id="fin_fenetre_temps1">
+						</div>
 					</div>
 					<div class="form-group">
-						<button class="btn btn-outline-primary" type="submit" style="margin-left: 5px;">Sauvegarder</button>
+						<button class="btn btn-outline-primary" type="button" style="margin-left: 5px;" onclick="savePoint()">Sauvegarder</button>
 					</div>
 				</form>
 				<div id="form-bacs">
@@ -261,9 +285,9 @@
 		 L.control.layers(baseLayers).addTo(map);
 
 	function getColour(d){
-        return  d > 20000 ? '#005075':
-                d > 10000 ? '#0AC0C9':
-				d > 5000 ? '#B7E9F7':
+        return  d > 6 ? '#005075':
+                d > 4 ? '#0AC0C9':
+				d > 2 ? '#B7E9F7':
 							'#fffff';
 	}
 
@@ -281,7 +305,7 @@
 	}
 	function densityStyle(feature){
         return {
-            "fillColor": getColour(feature.properties.population), // Call function to get fill colour
+            "fillColor": getColour(feature.properties.qtedechet), // Call function to get fill colour
             "weight": 2, //
             "opacity": 1, //
             "color": '#000', //
@@ -317,8 +341,8 @@
 		success: function(response){
 
 			function onEachFeature(feature, layer) {
-				layer.bindPopup('<b>Code: ' + feature.properties.code + '</b>');
-				groupSecteurs.addLayer(layer);
+				layer.bindPopup('<p><b>Code: </b>' + feature.properties.code + '</p><p><b>Horaire de collecte: </b>' + feature.properties.horaire + '</p><p><b>Véhicule:</b> ' + feature.properties.vehicule + '</p><p><b>Quantité de déchets:</b> ' + feature.properties.qtedechet + '</p>');
+				groupSecteurs.addLayer(layer,{style: densityStyle(feature)});
 			}
 
 			var secteurs = JSON.parse(response);
@@ -327,6 +351,7 @@
 				style: densityStyle,
 				onEachFeature: onEachFeature,
 			});
+	
 			map.addLayer(groupSecteurs);
 
 		},
@@ -411,7 +436,7 @@
 	$.ajax({url:"{{path('getDepotss')}}",
 		success: function(response){
 			function onEachFeature(feature, layer) {
-				layer.bindPopup('<b>Désignation: ' + feature.properties.designatio + '</b>');
+				layer.bindPopup('<b>Désignation: ' + feature.properties.designation + '</b>');
 			}
 
 			window.depots = JSON.parse(response);
@@ -589,14 +614,16 @@
 	
 
 	function getPoint(code){
-		var form_point = document.getElementById("form-point");
-		var point_edit_url = "{{path('editPoint', {code: 'code_point'})}}";
-		form_point.setAttribute("action", point_edit_url.replace("code_point", code));
-
+		window.code = code;
 		window.points.features.forEach(function(obj){
 			if (obj.properties.code_point == code) {
 				document.getElementById("libelle").setAttribute("value", obj.properties.libelle);
 				document.getElementById("adresse").setAttribute("value", obj.properties.adresse);
+				
+				var dateDebut = new Date(obj.properties.debut_fenetre_temps1);
+				var dateFin = new Date(obj.properties.fin_fenetre_temps1);
+				document.getElementById("debut_fenetre_temps1").setAttribute("value", dateDebut.toString().split(" ")[4]);
+				document.getElementById("fin_fenetre_temps1").setAttribute("value", dateFin.toString().split(" ")[4]);
 			}
 		});
 		
@@ -670,6 +697,32 @@
         });
 	}	
 
+	function savePoint(){
+		var data = JSON.stringify({
+			code_point: window.code,
+			libelle: document.getElementById("libelle").value,
+			adresse: document.getElementById("adresse").value,
+			debut_fenetre_temps1: document.getElementById("debut_fenetre_temps1").value,
+			fin_fenetre_temps1: document.getElementById("fin_fenetre_temps1").value
+		});
+
+		console.log(data);
+
+		$.ajax({
+			url: "{{path('editMapsPoint')}}",
+			method: 'POST',
+			contentType: 'JSON',
+			data : data,
+			success: function(response){
+				document.getElementById("alert-success-popup-content").innerHTML = response;
+				$('#alert-success-popup').show();
+				setTimeout(function() {$('#alert-success-popup').hide()},3000);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				alert("Erreur: " + errorThrown);
+			}
+		});
+	}
 </script>
 </body>
 </html>

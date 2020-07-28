@@ -186,4 +186,21 @@ class MapController extends AbstractController{
 		return new Response("Données mises à jour");
 		
 	}
+
+
+	/**
+	 * @Route("admin/maps/editPoints", methods={"POST","GET"}, name="editMapsPoint")
+	 */
+	public function editPointFromMaps(Request $request){
+		$date = "Mon 20 July 2020";
+		$data = json_decode($request->getContent(), true);
+		$code_point = $data["code_point"];
+		unset($data["code_point"]);
+		$dft = [$date, "".$data["debut_fenetre_temps1"].""];
+        $fft = [$date, "".$data["fin_fenetre_temps1"].""];
+        $data = ["adresse"=>$data["adresse"], "libelle"=>$data["libelle"], "debut_fenetre_temps1"=> strtotime(implode(" ", $dft))*1000+60*60000, "fin_fenetre_temps1"=>strtotime(implode(" ", $fft))*1000+60*60000];
+        
+		$edit = $this->app->Points->update($code_point, $data);
+		return new Response("Données mises à jour avec Success");
+	}
 }

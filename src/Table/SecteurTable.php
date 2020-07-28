@@ -14,7 +14,16 @@ class SecteurTable extends Table{
       return $this->query('SELECT code, horaire, qtedechet, vehicule, ST_AsGeoJson(geom, 5) as geojson
       FROM "public".secteurs
       ');
-    }
+	}
+	
+	/**
+     * @return array tableau
+     */
+    public function allTournee(){
+		return $this->query('SELECT code, horaire, qtedechet, vehicule
+		FROM "public".secteurs where horaire is not null
+		');
+	  }
 
     /**
 	 * check if key exist in table

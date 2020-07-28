@@ -12,7 +12,7 @@ class PointsTable extends Table{
      * @return array tableau
      */
     public function all(){
-      return $this->query('SELECT code_point, libelle, adresse, modecollecte, activites,secteur, quantited,debut_fenetre_temps1, fin_fenetre_temps1, X, Y,geom, ST_AsGeoJson(geom, 5) as geojson
+      return $this->query('SELECT code_point, libelle, adresse, modecollecte, activites,secteur, quantited,frequence,debut_fenetre_temps1, fin_fenetre_temps1, X, Y,geom, ST_AsGeoJson(geom, 5) as geojson
       FROM "public".points_collecte
       ');
     }
