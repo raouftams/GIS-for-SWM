@@ -326,7 +326,7 @@ class TourneeController extends AbstractController{
      */
     public function getRoute($id){
         $url = 'https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob?';
-        $token = 'Y95DYK_uq3IALG1bMwOW1-CdPauYiYI4s1s7Hr4EaZlwMi2C9ZMxU45kraDjm2M89eY3hyk-Qgkmz6CvNQMRdqKy05wjjvSXkJXcrGssHo68IgTYuhe-3Jc6azTjVK85SrNSIgUmMY03kwa5iFXXTw';    
+        $token = 'b7c19qi_748UGyKkpsHR3CT67NsyiINPQ7Jg5N2xWmgXuROkMeZWYMqEKGWC41XfJjjSUAVTS6zuOwpNUwW5kevAfiUlb5GDk3MQ6v7eXMk56saQ59QpOZPlG9NAA0f3ctLFC9YCfI8Ux3zNqgstsQ..';    
         $stops = $this->getStops($id)->getContent();
         $depots = $this->getVrpDepots($id)->getContent();
         $routes = $this->getVrpRoutes($id)->getContent();
@@ -339,17 +339,21 @@ class TourneeController extends AbstractController{
         $response = curl_exec($curl);
         curl_close($curl);
         $jobId = json_decode($response,true)['jobId'];
-        sleep(10);
-        $routesUrl = "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/jobs/".$jobId."/results/out_routes?";
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $routesUrl);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, 'f=json&token='.$token.'');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl);
-        curl_close($curl);
+        $result = ["value"=>null];
+        while($result["value"] == null){
+          sleep(2);
+          $routesUrl = "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/jobs/".$jobId."/results/out_routes?";
+          $curl = curl_init();
+          curl_setopt($curl, CURLOPT_URL, $routesUrl);
+          curl_setopt($curl, CURLOPT_POST, 1);
+          curl_setopt($curl, CURLOPT_POSTFIELDS, 'f=json&token='.$token.'');
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+          $response = curl_exec($curl);
+          curl_close($curl);
+          
+          $result = json_decode($response,true);
+        }
         
-        $result = json_decode($response,true);
         $features = [];
         foreach($result['value']['features'] as $row){
             $type = "MultiLineString";

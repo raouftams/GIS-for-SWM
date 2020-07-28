@@ -33,7 +33,8 @@
 
     <style>
         #map{border:1px solid transparent; height: 100%; width: 100%; margin-top: 50px; position: fixed;}
-    </style>
+		
+	</style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
@@ -215,6 +216,7 @@
 <script type="text/javascript">
 	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
 	L.esri.basemapLayer('Topographic').addTo(map);
+
 
     $.ajax({url:"{{path('routeService',{id : id_tournee })}}",
 		success: function(response){
