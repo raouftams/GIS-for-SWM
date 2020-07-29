@@ -62,6 +62,7 @@ function checkvehicule()
         return 0;
     }
 
+
     var DepotDepart = document.getElementById('DepotDepart');
     startFix(DepotDepart);
     if(DepotDepart.value === '')
@@ -117,7 +118,7 @@ function checkvehicule()
 
     var costUnitTime = document.getElementById('costUnitTime');
     startFix(costUnitTime)
-    if(costUnitTime.value ==='' || parseInt(costUnitTime.value) === 0)
+    if(costUnitTime.value ==='')
     {
         costUnitTime.classList.add('is-invalid');
         return 0;
@@ -138,7 +139,10 @@ function checkvehicule()
         costUnitDistance.classList.add('is-invalid');
         return 0;
     }
+
+    var renewalDepot = document.getElementById('renewalDepot').value;
     
+
     var Vehicule = { 
         code : Code.value,
         depotDepart : DepotDepart.value,
@@ -148,8 +152,17 @@ function checkvehicule()
         chargeHoraire : ChargeHoraire.value,
         nbrMaxOrdres : NbrMaxOrdres.value,
         costUnitTime : costUnitTime.value,
-        costUnitDistance : costUnitDistance.value
+        costUnitDistance : costUnitDistance.value,
+        renewalDepot: renewalDepot
     };
+
+    var selectVehicle = document.getElementById("code");
+	for (let i = 0; i < selectVehicle.length; i++) {
+		if (selectVehicle.options[i].value == Code.value) {
+            selectVehicle.remove(i);
+        }
+    }
+    
     return Vehicule;
 }
 
@@ -164,14 +177,19 @@ function AjouterDepot()
     
     var sel1 = document.getElementById('DepotDepart');
     var sel2 = document.getElementById('DepotFin');
+    var sel3 = document.getElementById('renewalDepot');
     var opt = document.createElement('option');
     opt.appendChild( document.createTextNode(depot['nom']));
     opt.value = depot['nom'];
     var opt2 = document.createElement('option');
     opt2.appendChild( document.createTextNode(depot['nom']));
-    opt2.value = depot['nom'];  
+    opt2.value = depot['nom']; 
+    var opt3 = document.createElement('option');
+    opt3.appendChild( document.createTextNode(depot['nom']));
+    opt3.value = depot['code'];   
     sel1.appendChild(opt2); 
     sel2.appendChild(opt);
+    sel3.appendChild(opt3);
 }
 
 

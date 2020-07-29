@@ -25,5 +25,15 @@ class ParcTable extends Table{
       WHERE code = ?
       ', [$code]);
     }
+
+    /**
+     * @return array retourne les données d'un parc donné
+     */
+    public function findVRP($code){
+      return $this->query('SELECT designation,geom, ST_AsGeoJson(geom, 5) as geojson
+      FROM "public".parc
+      WHERE code = ?
+      ', [$code]);
+    }
 }
 ?>

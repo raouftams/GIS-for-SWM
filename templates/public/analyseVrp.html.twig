@@ -134,33 +134,33 @@
 								<select class="form-control col-md-8" id="code">
 								<option value="" disabled selected>Choisir un véhicule</option>
 								{% for vehicle in vehicles %}
-									<option value="{{vehicle.code}}">Benne {{vehicle.volume}}m&#179;</option>
+									<option value="BT{{vehicle.volume}}_{{vehicle.code}}_{{vehicle.matricule}}">Benne {{vehicle.volume}}m&#179;_{{vehicle.code}}_{{vehicle.matricule}}</option>
 								{% endfor %}
 								</select>
 							</div>
 							<div class="form-row">
-								<label for="DepotDepart" class="col-sm-4 col-form-label">Depot de depart:</label>
+								<label for="DepotDepart" class="col-sm-4 col-form-label">Depot de départ:</label>
 								<select class="form-control col-md-8" id="DepotDepart">
 								<option value="" disabled selected>Choix du Depot</option>
 								</select>
 							</div>
 							<div class="form-row">
-								<label for="DepotFin" class="col-sm-4 col-form-label">Depot de fin de tournée </label>
+								<label for="DepotFin" class="col-sm-4 col-form-label">Depot de fin de rotation </label>
 								<select class="form-control col-md-8" id="DepotFin">
 								<option value="" disabled selected>Choix du Depot</option>
 								</select>
 							</div>
 							<div class="form-row">
-								<label for="HeureDebut" class="col-sm-4 col-form-label">Heure de debut </label>
+								<label for="HeureDebut" class="col-sm-4 col-form-label">Départ au plutôt: </label>
 								<input type="time" id="HeureDebut" class="form-control col-md-8" placeholder="Select time">
 							</div>
 							<div class="form-row">
-								<label for="HeureFin" class="col-sm-4 col-form-label">Heure de fin </label>
+								<label for="HeureFin" class="col-sm-4 col-form-label">Départ au plutard </label>
 								<input type="time" id="HeureFin" class="form-control col-md-8" placeholder="Select time">
 							</div>
 							<div class="form-row">
 								<label class="col-sm-4 col-form-label" for="ChargeHoraire">Charge horaire max</label>
-								<input type="time" id="ChargeHoraire" class="form-control col-md-8" placeholder="Select time">
+								<input type="number" min="1" id="ChargeHoraire" class="form-control col-md-8">
 							</div>
 							<div class="form-row">
 								<label class="col-sm-4 col-form-label" for="NbrMaxOrdres">Nombre max d'ordres a visiter</label>
@@ -173,6 +173,12 @@
 							<div class="form-row">
 								<label class="col-sm-4 col-form-label" for="costUnitDistance">Coûts par une unité de distance:</label>
 								<input type="number" min="0" step="0.1" class="form-control col-md-8" placeholder="0" id="costUnitDistance">
+							</div>
+							<div class="form-row">
+								<label class="col-sm-4 col-form-label" for="costUnitDistance">Dépôt de renouvellement:</label>
+								<select name="renewalDepot" id="renewalDepot" class="form-control col-md-8">
+									<option value="">Choisir un Dépôt</option>
+								</select>
 							</div>
 						</fieldset>
 					</form>
@@ -219,7 +225,6 @@
 				<table class="table" id="vehicles-table">
 					<thead>
 						<th>Véhicule</th>
-						<th>Volume</th>
 						<th>Dépôt départ</th>
 						<th>Dépôt fin</th>
 						<th>Heure début</th>
@@ -227,6 +232,7 @@
 						<th>Nombre max d'ordres</th>
 						<th>coûts par minute</th>
 						<th>coûts par Km</th>
+						<th>Actions</th>
 					</thead>
 					<tbody id="vehicles_table">
 
@@ -429,7 +435,7 @@
                     "points": Points,
                     "depots": Depots,
                     "vehicles": Vehicules
-                });
+				});
         $.ajax({
             url: '{{path("receiveData")}}',
             type: 'POST',
@@ -445,14 +451,17 @@
                     window.i++;
                 }
 				var result = JSON.parse(response);
+				
+				$('#loading-image').hide();
                 window.routes = result.routes;
 				window.stops = result.stops;
 				window.plan = result.plan;
+				
                 window.lyrRoutes = L.geoJSON(window.routes.features, {
                     onEachFeature: onEachFeature,
                     }).addTo(map);
 				
-				$('#loading-image').hide();
+				
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
             {
@@ -561,11 +570,8 @@
 		Vehicules.forEach(function(vehicle) {
 			var tr = document.createElement('tr');
 			var td = document.createElement('td');
-			td.appendChild(document.createTextNode(i));
-			tr.appendChild(td); 
 			
-			td = document.createElement('td');
-			td.appendChild( document.createTextNode(vehicle.volume));
+			td.appendChild( document.createTextNode(vehicle.code));
 			tr.appendChild(td);
 			td = document.createElement('td');
 			td.appendChild( document.createTextNode(vehicle.depotDepart));
@@ -603,6 +609,17 @@
 	}
 
 	function deleteVehicle(index){
+		var vehicle = Vehicules[index];
+		var data = vehicle.code.split("_");
+		var volume = data[0];
+		var code = data[1];
+		var matricule = data[2];
+		var selectVehicle = document.getElementById("code");
+		opt = document.createElement('option');
+		opt.appendChild( document.createTextNode(volume +"_" + code + "_" + matricule));
+		opt.setAttribute("value", vehicle.code);
+		selectVehicle.appendChild(opt);
+
 		Vehicules.splice(index, 1);
 		setVehiclesToTable();
 	}
@@ -612,9 +629,9 @@
 	
 	
 	function recalculate(){
-		map.removeLayer(window.lyrRoutes);
 		$('#btn-save-recalculate').hide();
 		$('#btn-analyse').show();
+		map.removeLayer(window.lyrRoutes);
 	}
 
 	// get point's time windows
