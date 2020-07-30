@@ -47,6 +47,13 @@ function checkdepot()
         heureFin : hf.value
     };
 
+    var selectDepot = document.getElementById("Couche");
+	for (let i = 0; i < selectDepot.length; i++) {
+		if (selectDepot.options[i].value == Couche.value) {
+            selectDepot.remove(i);
+        }
+    }
+
     return Depot;
 
 }

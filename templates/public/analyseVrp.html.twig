@@ -94,13 +94,22 @@
 							</div>                     
 						</fieldset>
 					</form>
+					<div class="alert alert-success" role="alert" id="alert-success" style="display:none; bottom: 0px;">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+					  </button>
+					  <div id="alert-success-content"></div>
+				  </div>
 				</div>   
 				
 
 				<div id="les-depots" style="display: none;">	
 					<form id="depotsForm">
 						<fieldset>
-						<legend>Les dépôts <button type="button" class="btn btn-md btn-ajouter" onclick="AjouterDepot()">+</button></legend>
+						<legend>
+							<a href="#popup-depots" onclick="setDepotsToTable()" title="Table des Dépots">Les Dépôts </a> 
+							<button type="button" class="btn btn-md btn-ajouter" onclick="AjouterDepot()">+</button>
+						</legend>
 						<div class="form-row">
 							<label for="Couche" class="col-sm-4 col-form-label">Dépôt:</label>
 							<select class="form-control Depot col-md-8" id="Couche">
@@ -235,6 +244,25 @@
 						<th>Actions</th>
 					</thead>
 					<tbody id="vehicles_table">
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="overlay" id="popup-depots">
+		<div class="popup" style="width: 50%;">
+			<h3>Table des Dépôts:</h3>
+			<a class="close" href="#">&times;</a><br>
+			<div class="content" id="content">
+				<table class="table" id="depots-table">
+					<thead>
+						<th>Dépôt</th>
+						<th>Début de service</th>
+						<th>Fin de service</th>
+					</thead>
+					<tbody id="depots_table">
 
 					</tbody>
 				</table>
@@ -396,6 +424,9 @@
             map.removeLayer(window.layer);
         });
         Points = selected;
+		document.getElementById("alert-success-content").innerHTML = "Points de collecte sélectionnés.";
+		$('#alert-success').show();
+		setTimeout(function() {$('#alert-success').hide()},3000);
     }
 
 
@@ -622,6 +653,47 @@
 
 		Vehicules.splice(index, 1);
 		setVehiclesToTable();
+	}
+
+	function setDepotsToTable(){
+		var body = document.getElementById("depots_table");
+		$(body).empty();
+		var i = 0;
+		Depots.forEach(function(depot) {
+			var tr = document.createElement('tr');
+			var td = document.createElement('td');
+			
+			td.appendChild( document.createTextNode(depot.nom));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(depot.heureDebut));
+			tr.appendChild(td);
+			td = document.createElement('td');
+			td.appendChild( document.createTextNode(depot.heureFin));
+			tr.appendChild(td);
+			var btn = document.createElement('button');
+			btn.setAttribute("type", "button");
+			btn.setAttribute("class", "btn btn-danger btn-sm");
+			btn.setAttribute("onclick", "deleteDepot("+i+")");
+			btn.style.cssFloat = "right";
+			btn.appendChild(document.createTextNode("delete"));
+			td.appendChild(btn);
+			tr.appendChild(td);
+
+			body.appendChild(tr);
+			i = i+1;
+		});
+	}
+
+	function deleteDepot(index){
+		var depot = Depots[index];
+		var selectDepot = document.getElementById("Couche");
+		var opt = document.createElement('option');
+		opt.appendChild(document.createTextNode(depot.nom));
+		opt.setAttribute("value", depot.code);
+		selectDepot.appendChild(opt);
+		Depots.splice(index, 1);
+		setDepotsToTable();
 	}
 </script>
 
