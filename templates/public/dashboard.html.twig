@@ -109,6 +109,13 @@
             <td>{{tournee.equipe}}</td>
             <td>{{tournee.designation}}</td>
             <td>{{tournee.heure_demarrage_parc}}</td>
+            <td class="th-sm">
+              <div class="btn-group" style="float: right;">
+                <a class="btn btn-sm btn-warning" href=""><i class="fa fa-edit"></i></a>
+                <a class="btn btn-sm btn-danger" href="{{path('deleteTournee', {id : tournee.id_tournee})}}"><i class="fas fa-trash-alt"></i></a>
+                <a class="btn btn-sm btn-info" href="{{path('tourneeDetail', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
+              </div>
+            </td>
           </tbody>
             {% endfor %}
         {% endif %}

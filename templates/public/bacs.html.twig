@@ -16,21 +16,19 @@
 	</div>	
 </div>
  
-<table class="table">
-	<thead>
-		<tr>
-		<th scope="col" class="th-sm">ID</th>
-		<th scope="col" class="th-sm">Nature</th>
-		<th scope="col" class="th-sm">Volume</th>
-		<th scope="col" class="th-sm">Nature déchets</th>
-		<th scope="col" class="th-sm">Date installation</th>
-		<th scope="col" class="th-sm">Etat</th>
-		<th scope="col" class="th-sm">Actions</th>
-		</tr>
-	</thead>
-</table>
 <div class="tableFixHead">
 	<table class="table">
+		<thead>
+			<tr>
+			<th scope="col" >ID</th>
+			<th scope="col">Nature</th>
+			<th scope="col">Volume</th>
+			<th scope="col">Nature déchets</th>
+			<th scope="col">Date installation</th>
+			<th scope="col">Etat</th>
+			<th scope="col">Actions</th>
+			</tr>
+		</thead>
 		<tbody>
 		{% for bac in bacs %}
 			<tr>
@@ -39,9 +37,9 @@
 				<td class="th-sm">{{ bac.volume }}</td>
 				<td class="th-sm">{{ bac.typedechet }}</td>
 				<td class="th-sm">{{ bac.dateinstal }}</td>
-				<td class="th-sm"><p style="float: right; margin-right: 25px;">{{ bac.etat }}</p></td>
+				<td class="th-sm">{{ bac.etat }}</td>
 				<td class="th-sm">
-					<div class="btn-group" style="float: right;">
+					<div class="btn-group">
 						<a class="btn btn-sm btn-primary" href="{{path('editBac',{code: bac.code})}}"><i class="fa fa-edit"></i></a>
 						<a class="btn btn-sm btn-danger" href="{{path('deleteBac', {code: bac.code})}}"><i class="fas fa-trash-alt"></i></a>
 					</div>

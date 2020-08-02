@@ -27,56 +27,67 @@
         
 
 		<div class="row1" id="navbar">
-          	<div class="col-xs-2">
-            	<nav class="aside " >
-					<h2 class="page-title" style="color:white;"><b>Ajouter point de collecte</b></h2>
-					
-					<div class="btn-group-vertical" style="width: 96%;">
-			
-					<a class="btn-menu" href="{{path('dashboard')}}" style="padding-left: 0px; ">
-						<i class="fas fa-tachometer-alt"></i>
-						 	&nbsp;<b> Home </b><span class="sr-only">(current)</span>
-					</a> 
+			<div class="col-xs-2">
+			  <nav class="aside " >
+				  <h2 class="page-title" style="color:#2274BF;"><strong>Ajouter un point de collecte</strong></h2>
+				  
+				  <div class="btn-group-vertical" style="width: 96%;">
+		  
+				  <a class="btn-menu" href="{{path('dashboard')}}" style="padding-left: 0px; ">
+					  <i class="fas fa-tachometer-alt"></i>
+						   &nbsp;<strong> Home </strong><span class="sr-only">(current)</span>
+				  </a> 
 
-					<a class="btn-menu" style="padding-left: 0px;" href="{{path('charts')}}">
-						<i class="far fa-chart-bar"></i>
-						&nbsp; <b> Chart </b>
-					</a> 
+				  <a class="btn-menu" style="padding-left: 0px;" href="{{path('charts')}}">
+					  <i class="far fa-chart-bar"></i>
+					  &nbsp; <strong> Chart </strong>
+				  </a> 
 
-					<a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;color:white; ">
-						<i class="fas fa-table"></i>
-						&nbsp; <b>Tables</b>
-					</a>
-                    	<div class="collapse" id="submenu1" aria-expanded="false" style="width: 100%;">
-							<ul class="flex-column pl-2 nav">
-								<a class="nav-item md btn-sub-menu" href="{{path('tournees')}}"><small>Tournees</small></a>
-								<a class="nav-item md btn-sub-menu" href="{{path('pointsIndex')}}"><small>Points</small></a>
-								<a class="nav-item btn-sub-menu" href="{{path('vehiclesIndex')}}"><small>Véhicules</small></a>
-								<a class="nav-item btn-sub-menu" href="{{path('bacsIndex')}}"><small>Bacs</small></a>
-								<a class="nav-item btn-sub-menu" href="{{path('employesIndex')}}"><small>Employés</small></a>
-							</ul>
-						</div>
-						
-					<a class="btn-menu" href="{{path('maps')}}" style="padding-left: 0px;">
-						<i class="fas fa-map-marked-alt"></i>
-						&nbsp; <b>Maps</b> 
-					</a> 
-					{% if is_granted("ROLE_ADMIN")%}
-					<a class="btn-menu" style="padding-left: 0px;" href="{{path('analyseVrp')}}">
-						<i class="fas fa-edit"></i>
-						&nbsp; <b>Analyse </b>
-					</a>
-					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>users</b></a>
-					{% endif %}
-					<a class="btn-menu" href="{{path('logout')}}"><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</a>
-					</div>
-				</nav>
-			</div>
-        </div>
+				  <a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;  color: rgb(132, 132, 132); ">
+					  <i class="fas fa-table"></i>
+					  &nbsp; <strong>Tables</strong>
+				  </a>
+					  <div class="collapse" id="submenu1" aria-expanded="false" style="width: 100%;">
+						  <ul class="flex-column pl-2 nav submenu-list">
+							  <a class="nav-item md btn-sub-menu" href="{{path('tournees')}}"><b>Tournees</b></a>
+							  <a class="nav-item md btn-sub-menu" href="{{path('pointsIndex')}}"><b>Points</b></a>
+							  <a class="nav-item btn-sub-menu" href="{{path('vehiclesIndex')}}"><b>Véhicules</b></a>
+							  <a class="nav-item btn-sub-menu" href="{{path('bacsIndex')}}"><b>Bacs</b></a>
+							  <a class="nav-item btn-sub-menu" href="{{path('employesIndex')}}"><b>Employés</b></a>
+						  </ul>
+					  </div>
+					  
+				  <a class="btn-menu" href="{{path('maps')}}" style="padding-left: 0px;">
+					  <i class="fas fa-map-marked-alt"></i>
+					  &nbsp; <strong>Maps</strong> 
+				  </a> 
+				  {% if is_granted("ROLE_ADMIN")%}
+				  <a class="btn-menu" style="padding-left: 0px;" href="{{path('analyseVrp')}}">
+					  <i class="fas fa-route"></i>
+					  &nbsp; <strong>Analyse </strong>
+				  </a>
+				  {% endif %}
+
+				  <a class="btn-menu" style="padding-left: 0px;" href="{{path('planCollecte')}}">
+					  <i class="fas fa-calendar-alt"></i>
+					  &nbsp; <strong>Plan Collecte </strong>
+				  </a>	
+
+				  {% if is_granted("ROLE_ADMIN")%}
+				  <a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>users</b></a>
+				  {% endif %}
+				  
+				  </div>
+				  <a class="btn-logout" href="{{path('logout')}}" style="color:#e02222;" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</a>
+			  </nav>
+		  </div>
+	  </div>
         <div class="col-xs-9">
           <div class="interface">
             <div id="main_content">
-				<form method="POST" action="">
+				<div id="map" class="map"></div>
+
+				<form method="POST" action="" class="mt-4">
 					<div class="form-row">
 					  <div class="form-group col-md-6">
 						<label for="inputCode">Code</label>
@@ -89,8 +100,18 @@
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6">
+						  <label for="inputCode">Longitude</label>
+						  <input type="number" step="0.000001" class="form-control" id="inputLongitude" name="longitude">
+						</div>
+						<div class="form-group col-md-6">
+						  <label for="inputLibelle">Latitude</label>
+						  <input type="number" step="0.0000001" class="form-control" id="inputLatitude" name="latitude">
+						</div>
+					  </div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
 							<label for="inputAddress">Selectionner ou insérer une adresse</label>
-					  		<select name="select-adresse" id="adresse" class="form-control">
+					  		<select id="adresse" class="form-control" name="selectAdresse">
 								<option value="">Selectionner </option>
 						    </select>
 						</div>
@@ -106,6 +127,20 @@
 							  <option value="C013-A11">C013-A11</option>
 							</select>
 						</div>
+						<div class="form-group col-md-6">
+							<label for="inputFrequence">Fréquence de collecte</label>
+							<input type="number" min="1" max="4" name="frequence" class="form-control">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="inputSecteur">Début fenêtre de temps:</label>
+							<input type="time" class="form-control" name="debut_fenetre_temps">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="inputFrequence">Fin fenêtre de temps:</label>
+							<input type="time" name="fin_fenetre_temps" class="form-control">
+						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputAddress">activité</label>
@@ -114,7 +149,7 @@
 				  
 					<button type="submit" class="btn btn-primary">Ajouter</button>
 				  </form>
-              <div id="map" class="map"></div>
+              
             </div>
           </div>
         </div>
@@ -213,11 +248,16 @@
         var point = e.layer.getLatLng();
 		console.log(""+point.lat +","+point.lng +"");
 		editableLayers.addLayer(e.layer);
+
+		document.getElementById("inputLongitude").value = point.lng;
+		document.getElementById("inputLatitude").value = point.lat;
 		
 		$.ajax({
 			url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates",
 			type: "GET",
-			data: {f: 'json', location: ""+point.lng +","+point.lat +"", category:"education, food, parks and outdoors, hotel, Arts and Entertainment, Metro Station", token: "8ZZcyRvgH1RZjAyPojm4QBupawxGJM9hbvGOyoafpJ01HUnKQgGro0JQWuSA_SLoADkyz9LeNeszmTvR8GG7ikC0buvlq5K33ewMqlN846s-mk3R_Zh9oozDktdM4K5ykXfz7pWRC23bFx4EVYvgew..", outFields: "Palce_addr, PlaceName", maxLocations: 5, langCode: "fr", forStorage: true, featureTypes:"StreetAdresses"},
+			data: {
+				f: 'json', 
+				location: ""+point.lng +","+point.lat +"", category:"education, food, parks and outdoors, hotel, Arts and Entertainment, Metro Station", token: "8ZZcyRvgH1RZjAyPojm4QBupawxGJM9hbvGOyoafpJ01HUnKQgGro0JQWuSA_SLoADkyz9LeNeszmTvR8GG7ikC0buvlq5K33ewMqlN846s-mk3R_Zh9oozDktdM4K5ykXfz7pWRC23bFx4EVYvgew..", outFields: "Palce_addr, PlaceName", maxLocations: 5, langCode: "fr", forStorage: true, featureTypes:"StreetAdresses"},
 			success: function(response){
 				console.log(response);
 				var selAdd = document.getElementById("adresse");

@@ -19,22 +19,20 @@
 		<a class="btn btn-success btn-add btn-sm" href="{{path('addTournee')}}" value="add" type="submit"><i class="fas fa-plus"></i></a>
 	</div>	
 </div>
- 
-<table class="table">
-	<thead>
-		<tr>
-		<th scope="col">Id</th>
-		<th scope="col">Secteur</th>
-		<th scope="col">Véhicule</th>
-		<th scope="col">Equipe</th>
-		<th scope="col">CET</th>
-        <th scope="col">Quantité réalisée</th>
-        <th scope="col">Actions</th>
-		</tr>
-	</thead>
-</table>
+
 <div class="tableFixHead">
 	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col" style="text-align: center;">Id</th>
+				<th scope="col" style="text-align: center;">Secteur</th>
+				<th scope="col" style="text-align: center;">Véhicule</th>
+				<th scope="col" style="text-align: center;">Equipe</th>
+				<th scope="col" style="text-align: center;">CET</th>
+				<th scope="col" style="text-align: center;">Quantité réalisée</th>
+				<th scope="col" style="text-align: center;">Actions</th>
+			</tr>
+		</thead>
 		<tbody>
 		{% for tournee in tournees %}
 			<tr>

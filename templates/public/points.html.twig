@@ -24,21 +24,19 @@
 		<a class="btn btn-success btn-add btn-sm" href="{{path('addPoint')}}" value="add" type="submit"><i class="fas fa-plus"></i></a>
 	</div>	
 </div>
- 
-<table class="table">
-	<thead>
-		<tr>
-		<th scope="col">Code</th>
-		<th scope="col">Libelle</th>
-		<th scope="col">Adresse</th>
-		<th scope="col">Mode </th>
-		<th scope="col">Activités</th>
-		<th scope="col">Actions</th>
-		</tr>
-	</thead>
-</table>
-<div class="tableFixHead">
+
+<div class="tableFixHead mt-4">
 	<table class="table">
+		<thead>
+			<tr>
+			<th scope="col">Code</th>
+			<th scope="col">Libelle</th>
+			<th scope="col">Adresse</th>
+			<th scope="col">Mode </th>
+			<th scope="col">Activités</th>
+			<th scope="col">Actions</th>
+			</tr>
+		</thead>
 		<tbody>
 		{% for point in points %}
 			<tr>
@@ -48,9 +46,9 @@
 				<td>{{ point.modecollecte }}</td>
 				<td>{{ point.activites }}</td>
 				<td>
-					<div class="btn-group">
-						<button class="btn btn-sm btn-info"><i class="fa fa-edit"></i></button>
-						<button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
+					<div class="btn-group" style="display:flex">
+						<a class="btn btn-sm btn-info" href="{{path('editPoint', {code:point.code_point})}}"><i class="fa fa-edit"></i></a>
+						<a class="btn btn-sm btn-danger" href="{{path('deletePoint')}}"><i class="fas fa-trash-alt"></i></a>
 					</div>
 				</td>
 			</tr>

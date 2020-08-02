@@ -6,7 +6,7 @@
 <style>
     h3{
         border: 1px solid transparent;
-        background-color: #292b2c;
+        background-color: #2274BF;
         color: white;
         border-radius: 3px;
         margin-top: 40px;
@@ -17,31 +17,29 @@
 {% endblock %}
 {% block body %}
 
-<table class="table">
-	<thead class="thead-dark">
-		<tr>
-		<th scope="col">Id</th>
-		<th scope="col">Nom utilisateur</th>
-		<th scope="col">Roles &nbsp;</th>
-		<th scope="col">Equipe</th>
-		<th scope="col">Date inscription</th>
-        <th scope="col">Actions</th>
-		</tr>
-	</thead>
-</table>
 <div class="tableFixHead">
 	<table class="table">
+        <thead>
+            <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nom utilisateur</th>
+            <th scope="col">Roles &nbsp;</th>
+            <th scope="col">Equipe</th>
+            <th scope="col">Date inscription</th>
+            <th scope="col">Actions</th>
+            </tr>
+        </thead>
 		<tbody>
 		{% for user in users %}
 			<tr>
-				<td scope="row" style="padding-right: 50px;">{{ user.id }}</td>
-				<td class="th-sm" style="text-align: left;"> {{ user.username}} </td>
-				<td class="th-sm" style="text-align: right;">{% for role in user.roles %} {{role}}<br> {%endfor%}</td>
-				<td class="th-sm" style="text-align: right;">{{ user.getIdEquipe }}</td>
-				<td class="th-sm" style="text-align: right;">{{ user.getDateInscription.date| json_encode}}</td>
+				<td scope="row" >{{ user.id }}</td>
+				<td class="th-sm" > {{ user.username}} </td>
+				<td class="th-sm">{% for role in user.roles %} {{role}}<br> {%endfor%}</td>
+				<td class="th-sm">{{ user.getIdEquipe }}</td>
+				<td class="th-sm">{{ user.getDateInscription.date| json_encode}}</td>
                 
 				<td class="th-sm">
-					<div class="btn-group" style="float: right;">
+					<div class="btn-group" >
 						<a class="btn btn-sm btn-warning" href=""><i class="fa fa-edit"></i></a>
 						<a class="btn btn-sm btn-danger" href="{{path('deleteUser', {id: user.id})}}"><i class="fas fa-trash-alt"></i></a>
 					</div>

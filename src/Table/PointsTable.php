@@ -51,7 +51,28 @@ class PointsTable extends Table{
      * @return boolean 
      */
     public function add($fields){
-      return $this->create($fields);
+      $sql_parts = [];
+      $attributes = [];
+      $indexes = [];
+      $geom = $this->query("SELECT ST_SetSRID( ST_Point( {$fields['X']}, {$fields['Y']}), 4326)")[0][0];
+      
+
+      foreach ($fields as $k => $v) {
+        if ($k == "debut_fenetre_temps1") {
+          $sql_parts[] = "?";
+          $indexes[] = "geom";
+          $attributes[] = $geom;
+        }else{
+          $sql_parts[] = "?";
+          $indexes[] = $k;
+          $attributes[] = $v;
+        }
+        
+      }
+
+      $sql_part = implode(',', $sql_parts);
+      $index = implode(',', $indexes);
+      return $this->query("INSERT INTO {$this->table} ($index) Values ($sql_part)", $attributes, true);
     }
 
     /**

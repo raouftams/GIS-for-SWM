@@ -11,31 +11,29 @@
 		<a class="btn btn-success btn-add btn-sm" href="{{path('addEmploye')}}" value="add" type="submit"><i class="fas fa-plus"></i></a>
 	</div>	
 </div>
- 
-<table class="table">
-	<thead>
-		<tr>
-		<th scope="col">Matricule</th>
-		<th scope="col">Nom</th>
-		<th scope="col">Prénom</th>
-		<th scope="col">Fonction</th>
-		<th scope="col">Début contrat</th>
-		<th scope="col">Actions</th>
-		</tr>
-	</thead>
-</table>
+
 <div class="tableFixHead">
 	<table class="table">
+		<thead>
+			<tr>
+			<th scope="col">Matricule</th>
+			<th scope="col">Nom</th>
+			<th scope="col">Prénom</th>
+			<th scope="col">Fonction</th>
+			<th scope="col">Début contrat</th>
+			<th scope="col">Actions</th>
+			</tr>
+		</thead>
 		<tbody>
 		{% for employe in employes %}
 			<tr>
 				<td scope="row">{{ employe.matricule }}</td>
-				<td	class="th-sm" style="text-align: center;"> {{ employe.nom }} </td>
-				<td	class="th-sm" style="text-align: center;">{{ employe.prenom }}</td>
-				<td	class="th-sm" style="text-align: center;">{{ employe.fonction }}</td>
-				<td	class="th-sm"><p style="float: right;">{{ employe.debut_contrat }}</p></td>
+				<td	class="th-sm" > {{ employe.nom }} </td>
+				<td	class="th-sm" >{{ employe.prenom }}</td>
+				<td	class="th-sm" >{{ employe.fonction }}</td>
+				<td	class="th-sm">{{ employe.debut_contrat }}</td>
 				<td	class="th-sm">
-					<div class="btn-group" style="float:right;">
+					<div class="btn-group" >
 						<a class="btn btn-sm btn-primary" href="{{path('editEmploye', {matricule: employe.matricule})}}"><i class="fa fa-edit"></i></a>
 						<a class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                         <a class="btn btn-sm btn-warning" "><i class="fas fa-info-circle"></i></a>

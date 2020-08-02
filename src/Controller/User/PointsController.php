@@ -46,14 +46,24 @@ class PointsController extends AbstractController{
      */
     public function Add(){
       if (!empty($_POST)) {
+        if ($_POST["selectAdresse"] == "") {
+            $adresse = $_POST["adresse"];
+        }else{
+            $adresse = $_POST["selectAdresse"];
+        }
         $point = $this->app->Points->add([
-          'secteur' => $_POST['secteur'],
           'code_point' => $_POST['code'],
+          'adresse' => $adresse,
           'X' => floatval($_POST['longitude']),
-          'libelle' => $_POST['libelle'],
           'Y' => floatval($_POST['latitude']),
-          'adresse' => $_POST['adresse'],
-          'activites' => $_POST['activite']
+          'secteur' => $_POST['secteur'],
+          'activites' => $_POST['activite'],
+          'frequence' => $_POST["frequence"],
+          'libelle' => $_POST['libelle'],
+          'debut_fenetre_temps1' => $this->datetimeToMs($_POST["debut_fenetre_temps"]),
+          'fin_fenetre_temps1' => $this->datetimeToMs($_POST["fin_fenetre_temps"]),
+          'debut_fenetre_temps2' => $this->datetimeToMs($_POST["debut_fenetre_temps"])+6*60*60000,
+          'fin_fenetre_temps2' => $this->datetimeToMs($_POST["fin_fenetre_temps"])+6*60*60000
           
         ]);
         $geom = $this->app->Points->addgeom($_POST['code'], $_POST['longitude'], $_POST['latitude']);
@@ -72,15 +82,20 @@ class PointsController extends AbstractController{
       if (!empty($_POST)) {
         $point = $this->app->Points->update($_POST['code'], [
           'libelle' => $_POST['libelle'],
-          'X' => $_POST['longitude'],
-          'Y' => $_POST['latitude'],
           'adresse' => $_POST['adresse'],
           'activites' => $_POST['activite'],
-          'secteur' => $_POST['secteur'],
+          'frequence' => $_POST['frequence'],
+          'debut_fenetre_temps1' => $this->datetimeToMs($_POST['debut_fenetre_temps']),
+          'fin_fenetre_temps1' => $this->datetimeToMs($_POST['fin_fenetre_temps'])
         ]);
         return $this->index();
       }
-      $point = $this->app->Points->getPoint($code);
+      $point = $this->app->Points->getPoint($code)[0];
+      for ($i=0; $i <count($point) ; $i++) { 
+          unset($point[$i]);
+      }
+      $point["debut_fenetre_temps1"] = $this->msToTime($point["debut_fenetre_temps1"]);
+      $point["fin_fenetre_temps1"] = $this->msToTime($point["fin_fenetre_temps1"]);
       return $this->render('admin/points/edit.html.twig',[
         "point" => $point
       ]);
@@ -103,4 +118,19 @@ class PointsController extends AbstractController{
         return $this->index();
       }
     }
+
+
+    private function datetimeToMs($time){
+      $date = "Mon 20 July 2020";
+      $newTime = [$date, "".$time.""];
+
+      return strtotime(implode(" ", $newTime))*1000;
+  }
+
+
+  private function msToTime($ms){
+    $date = date("Y-m-d H:i:s",$ms/1000);
+    $date_array = explode(" ",$date);
+    return $date_array[1];
+  }
 }
