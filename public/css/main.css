@@ -20,7 +20,7 @@ nav{
 	float: left;	
 	border: 1px solid transparent;
 	box-shadow: 3px 0 5px -2px #aaacad;
-	border-right: 3px solid #2274BF;
+	border-right: 2px solid #2274BF;
 }
 nav>hr{
 	background-color: white;
