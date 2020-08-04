@@ -39,12 +39,13 @@ class SecteurTable extends Table{
 	}
 
     /**
-     * Retourne la quantité de déchets dans chaque point de collecte
+     * Retourne la quantité de déchets pour chaque secteur
      * @return array tableau
      */
     public function qte(){
 		return $this->query('SELECT code as label, qtedechet as data
-		FROM "public".secteurs
+		FROM "public".secteurs 
+		where horaire is not null
 		GROUP BY label
 		order by label
 		');
