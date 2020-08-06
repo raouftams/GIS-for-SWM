@@ -75,7 +75,7 @@
 
   <div class="mt-4 table-tournee">
     <div class="table-title">
-        <h3 class="text-center text-white font-weight-bold mb4">Tournées en attente</h3>
+        <h3 class="text-center text-white font-weight-bold mb4">Rotations en attente</h3>
     </div>
     <table class="table">
         <thead>
@@ -114,9 +114,9 @@
         <div class="col-5">
             <div class="au-card m-b-30">
                 <div class="au-card-inner"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-                    <h3 class="text-center font-weight-bold mb-4">Quantité de déchets par secteur</h3>
+                    <h3 class="text-center font-weight-bold mb-4">Rotations par véhicule</h3>
                     <hr>
-                    <canvas id="Chart1" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
+                    <canvas id="Chart8" height="195" width="390" class="chartjs-render-monitor" style="display: block; width: 390px; height: 195px;"></canvas>
                 </div>
             </div>
         </div>
@@ -137,4 +137,5 @@
 {% block javascripts %}
 <script src="{{asset('js/chart1.js')}}"></script> 
 <script src="{{asset('js/chart2.js')}}"></script>
+<script src="{{asset('js/chart8.js')}}"></script>
 {% endblock %}

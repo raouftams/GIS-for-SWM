@@ -2,6 +2,10 @@
     margin: auto;
 }
 
+.col-md-5{
+    background-color: white;
+}
+
 .table-tournee{
     border: 1px solid transparent;
     background-color: white;
