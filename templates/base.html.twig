@@ -22,30 +22,29 @@
           	<div class="col-xs-2">
             	<nav class="aside " >
 					<h2 class="page-title" style="color:#2274BF;"><strong>{% block header %} {%endblock%}</strong></h2>
-					
 					<div class="btn-group-vertical" style="width: 96%;">
 			
 					<a class="btn-menu" href="{{path('dashboard')}}" style="padding-left: 0px; ">
 						<i class="fas fa-tachometer-alt"></i>
-						 	&nbsp;<strong> Home </strong><span class="sr-only">(current)</span>
+						 	&nbsp;<strong> Tableau de bord </strong><span class="sr-only">(current)</span>
 					</a> 
 
 					<a class="btn-menu" style="padding-left: 0px;" href="{{path('charts')}}">
 						<i class="far fa-chart-bar"></i>
-						&nbsp; <strong> Chart </strong>
+						&nbsp; <strong> Statistiques </strong>
 					</a> 
 
-					<a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;  color: rgb(132, 132, 132); ">
+					<a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;  color: rgb(77, 77, 77); ">
 						<i class="fas fa-table"></i>
 						&nbsp; <strong>Tables</strong>
 					</a>
                     	<div class="collapse" id="submenu1" aria-expanded="false" style="width: 100%;">
 							<ul class="flex-column pl-2 nav submenu-list">
-								<a class="nav-item md btn-sub-menu" href="{{path('tournees')}}"><b>Tournees</b></a>
-								<a class="nav-item md btn-sub-menu" href="{{path('pointsIndex')}}"><b>Points</b></a>
-								<a class="nav-item btn-sub-menu" href="{{path('vehiclesIndex')}}"><b>Véhicules</b></a>
-								<a class="nav-item btn-sub-menu" href="{{path('bacsIndex')}}"><b>Bacs</b></a>
-								<a class="nav-item btn-sub-menu" href="{{path('employesIndex')}}"><b>Employés</b></a>
+								<a class="nav-item md btn-sub-menu" href="{{path('tournees')}}"><b><i class="fas fa-route"></i> &nbsp;&nbsp; Rotations</b></a>
+								<a class="nav-item md btn-sub-menu" href="{{path('pointsIndex')}}"><b><i class="fas fa-map-marker-alt"></i> &nbsp; &nbsp; Points</b></a>
+								<a class="nav-item btn-sub-menu" href="{{path('vehiclesIndex')}}"><b><i class="fas fa-truck-moving"></i> &nbsp; &nbsp; Véhicules</b></a>
+								<a class="nav-item btn-sub-menu" href="{{path('bacsIndex')}}"><b><i class="fas fa-dumpster"></i> &nbsp; &nbsp; Bacs</b></a>
+								<a class="nav-item btn-sub-menu" href="{{path('employesIndex')}}"><b><i class="fas fa-user-alt"></i> &nbsp; &nbsp; Employés</b></a>
 							</ul>
 						</div>
 						
@@ -56,21 +55,21 @@
 					{% if is_granted("ROLE_ADMIN")%}
 					<a class="btn-menu" style="padding-left: 0px;" href="{{path('analyseVrp')}}">
 						<i class="fas fa-route"></i>
-						&nbsp; <strong>Analyse </strong>
+						&nbsp; <strong>Analyse VRP </strong>
 					</a>
 					{% endif %}
 
 					<a class="btn-menu" style="padding-left: 0px;" href="{{path('planCollecte')}}">
 						<i class="fas fa-calendar-alt"></i>
-						&nbsp; <strong>Plan Collecte </strong>
+						&nbsp; <strong>Plan de collecte </strong>
 					</a>	
 
 					{% if is_granted("ROLE_ADMIN")%}
-					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>users</b></a>
+					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>Utilisateurs</b></a>
 					{% endif %}
 					
 					</div>
-					<a class="btn-logout" href="{{path('logout')}}" style="color:#e02222;" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</a>
+					<a class="btn-logout" href="{{path('logout')}}" style="color:#e02222;" ><strong><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</strong></a>
 				</nav>
 			</div>
         </div>

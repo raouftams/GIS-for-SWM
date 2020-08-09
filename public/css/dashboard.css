@@ -9,12 +9,13 @@
 .table-tournee{
     border: 1px solid transparent;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px #cccdce;
 }
 .table-title{
     border: 1px solid transparent;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     background-color: #2274BF;
 }
 

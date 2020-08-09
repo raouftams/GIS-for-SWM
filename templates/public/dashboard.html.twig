@@ -69,7 +69,7 @@
   <div class="jumbotron" style="height: 30%; padding-top: 0; border-radius: 5px;">
     <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets par secteur</h3>
     <hr>
-    <canvas id="Chart1" height="70" class="chartjs-render-monitor"></canvas>
+    <canvas id="Chart1" height="200" style="width: 100%; height: 30%;" class="chartjs-render-monitor"></canvas>
               
   </div>
 
@@ -77,12 +77,13 @@
     <div class="table-title">
         <h3 class="text-center text-white font-weight-bold mb4">Rotations en attente</h3>
     </div>
-    <table class="table">
+    <table class="table" style="text-align: center;">
         <thead>
             <th>Secteur</th>
             <th>Véhicule</th>
             <th>Equipe</th>
             <th>CET</th>
+            <th>Date</th>
             <th>Heure début</th>
             <th>Actions</th>
         </thead>
@@ -93,12 +94,13 @@
             <td>{{tournee.marque}}</td>
             <td>{{tournee.equipe}}</td>
             <td>{{tournee.designation}}</td>
+            <td>{{tournee.date}}</td>
             <td>{{tournee.heure_demarrage_parc}}</td>
             <td class="th-sm">
-              <div class="btn-group" style="float: right;">
+              <div class="btn-group">
                 <a class="btn btn-sm btn-warning" href=""><i class="fa fa-edit"></i></a>
-                <a class="btn btn-sm btn-danger" href="{{path('deleteTournee', {id : tournee.id_tournee})}}"><i class="fas fa-trash-alt"></i></a>
-                <a class="btn btn-sm btn-info" href="{{path('tourneeDetail', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
+                <a class="btn btn-sm btn-danger" href=""><i class="fas fa-trash-alt"></i></a>
+                <a class="btn btn-sm btn-info" href=""><i class="fas fa-info-circle"></i></a>
               </div>
             </td>
           </tbody>
