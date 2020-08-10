@@ -40,7 +40,7 @@ class TourneeController extends AbstractController{
     }
 
     /**
-     * @Route("/user/tournee/{id}/details", methods={"POST","GET"}, name="tourneeDetail")
+     * @Route("/dashboard/tournee/{id}/details", methods={"POST","GET"}, name="tourneeDetail")
      */
     public function detail($id){
       $bon = $this->app->Tournee->getBonTransport($id);
@@ -57,18 +57,58 @@ class TourneeController extends AbstractController{
   }
 
     /**
-     * @Route("/user/tournee/{id}/update", methods={"POST","GET"}, name="updateTournee")
+     * @Route("/dashboard/tournee/{id}/update", methods={"POST","GET"}, name="updateTournee")
      */
     public function update($id){
-      if(empty($_POST)){
-        $tournee = $this->app->Tournee->findWithId($id);
-        $t = $tournee[0];
-        for ($i=0; $i < count($t) ; $i++) { 
-          unset($t[$i]);
-        }
-        return $this->render('public/tournee/edit.html.twig', ["tournee"=>$t, "result"=>null]);
-      }
-      return new Response("azul");
+		$secteurs = $this->app->Secteur->allTournee();
+		$vehicules = $this->app->Vehicle->vehiculesEnMarche();
+		$equipes = $this->app->Equipe->all();
+		if(empty($_POST)){
+			$tournee = $this->app->Tournee->findWithId($id);
+			$t = $tournee[0];
+			for ($i=0; $i < count($t) ; $i++) { 
+				unset($t[$i]);
+			}
+			return $this->render('public/tournee/edit.html.twig', [
+			"tournee_id"=> $id,
+			"tournee"=>$t, 
+			"vehicles"=>$vehicules, 
+			"secteurs"=> $secteurs, 
+			"equipes" => $equipes,
+			"result"=>null]);
+		}
+
+		$this->app->Tournee->edit($id, [
+            "date" => $_POST['date'],
+            "qte_prevue" => $_POST['qte_prevue'],
+            "heure_demarrage_parc" =>  $_POST['heure_demarrage_parc'],
+            "secteur" =>  $_POST['secteur'],
+            "vehicle" => $_POST['vehicle'],
+            "cet" => $_POST['cet'],
+            "equipe" => intval($_POST['equipe'])
+		]);
+		$this->app->Tournee->updateBonTransport($id, [
+			"date" => $_POST["date"],
+			"heure_debut" => $_POST["heure_demarrage_parc"],
+			"vehicule" => $_POST["vehicle"],
+			"equipe" => $_POST["equipe"],
+			"secteur" => $_POST["secteur"]
+		]);
+		$this->app->Tournee->updateTicketPesee($id, [
+			"date_ticket" => $_POST["date"]
+		]);
+		$tournee = $this->app->Tournee->findWithId($id);
+		$t = $tournee[0];
+		for ($i=0; $i < count($t) ; $i++) { 
+			unset($t[$i]);
+		}
+		return $this->render('public/tournee/edit.html.twig', [
+			"tournee_id"=> $id,
+			"tournee"=>$t, 
+			"vehicles"=>$vehicules, 
+			"secteurs"=> $secteurs, 
+			"equipes" => $equipes,
+			"result"=> "Rotation mise à jour avec succés."]);
       
     } 
 

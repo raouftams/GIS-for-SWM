@@ -172,7 +172,7 @@ class TourneeTable extends Table{
 	 * retourne les tournees en attente
 	 */
 	public function getTourneesEnAttente(){
-		return $this->query('SELECT  t.secteur, c.designation, v.marque, t.qte_prevue, heure_demarrage_parc, equipe, t.vehicle, t.date
+	return $this->query('SELECT t.id_tournee,  t.secteur, c.designation, v.marque, t.qte_prevue, heure_demarrage_parc, equipe, t.vehicle, t.date
     FROM "public".tournee t, "public".vehicule v, "public".cet c
     WHERE v.code = t.vehicle and c.code = t.cet and (t.date > current_date or (t.date = current_date and t.heure_demarrage_parc > current_time ) )');
   }
@@ -274,6 +274,30 @@ class TourneeTable extends Table{
 		$sql_part = implode(',', $sql_parts);
 		return $this->query("INSERT INTO {$table} Values ($sql_part)", $attributes, true);
   }
+
+	public function updateBonTransport($tournee, $bonData){
+		$sql_parts = [];
+		$attributes = [];
+		foreach ($bonData as $k => $v) {
+			$sql_parts[] = "$k = ?";
+			$attributes[] = $v;
+		}
+		$attributes[] = $tournee;
+		$sql_part = implode(',', $sql_parts);
+		return $this->query("UPDATE bon_transport SET $sql_part WHERE tournee = ?", $attributes, true);
+	}
+
+	public function updateTicketPesee($tournee, $ticketData){
+		$sql_parts = [];
+		$attributes = [];
+		foreach ($ticketData as $k => $v) {
+			$sql_parts[] = "$k = ?";
+			$attributes[] = $v;
+		}
+		$attributes[] = $tournee;
+		$sql_part = implode(',', $sql_parts);
+		return $this->query("UPDATE ticket_pesee SET $sql_part WHERE tournee = ?", $attributes, true);
+	}
 
   }
 
