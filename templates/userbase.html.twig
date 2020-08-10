@@ -19,15 +19,16 @@
 	<!-- Material Design Bootstrap -->
 	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/table.css')}}">
+    <link rel="stylesheet" href="{{asset('css/userBase.css')}}">
         
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <a href="#" class="navbar-brand">
             Tableau de bord
         </a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
+            <i class="fas fa-bars"></i>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -36,7 +37,7 @@
                 <a class="nav-item nav-link">Contact</a>
             </div>
             <div class="navbar-nav ml-auto">
-                <a class="nav-item nav-link"href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a>
+                <a class="nav-item nav-link logout"href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a>
             </div>
         </div>
     </nav>
@@ -72,7 +73,7 @@
 
                                 <td class="th-sm">
                                     <div class="btn-group" style="text-align:center;">
-                                        <a class="btn btn-sm btn-primary" href="{{path('tourneeDetail', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
+                                        <a class="btn btn-sm btn-primary" href="{{path('tourneeMaps', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
                                     </div>
                                 </td>
                             </tr>

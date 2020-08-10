@@ -38,13 +38,15 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
-		<button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-  		  <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
-  		</button>
-		<a class="navbar-brand" href="#">Tournee</a>
-		
+		<a href="#" class="navbar-brand">
+            Rotation maps
+        </a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
+            <i class="fas fa-bars"></i>
+        </button>
+		<div class="collapse navbar-collapse" id="navbarNav">
 		{% if is_granted('ROLE_SUPERUSER')%}
-			<div class="collapse navbar-collapse" id="navbarNav">
+			
 			  <ul class="navbar-nav">
 				<li class="nav-item active">
 				  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
@@ -71,7 +73,6 @@
 					<a class="nav-link" href="#popup-tournee">edit tournee</a>
 				  </li>
 			  </ul>
-			</div>
 		{%endif %}
 		{% if is_granted('ROLE_USER') and not is_granted('ROLE_SUPERUSER')%}
 			<ul class="navbar-nav mr-auto">
@@ -90,6 +91,7 @@
           		<li class="nav-item"><a class="nav-link logout" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
           		</li>
         </ul>
+		</div>
     </nav>
 	
 	<div class="page">
