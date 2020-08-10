@@ -32,3 +32,14 @@ h3{
     text-align: center;
 }
 .lyrDiv{border: 1px solid transparent; margin-left: 2%;}
+
+.btn-sauvegarder{
+    width: 30%; 
+    position: fixed;
+    bottom: 0;
+    left: 70%; 
+    border: 1px solid #2f8adf;
+    background-color: #2f8adf;
+    color: #ffffff;
+    height: 50px;
+  }

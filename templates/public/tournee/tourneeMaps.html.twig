@@ -216,8 +216,44 @@
 </script>
 
 <script type="text/javascript">
+	//OSM tiles attribution and URL
+	var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+	var osmURL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib = '&copy; ' + osmLink;
+		
+	//Carto tiles attribution and URL
+	var cartoLink = '<a href="http://cartodb.com/attributions">CartoDB</a>';
+	var cartoURL = 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+	var cartoAttrib = '&copy; ' + osmLink + ' &copy; ' + cartoLink;
+
+	//Stamen Toner tiles attribution and URL
+	var stamenURL = 'http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}';
+	var stamenAttrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+	//Creation of map tiles
+	var osmMap = L.tileLayer(osmURL, {attribution: osmAttrib});
+	var cartoMap = L.tileLayer(cartoURL, {attribution: cartoAttrib});
+	var stamenMap = L.tileLayer(stamenURL,{
+			attribution: stamenAttrib,
+			subdomains: 'abcd',
+			minZoom: 0,
+			maxZoom: 20,
+			ext: 'png'
+		});
 	var map = L.map('map',{ drawControl: true }).setView([36.7206251, 3.1854975], 13);
 	L.esri.basemapLayer('Topographic').addTo(map);
+
+	//Base layers definition and addition
+	var baseLayers = {
+			"Esri Topographic": L.esri.basemapLayer('Topographic'),
+			"OSM Mapnik": osmMap,
+			"Carto DarkMatter": cartoMap,
+			"Stamen Toner": stamenMap,
+			"Esri imagery": L.esri.basemapLayer('Imagery')
+		};
+	  
+		 //Add baseLayers to map as control layers
+		 L.control.layers(baseLayers).addTo(map);
 
 
     $.ajax({url:"{{path('routeService',{id : id_tournee })}}",
