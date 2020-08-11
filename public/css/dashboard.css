@@ -2,23 +2,72 @@
     margin: auto;
 }
 
-.col-md-5{
-    background-color: white;
-}
 
 .table-tournee{
     border: 1px solid transparent;
     background-color: white;
     border-radius: 5px;
-    box-shadow: 2px 2px 2px 1px #cccdce;
+    box-shadow: 0px 2px 2px 1px #cccdce;
+    width: 100%;
+    overflow-x: auto;
+}
+.table-tournee .table{
+    width: 700px;
+    height: 333px;
+    overflow-x: auto;
+}
+.table-tournee .table td , th{
+    white-space:nowrap;
 }
 .table-title{
     border: 1px solid transparent;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    background-color: #2274BF;
+    background-color: #ffffff;
+    width: 100% ;
+    position: sticky;
+    color: #2274BF;
 }
 
-.card-employe{
-    border-right: 3px solid #2274BF !important;
+.table-tournee::-webkit-scrollbar{
+	height: 10px;
+	background-color: #afcbe6;
+}
+.table-tournee::-webkit-scrollbar-thumb{
+	background-color: #2a81d3;
+}
+.table-tournee .table::-webkit-scrollbar{
+    display: none;
+}
+
+.card-rotation-vehicle{
+    border: 1px solid transparent;
+    border-radius: 5px !important;
+    height: 426px !important;
+    background-color: #ffffff;
+    color: #2274BF;
+}
+
+.card-employe .card-body{
+    background-image: linear-gradient(to right,#0083B0, #00B4DB);
+    border: 1px solid transparent;
+    border-right: 1px solid #00B4DB;
+    border-left: 1px solid #0083B0;
+    border-radius: 5px;
+}
+
+.card-tournee .card-body{
+    background-image: linear-gradient(to right,#11998e,#38ef7d);
+    border: 1px solid transparent;
+    border-right: 1px solid #38ef7d;
+    border-left: 1px solid #11998e;
+    border-radius: 5px;
+}
+
+.card-tournee-encours .card-body{
+    background-image: linear-gradient(to right,#cb2d3e,#ef473a);
+    border: 1px solid transparent;
+    border-right: 1px solid #ef473a;
+    border-left: 1px solid #cb2d3e;
+    border-radius: 5px;
 }

@@ -3,7 +3,7 @@ html,body,nav,img,footer, .interface {
 }
 
 body{
-	background-color: rgb(248, 248, 248);
+	background-color: rgb(235, 235, 235);
 }
 body::-webkit-scrollbar{
 	display: none;
