@@ -40,11 +40,12 @@ class BacController extends AbstractController{
           'adresse' => $_POST['adresse'],
           'typemat' => $_POST['nature'],
           'etat' => $_POST['etat'],
-          'typedechet' => $_POST['nature_dechet']
+          'typedechet' => $_POST['nature_dechet'],
+          'pointc' => $_POST['point']
         ]);
         if ($result){
           return $this->render('admin/bacs/add.html.twig',[
-            "result" => "Bac inséré.",
+            "result" => "Bac inséré avec succès.",
             "bac" => null
           ]);
         }

@@ -43,7 +43,17 @@ class BacsTable extends Table{
      * @return boolean 
      */
     public function add($fields){
-      	return $this->create($fields);
+      $sql_parts = [];
+      $attributes = [];
+      $indexes = [];
+      foreach ($fields as $k => $v) {
+        $sql_parts[] = "?";
+        $indexes[] = $k;
+        $attributes[] = $v;
+      }
+      $sql_part = implode(',', $sql_parts);
+      $columns = implode(',', $indexes);
+      return $this->query("INSERT INTO {$this->table} ({$columns}) Values ($sql_part)", $attributes, true);
     }
 
     /**

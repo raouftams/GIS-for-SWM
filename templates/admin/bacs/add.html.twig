@@ -1,57 +1,231 @@
-{% extends "base.html.twig" %}
-{% block title %}Ajouter bac{%endblock%}
-{% block header %}Ajouter bac{%endblock%}
-{% block body %}
-{% if result != null %}
-<div class="alert alert-success">
-  {{result}}
-</div>
-{% endif %}
-<form method="POST" action="{{path('addBac')}}">
-  <div class="form-row">
-    <div class="form-group col-md-4">
-      <label for="inputCode">Code</label>
-      <input type="text" class="form-control" name="code">
-    </div>
-    <div class="form-group col-md-4">
-        <label for="inputLongitude">Adresse</label>
-        <input type="text" name="adresse" class="form-control" >
-      </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-4">
-        <label for="inputLatitude" >Nature</label>
-        <select name="nature" class="form-control" id="">
-            <option value="plastique">Plastique</option>
-            <option value="métalique">Métalique</option>
-            <option value="Galvanisé">Galvanisé</option>
-        </select>
-      </div>
-    <div class="form-group col-md-4">
-      <label for="inputLatitude">Nature de déchets:</label>
-      <input type="text" name="nature_dechet" class="form-control" >
-    </div>
-    <div class="form-group col-md-8">
-        <label for="inputLibelle">Volume</label>
-        <input type="number" step="5" class="form-control" name="volume">
-      </div>
-  </div>
-    <div class="form-row">
-        <div class="form-group col-md-4">
-            <label for="inputAddress">Etat:</label>
-            <select name="etat" id="" class="form-control">
-                <option value="Bon" selected>Bon</option>
-                <option value="Moyen" selected>Moyen</option>
-                <option value="Dégradé" selected>Dégradé</option>
-            </select>
-        </div>
-        <div class="form-group col-md-8">
-            <label for="inputAddress">Date d'installation:</label>
-            <input type="date"  class="form-control col-md-6" name="date" >
-        </div>
-    </div>
-    
-  <button type="submit" class="btn btn-primary">Ajouter</button>
-</form>
+<!DOCTYPE html>
+<html>
+  	<head>
+        <meta charset="UTF-8">
+        <title>Ajouter un bac</title>
+		<link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+		<!-- Google Fonts Roboto -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+		<!-- Material Design Bootstrap -->
+		<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+		<link rel="stylesheet" href="{{asset('css/main.css')}}">
+		<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
 
-{% endblock %}
+		<style>
+    	  .map {
+    	    height: 250px;
+    	    width: 100%;
+    	  }
+    	</style>
+    </head>
+	<body style="background-color: #f2f2f2;">
+		<div class="row1" id="navbar">
+			<div class="col-xs-2">
+			  <nav class="aside " >
+				  <h2 class="page-title" style="color:#2274BF;"><strong>Ajouter un point de collecte</strong></h2>
+				  <div class="btn-group-vertical" style="width: 96%;">
+		  
+				  <a class="btn-menu" href="{{path('dashboard')}}" style="padding-left: 0px; ">
+					  <i class="fas fa-tachometer-alt"></i>
+						   &nbsp;<strong> Tableau de bord </strong><span class="sr-only">(current)</span>
+				  </a> 
+
+				  <a class="btn-menu" style="padding-left: 0px;" href="{{path('charts')}}">
+					  <i class="far fa-chart-bar"></i>
+					  &nbsp; <strong> Statistiques </strong>
+				  </a> 
+
+				  <a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;  color: rgb(77, 77, 77); ">
+					  <i class="fas fa-table"></i>
+					  &nbsp; <strong>Tables</strong>
+				  </a>
+					  <div class="collapse" id="submenu1" aria-expanded="false" style="width: 100%;">
+						  <ul class="flex-column pl-2 nav submenu-list">
+							  <a class="nav-item md btn-sub-menu" href="{{path('tournees')}}"><b><i class="fas fa-route"></i> &nbsp;&nbsp; Rotations</b></a>
+							  <a class="nav-item md btn-sub-menu" href="{{path('pointsIndex')}}"><b><i class="fas fa-map-marker-alt"></i> &nbsp; &nbsp; Points</b></a>
+							  <a class="nav-item btn-sub-menu" href="{{path('vehiclesIndex')}}"><b><i class="fas fa-truck-moving"></i> &nbsp; &nbsp; Véhicules</b></a>
+							  <a class="nav-item btn-sub-menu" href="{{path('bacsIndex')}}"><b><i class="fas fa-dumpster"></i> &nbsp; &nbsp; Bacs</b></a>
+							  <a class="nav-item btn-sub-menu" href="{{path('employesIndex')}}"><b><i class="fas fa-user-alt"></i> &nbsp; &nbsp; Employés</b></a>
+						  </ul>
+					  </div>
+					  
+				  <a class="btn-menu" href="{{path('maps')}}" style="padding-left: 0px;">
+					  <i class="fas fa-map-marked-alt"></i>
+					  &nbsp; <strong>Maps</strong> 
+				  </a> 
+				  {% if is_granted("ROLE_ADMIN")%}
+				  <a class="btn-menu" style="padding-left: 0px;" href="{{path('analyseVrp')}}">
+					  <i class="fas fa-route"></i>
+					  &nbsp; <strong>Analyse VRP </strong>
+				  </a>
+				  {% endif %}
+
+				  <a class="btn-menu" style="padding-left: 0px;" href="{{path('planCollecte')}}">
+					  <i class="fas fa-calendar-alt"></i>
+					  &nbsp; <strong>Plan de collecte </strong>
+				  </a>	
+
+				  {% if is_granted("ROLE_ADMIN")%}
+				  <a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>Utilisateurs</b></a>
+				  {% endif %}
+				  
+				  </div>
+				  <a class="btn-logout" href="{{path('logout')}}" style="color:#e02222;" ><strong><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion</strong></a>
+			  </nav>
+		  </div>
+	  </div>
+	  <div class="col-xs-9">
+		<div class="interface">
+		  <div id="main_content">
+			{% if result != null %}
+			<div class="alert alert-success">
+			{{result}}
+			</div>
+			{% endif %}
+
+			<div id="map" class="map"></div>
+
+
+			<form method="POST" action="{{path('addBac')}}" class="mt-4">
+			<div class="form-row">
+				<div class="form-group col-md-4">
+					<label for="inputCode">Point de collecte:</label>
+					<input type="text" class="form-control" name="point" id="code_point">
+				</div>
+				<div class="form-group col-md-8">
+					<label for="inputLongitude">Adresse</label>
+					<input type="text" name="adresse" class="form-control" id="adresse">
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-4">
+					<label for="inputLatitude" >Nature</label>
+					<select name="nature" class="form-control" id="">
+						<option value="plastique">Plastique</option>
+						<option value="métalique">Métalique</option>
+						<option value="Galvanisé">Galvanisé</option>
+					</select>
+				</div>
+				<div class="form-group col-md-4">
+					<label for="inputLibelle">Volume</label>
+					<input type="number" step="5" class="form-control" name="volume">
+				</div>
+				<div class="form-group col-md-4">
+					<label for="inputAddress">Etat:</label>
+					<select name="etat" id="" class="form-control">
+						<option value="Bon" selected>Bon</option>
+						<option value="Moyen" selected>Moyen</option>
+						<option value="Dégradé" selected>Dégradé</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-8">
+					<label for="inputLatitude">Nature des déchets:</label>
+					<input type="text" name="nature_dechet" class="form-control" >
+				</div>
+				
+				<div class="form-group col-md-4">
+					<label for="inputAddress">Date d'installation:</label>
+					<input type="date"  class="form-control " name="date" >
+				</div>
+			</div>
+				
+			<button type="submit" class="btn btn-primary">Ajouter</button>
+			</form>
+		</div>
+		</div>
+		</div>
+	</body>
+
+	<script>
+		function processAjaxData(response, urlPath){
+			document.getElementById("main_content").innerHTML = response.html;
+			document.title = response.pageTitle;
+			window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
+		}
+		window.onpopstate = function(e){
+			if(e.state){
+				document.getElementById("main_content").innerHTML = e.state.html;
+				document.title = e.state.pageTitle;
+			}
+		};
+
+	</script>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script src="{{asset('js/leaflet/leaflet.js')}}"></script>
+	<script src="{{asset('js/leaflet/esriservices/esri-leaflet.js')}}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+	<script src=" https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
+
+	<!-- jQuery -->
+	<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+	<!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+	
+	<script type="text/javascript">
+
+		   //Instanciation d'une maps avec le fond topographiqe d'ESRI
+	var map = L.map('map').setView([36.7206251, 3.1854975], 13);
+	L.esri.basemapLayer('Topographic').addTo(map);
+
+	// requete pour charger les points de collecte
+	$.ajax({url:"{{path('getPoints')}}",
+		success: function(response){
+			var myIcon = L.icon({
+				iconUrl: '{{asset("img/leaflet/marker.png")}}',
+				iconSize: [30, 30],
+			});
+
+			var selected;
+
+			window.points = JSON.parse(response);
+			Points = window.points;
+			window.lyrPoints = L.geoJSON(window.points, {
+				pointToLayer: function x(features, coordinates) {
+							return L.circleMarker(coordinates, {
+								color: 'black',
+								fillColor: 'black',
+								fillOpacity: 0.7,
+								radius: 5
+							});
+					}
+			}).on('click', function (e) {
+					// Check for selected
+					if (selected) {
+						// Reset selected to default style
+						e.target.resetStyle(selected)
+					}
+					// Assign new selected
+					selected = e.layer
+					// Bring selected to front
+					selected.bringToFront()
+					// Style selected
+					selected.setStyle({
+						'color': 'red',
+						'fillColor': 'red'
+					})
+					// change 
+					document.getElementById("code_point").value = selected.toGeoJSON().properties.code_point;
+					document.getElementById("adresse").value = selected.toGeoJSON().properties.adresse;
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+	});
+
+</script>
+
+</html>
