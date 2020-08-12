@@ -16,11 +16,71 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        
+		
+		<div class="navbar navbar-expand-lg fixed-top top-nav">
+			<a href="#" class="navbar-brand font-weight-bold">
+				GDMA Bab Ezzouar
+			</a>
+			<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
+				<i class="fas fa-bars"></i>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+			{% if is_granted('ROLE_SUPERUSER')%}
+				
+				  <ul class="navbar-nav">
+					<li class="nav-item active">
+					  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-tachometer-alt"></i>
+						&nbsp;<strong> Tableau de bord </strong><span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="collapse" data-target="#submenu2" aria-haspopup="true" aria-expanded="false">
+							<i class="fas fa-table"></i>
+						&nbsp; <strong>Tables</strong>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown" id="submenu2">
+						  <a class="dropdown-item btn-drop-menu" href='{{path("pointsIndex")}}'><b><i class="fas fa-map-marker-alt"></i> &nbsp; &nbsp; Points</b></a>
+						  <a class="dropdown-item btn-drop-menu" href='{{path("bacsIndex")}}'><b><i class="fas fa-dumpster"></i> &nbsp; &nbsp; Bacs</b></a>
+						  <a class="dropdown-item btn-drop-menu" href='{{path("vehiclesIndex")}}'><b><i class="fas fa-truck-moving"></i> &nbsp; &nbsp; Véhicules</b></a>
+						  <a class="dropdown-item btn-drop-menu" href='{{path("tournees")}}'><b><i class="fas fa-route"></i> &nbsp;&nbsp; Rotations</b></a>
+						  <a class="dropdown-item btn-drop-menu" href='{{path("employesIndex")}}'><b><i class="fas fa-user-alt"></i> &nbsp; &nbsp; Employés</b></a>
+						</div>
+					  </li>
+					<li class="nav-item">
+					  <a class="nav-link" href="{{path('maps')}}"><i class="fas fa-map-marked-alt"></i>
+						&nbsp; <strong>Maps</strong> </a>
+					</li>
+					{% if is_granted("ROLE_ADMIN")%}
+					<li class="nav-item">
+					  <a class="nav-link" href="{{path('analyseVrp')}}"><i class="fas fa-route"></i>
+						&nbsp; <strong>Analyse VRP </strong></a>
+					</li>
+					{% endif %}
+					<li class="nav-item">
+						<a class="nav-link" href="{{path('planCollecte')}}">
+							<i class="fas fa-calendar-alt"></i>
+							&nbsp; <strong>Plan de collecte </strong>
+						</a>
+					</li>
+					{% if is_granted("ROLE_ADMIN")%}
+					<li class="nav-item">	
+						<a class="nav-link" href="{{path('addUser')}}">
+							<i class="fas fa-user-alt"></i>
+							&nbsp;<b>Utilisateurs</b></a>
+					</li>
+					{% endif %}
+					
+			{%endif %}
+
+			<ul class="navbar-nav ml-auto">
+					  <li class="nav-item"><a class="nav-link logout" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
+					  </li>
+			</ul>
+			</div>
+		</div>
 
 		<div class="row1" id="navbar">
           	<div class="col-xs-2">
-            	<nav class="aside " >
+            	<nav class="aside " id="myMenu" >
 					<h2 class="page-title" style="color:#2274BF;"><strong>GDMA Bab Ezzouar</strong></h2>
 					<div class="btn-group-vertical" style="width: 96%;">
 			
@@ -92,7 +152,8 @@
                     document.getElementById("main_content").innerHTML = e.state.html;
                     document.title = e.state.pageTitle;
                 }
-            };
+			};
+			
 
 		</script>
 		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

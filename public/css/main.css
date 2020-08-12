@@ -116,3 +116,72 @@ nav>div>button{
 	padding-left: 5px;
 	margin-top: 0px!important;
 }
+
+
+.top-nav{
+	visibility: hidden;
+	position: fixed; 
+	box-shadow:none; 
+	border-bottom: 2px solid rgb(223, 222, 222); 
+	background-color: rgb(253, 253, 253);
+
+}
+
+.top-nav .navspan{
+    color: rgb(132, 132, 132) !important;
+    margin-top: 12px;
+    z-index: 100;
+}
+.top-nav .nav-link{
+    color: rgb(132, 132, 132);
+    border: 2px solid transparent;
+}
+.top-nav .nav-link:hover{
+    color: #2274BF;
+    border-bottom: 2px solid #2274BF;
+    background-color: rgb(248, 248, 248);
+}
+
+.top-nav .logout:hover{
+    color: #e02222;
+    border-bottom: 2px solid #e02222;
+    background-color: rgb(248, 248, 248);
+}
+
+.top-nav .navbar-brand{color: #2274BF;}
+
+#submenu2{
+	width: 40%;
+}
+.top-nav .btn-drop-menu{
+	border: 1px solid transparent;
+	margin-bottom: 5px;
+	color: rgb(77, 77, 77) !important;
+}
+.top-nav .btn-drop-menu:hover{
+	border-bottom: 2px solid #2274BF;
+	color: #2274BF !important;
+	background-color: rgb(231, 231, 231) !important;
+}
+
+@media only screen and (max-width: 970px){
+	nav{
+		visibility: hidden;
+		width: 0;
+	}
+	.top-nav{
+		visibility: visible;
+	}
+	.interface{
+		display: block;
+		width: 100%;
+		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 65px;
+	}
+
+	.navbar-toggler{
+		z-index:100;
+	}
+}

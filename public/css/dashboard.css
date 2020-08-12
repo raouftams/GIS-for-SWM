@@ -41,11 +41,15 @@
 }
 
 .card-rotation-vehicle{
-    border: 1px solid transparent;
+    border: 1px solid rgb(214, 214, 214);
     border-radius: 5px !important;
     height: 426px !important;
+    width: 95% !important;
+    margin-left: auto;
+    margin-right: auto;
     background-color: #ffffff;
     color: #2274BF;
+    padding: 0;
 }
 
 .card-employe .card-body{
@@ -70,4 +74,8 @@
     border-right: 1px solid #ef473a;
     border-left: 1px solid #cb2d3e;
     border-radius: 5px;
+}
+
+.chart{
+    width: 100% !important;
 }
