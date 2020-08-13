@@ -56,6 +56,21 @@ class ChartsController extends AbstractController{
      }
       return new Response(json_encode($qtemois));
       }
+
+    /**
+     * @Route("dashboard/charts/qteDechets", name= "getQteDechets")
+     */
+    public function qteDechets(){
+      $qtePrevue = $qteRealisee = [];
+      $qtemois = $this->app->Tournee->qteRealiseEtPrevue();
+      foreach ($qtemois as $key => $value) {
+      unset($qtemois[$key][0]);
+      unset($qtemois[$key][1]);
+      array_push($qtePrevue, ["label" => $qtemois[$key]["label"], "data" => floatval($qtemois[$key]["prevuedata"])]);
+      array_push($qteRealisee, ["label" => $qtemois[$key]["label"], "data" => floatval($qtemois[$key]["realisedata"])]);
+     }
+      return new Response(json_encode(["qtePrevue"=>$qtePrevue, "qteRealisee"=>$qteRealisee]));
+    }
   
   /**
    * @Route("/dashboard/charts/data3", name ="getdatachart3")

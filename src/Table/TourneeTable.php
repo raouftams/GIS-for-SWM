@@ -105,6 +105,19 @@ class TourneeTable extends Table{
     }   
 
     /**
+     * Retourne la quantité de dechets prévue et réalisée
+     * @return array
+     */
+    public function qteRealiseEtPrevue(){
+      return $this->query('SELECT  extract(month FROM date) AS label , sum(qte_realise) as realiseData, sum(qte_prevue) as prevueData
+      FROM "public".tournee 
+      WHERE date_trunc(\'year\', date) = date_trunc(\'year\', current_date) 
+      GROUP BY label
+      ORDER BY label');
+    } 
+
+
+    /**
      * @return array
      */
     public function findWithId($id){
