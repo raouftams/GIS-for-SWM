@@ -66,12 +66,14 @@
 <br>
 <div class="container-fluid mt-4">
 
-  <div class="jumbotron" style="height: 30%; padding-top: 0; border-radius: 5px;">
-    <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets par secteur</h3>
+  
+  <div class="jumbotron" style="height: 30%; width: 100%; padding-top: 0; border-radius: 5px;">
+    <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets (En tonne)</h3>
     <hr>
-    <canvas id="Chart1" height="200" class="chartjs-render-monitor chart"></canvas>
+    <canvas id="ChartQteDechets" height="200" class="chartjs-render-monitor chart" style="display: block; width: 390px; height: 195px;"></canvas>
               
   </div>
+  
 <div class="row mt-4">
   <div class="col-md-7 mb-4" style="float: left;">
     <div class="table-title">
@@ -124,13 +126,14 @@
 </div>
 </div>
 
+<div class="jumbotron" style="height: 30%; padding-top: 0; border-radius: 5px;">
+  <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets par secteur (En tonne)</h3>
+  <hr>
+  <canvas id="Chart1" height="200" class="chartjs-render-monitor chart"></canvas>
+            
+</div>
 
-    <div class="jumbotron" style="height: 30%; width: 100%; padding-top: 0; border-radius: 5px;">
-      <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets </h3>
-      <hr>
-      <canvas id="ChartQteDechets" height="200" class="chartjs-render-monitor chart" style="display: block; width: 390px; height: 195px;"></canvas>
-                
-    </div>
+
 <br>
 
 {% endblock %}

@@ -24,10 +24,10 @@ $.ajax({url:"http://127.0.0.1:8000/dashboard/charts/qteDechets",
                     label: "Quantité réalisée",
                     data: dataRealise,
                     backgroundColor: [
-                        'rgba(109, 213, 237, 0)',
+                        'rgba(70, 169, 255, 0)',
                         ],
                         borderColor: [
-                        'rgba(0, 10, 130, .7)',
+                        'rgba(65, 159, 240, .7)',
                         ],
                     borderWidth: 2
                     },
