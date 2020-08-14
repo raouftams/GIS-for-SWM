@@ -6,10 +6,10 @@ $.ajax({url:"http://127.0.0.1:8000/dashboard/charts/qteDechets",
             var result = JSON.parse(response);
 
 			result.qtePrevue.forEach(function(obj){
-                dataPrevue[parseInt(obj.label)] = obj.data;
+                dataPrevue[parseInt(obj.label)-1] = obj.data;
             });
             result.qteRealisee.forEach(function(obj){
-                dataRealise[parseInt(obj.label)] = obj.data;
+                dataRealise[parseInt(obj.label)-1] = obj.data;
             });
 
             console.log(dataPrevue);
