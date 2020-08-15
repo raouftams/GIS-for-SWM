@@ -111,7 +111,7 @@ class TourneeTable extends Table{
     public function qteRealiseEtPrevue(){
       return $this->query('SELECT  extract(month FROM date) AS label , sum(qte_realise) as realiseData, sum(qte_prevue) as prevueData
       FROM "public".tournee 
-      WHERE date_trunc(\'year\', date) = date_trunc(\'year\', current_date) 
+      WHERE date_trunc(\'year\', date) = date_trunc(\'year\', current_date) and qte_realise is not null 
       GROUP BY label
       ORDER BY label');
     } 

@@ -35,10 +35,10 @@ class UserController extends AbstractController{
             $equipe =  intval($_POST['id_equipe']);
             
             if ($role == 'Administrateur') {
-                $roles = ['ROLE_ADMIN','ROLE_USER','ROLE_SUPERUSER'];
+                $roles = ['ROLE_ADMIN','ROLE_SUPERUSER','ROLE_USER'];
             }else{
                 if ($role == 'Planificateur') {
-                    $roles = ['ROLE_USER','ROLE_SUPERUSER'];
+                    $roles = ['ROLE_SUPERUSER','ROLE_USER'];
                 }else{
                     $roles = ['ROLE_USER'];
                 }

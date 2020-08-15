@@ -9,9 +9,14 @@
         background-color: #2274BF;
         color: white;
         border-radius: 3px;
-        margin-top: 40px;
+
         text-align: center;
         height: 40px;
+    }
+    .addUser{
+        border: 1px solid transparent;
+        background-color: #ffffff;
+        border-radius: 3px;
     }
 </style>
 {% endblock %}
@@ -23,7 +28,7 @@
             <tr>
             <th scope="col">Id</th>
             <th scope="col">Nom utilisateur</th>
-            <th scope="col">Roles &nbsp;</th>
+            <th scope="col">Rôle &nbsp;</th>
             <th scope="col">Equipe</th>
             <th scope="col">Date inscription</th>
             <th scope="col">Actions</th>
@@ -34,9 +39,19 @@
 			<tr>
 				<td scope="row" >{{ user.id }}</td>
 				<td class="th-sm" > {{ user.username}} </td>
-				<td class="th-sm">{% for role in user.roles %} {{role}}<br> {%endfor%}</td>
+				<td class="th-sm">
+                    {% if user.roles[0] == "ROLE_ADMIN" %} 
+                        Administrateur
+                    {%endif%}
+                    {% if user.roles[0] == "ROLE_SUPERUSER" %}
+                        Planificateur
+                    {%endif%}
+                    {% if user.roles[0] == "ROLE_USER" %}
+                        Chef d'équipe
+                    {%endif%}
+                    </td>
 				<td class="th-sm">{{ user.getIdEquipe }}</td>
-				<td class="th-sm">{{ user.getDateInscription.date| json_encode}}</td>
+				<td class="th-sm">{{ user.getDateInscription.date|date("m/d/Y")}}</td>
                 
 				<td class="th-sm">
 					<div class="btn-group" >
@@ -50,7 +65,9 @@
   	</table>
 </div>
 <hr>
-<h3>Ajouter un utilisateur</h3>
+<div class="addUser">
+
+<h3 class="mb-4">Ajouter un utilisateur</h3>
 {% if result != null %}
     <h4 class="alert alert-success">{{result}}</h4>
 {% endif %}
@@ -68,7 +85,7 @@
     </div>
     <div class="form-row">   
         <div class="form-group col-md-4">
-            <label>Role dans le système:</label>
+            <label>R$ole dans le système:</label>
             <select name="role" class="form-control">
                 <option value="Administrateur">Administrateur</option>
                 <option value="Planificateur">Planificateur</option>
@@ -76,7 +93,7 @@
             </select>
         </div>
         <div class="form-group col-md-4">
-            <label>Choisie Equipe:</label>
+            <label>Choisir Equipe:</label>
             <select name="id_equipe" class="form-control">
             <option value="0" selected>Choisir equipe</option>
             {% for equipe in equipes %}
@@ -87,5 +104,5 @@
     </div>
     <button type="submit" class="btn btn-info" style="float:left;">Ajouter</button>
 </form>
-
+</div>
 {% endblock %}
