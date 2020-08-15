@@ -46,11 +46,11 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 		  <ul class="navbar-nav">
 				<li class="nav-item active">
-				  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
+				  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-home"></i>Tableau de bord <span class="sr-only">(current)</span></a>
 				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-table"></i> &nbsp; Table
+						<i class="fas fa-table"></i> &nbsp; Tables
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 					  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
@@ -64,8 +64,17 @@
 				  <a class="nav-link" href="{{path('maps')}}"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
 				</li>
 				<li class="nav-item">
+				  <a class="nav-link" href="{{path('planCollecte')}}"><i class="fas fa-calendar-alt"></i>Plan de collecte</a>
+				</li>
+				{% if is_granted("ROLE_ADMIN")%}
+				<li class="nav-item">
 				  <a class="nav-link" href="{{path('analyseVrp')}}"><i class="fas fa-route"></i>Analyse</a>
 				</li>
+				<li class="nav-item">
+				  <a class="nav-link" href="{{path('addUser')}}"><i class="fas fa-user-alt"></i>Utilisateurs</a>
+				</li>
+				{% endif %}
+				
 			</ul>
 			<ul class="navbar-nav ml-auto">
           		<li class="nav-item"><a class="nav-link logout" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
@@ -115,7 +124,7 @@
 							<button type="button" class="btn btn-md btn-ajouter" onclick="AjouterDepot()">+</button>
 						</legend>
 						<div class="form-row">
-							<label for="Couche" class="col-sm-4 col-form-label">Dépôt:</label>
+							<label for="Couche" class="col-sm-4 col-form-label">Dépôt :</label>
 							<select class="form-control Depot col-md-8" id="Couche">
 							{% for depot in depots %}
 								<option value="{{depot.code}}"  selected>{{depot.designation}}</option>
@@ -124,11 +133,11 @@
 							</div>
 
 							<div class="form-row">
-								<label for="hd" class="col-sm-4 col-form-label" >Heure de debut </label>
+								<label for="hd" class="col-sm-4 col-form-label" >Début de service :</label>
 								<input type="time" id="hd" class="form-control Depot col-md-8" placeholder="Select time">
 							</div>
 							<div class="form-row">
-								<label for="hf" class="col-sm-4 col-form-label">Heure de fin </label>
+								<label for="hf" class="col-sm-4 col-form-label">Fin de service :</label>
 								<input type="time" id="hf" class="form-control Depot col-md-8" placeholder="Select time" >
 							</div>
 						</fieldset>
@@ -202,8 +211,8 @@
 				</div>
 				<div id="btn-save-recalculate" style="display: none; text-align: center;">
 					<button type="button" id="btn-save" class="btn btn-success" onclick="saveResult()" >Sauvegarder</button>
-					<button type="button" id="btn-recalculate" class="btn btn-warning" onclick="recalculate()" >Recalcul</button>
-					<a href="#popup-result"><button class="btn btn-unique" id="btn-results" onclick="setDataToTable()" >Resultats</button></a>
+					<button type="button" id="btn-recalculate" class="btn btn-warning" onclick="recalculate()" >Recalculer</button>
+					<a href="#popup-result"><button class="btn btn-unique" id="btn-results" onclick="setDataToTable()" >Résultats</button></a>
 				</div>
 			</div>
 	</div>
