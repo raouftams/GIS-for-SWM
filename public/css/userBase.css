@@ -25,6 +25,41 @@
 .interface{
     border: 1px solid transparent;
     margin-top: 65px !important;
+    text-align: center;
     z-index: 100%;
 }
+.table thead{
+    background-color: #2a81d3;
+    color: #ffffff;
+}
+.table th, td{
+    white-space:nowrap;
+}
 
+.interface h2{
+    color: #2a81d3;
+    font-weight: bold;
+}
+
+footer{
+    position: absolute;
+    border: 1px solid transparent;
+    width: 100%;
+    bottom: 0;
+    text-align:center; 
+   
+}
+
+
+@media only screen and (max-width: 992px){
+    .interface{
+        margin: auto;
+    }
+    .table-responsive::-webkit-scrollbar{
+        height: 10px;
+        background-color: #afcbe6;
+    }
+    .table-responsive::-webkit-scrollbar-thumb{
+        background-color: #2a81d3;
+    }
+}

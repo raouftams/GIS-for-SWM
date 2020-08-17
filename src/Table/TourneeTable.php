@@ -207,7 +207,7 @@ class TourneeTable extends Table{
    * retourne les tournées d'une equipe donnée
    */
   public function getTourneesEquipe($id){
-    return $this->query('SELECT t.id_tournee, t.secteur, c.designation, v.marque, v.volume, t.qte_prevue, t.heure_demarrage_parc, t.date
+    return $this->query('SELECT t.id_tournee, t.secteur, c.designation, v.marque, v.matricule, v.volume, t.qte_prevue, t.heure_demarrage_parc, t.date
       FROM "public".tournee t, "public".vehicule v, "public".cet c
       WHERE v.code = t.vehicle and c.code = t.cet and t.equipe = ? and t.date >= current_date
       ',[$id]);

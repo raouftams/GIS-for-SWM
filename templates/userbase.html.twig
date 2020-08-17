@@ -18,7 +18,6 @@
 	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 	<!-- Material Design Bootstrap -->
 	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/table.css')}}">
     <link rel="stylesheet" href="{{asset('css/userBase.css')}}">
         
 </head>
@@ -33,8 +32,8 @@
 
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="{{path('userIndex')}}" ><i class="fas fa-tachometer-alt"></i>&nbsp; Home <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link">Contact</a>
+                <a class="nav-item nav-link" href="{{path('userIndex')}}" ><i class="fas fa-tachometer-alt"></i>&nbsp; Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="">Contact</a>
             </div>
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link logout"href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a>
@@ -46,44 +45,50 @@
         <div class="container mt-4">
             <div class="interface">
               <div id="main_content">
-                <h2>Tournées à effectuer</h2><br>
-                <table class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Secteur</th>
-                        <th scope="col">Véhicule</th>
-                        <th scope="col">CET</th>
-                        <th scope="col" style="margin-left: 40px;">Date</th>
-                        <th scope="col" style="margin-left: 40px;">Heure</th>
-                        <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                
-            
-                        <tbody>
-                        {% for tournee in tournees %}
+                <h2>Rotations à effectuer</h2><br>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
-                                <td scope="row">{{ tournee.id_tournee }}</td>
-                                <td> {{ tournee.secteur }} </td>
-                                <td>{{ tournee.marque }} {{tournee.volume}}m&#179;</td>
-                                <td>{{ tournee.designation }}</td>
-                                <td>{{ tournee.date }}</td>
-                                <td>{{ tournee.heure_demarrage_parc }}</td>
-
-                                <td class="th-sm">
-                                    <div class="btn-group" style="text-align:center;">
-                                        <a class="btn btn-sm btn-primary" href="{{path('tourneeMaps', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
-                                    </div>
-                                </td>
+                            <th scope="col">Secteur</th>
+                            <th scope="col">Véhicule</th>
+                            <th scope="col">CET</th>
+                            <th>Quantité prévue</th>
+                            <th scope="col" style="margin-left: 40px;">Date</th>
+                            <th scope="col" style="margin-left: 40px;">Heure</th>
+                            <th scope="col">Actions</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                      </table>
+                        </thead>
+                    
+                
+                            <tbody>
+                            {% for tournee in tournees %}
+                                <tr>
+                                    <td> {{ tournee.secteur }} </td>
+                                    <td>{{ tournee.marque }}_{{tournee.volume}}m&#179;_{{tournee.matricule}}</td>
+                                    <td>{{ tournee.designation }}</td>
+                                    <td>{{ tournee.qte_prevue }} Tonnes</td>
+                                    <td>{{ tournee.date }}</td>
+                                    <td>{{ tournee.heure_demarrage_parc }}</td>
+
+                                    <td class="th-sm">
+                                        <div class="btn-group" style="text-align:center;">
+                                            <a class="btn btn-sm btn-info" href="{{path('tourneeMaps', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             </div>
         </div>
+        <footer>
+            <h5></h5>
+        </footer>
+
 
 </body>
 </html>
