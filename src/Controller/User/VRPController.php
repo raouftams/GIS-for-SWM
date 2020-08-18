@@ -199,7 +199,7 @@ class VRPController extends AbstractController{
         $this->orders = $this->getOrders()->getContent();
         
         $url = 'https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem/submitJob?';
-        $token = 'pjybK6-QiR8Sr93PhNMgvI_4RqmiMx6MbQYK_hPhyoIpFCoGNgAsPi467wYTC7bhGvEsHrPs2J4s7s3uCLc17n19PpH3gMqB3bUF_j3mxcrdswrDobQFFTa579-lF9dPSEzVu2dkau7dNVoxsVjNTA..';
+        $token = $this->app->token;
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_POST, 1);

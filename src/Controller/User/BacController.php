@@ -108,7 +108,7 @@ class BacController extends AbstractController{
   }
 
     /**
-     * @Route("/admin/edit-tournee-bac", name="editTourneeBac")
+     * @Route("/user/edit-tournee-bac", name="editTourneeBac")
      */
     public function editFromTournee(Request $request){
       $data = json_decode($request->getContent(), true);

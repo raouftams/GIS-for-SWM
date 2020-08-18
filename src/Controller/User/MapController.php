@@ -143,7 +143,7 @@ class MapController extends AbstractController{
 	}
 
 	/**
-	 * @Route("dashboard/maps/getBacs/{code_point}", methods={"POST","GET"}, name="getBacs")
+	 * @Route("user/maps/getBacs/{code_point}", methods={"POST","GET"}, name="getBacs")
 	 */
 	public function getBacs($code_point){
 		$bacs = $this->app->Bacs->getBacsPoint($code_point);
