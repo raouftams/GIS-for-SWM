@@ -19,7 +19,7 @@ class SecteurTable extends Table{
 	/**
      * @return array tableau
      */
-    public function allTournee(){
+    public function allTournee(){ 
 		return $this->query('SELECT code, horaire, qtedechet, vehicule
 		FROM "public".secteurs where horaire is not null
 		');

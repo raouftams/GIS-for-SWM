@@ -1,0 +1,60 @@
+{% extends "base.html.twig" %}
+{%block title %}Plan de collecte{% endblock %}
+{%block header %}Plan de collecte{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{asset('css/table.css')}}">
+
+{% endblock %}
+
+{%block body %}
+{% if result != null %}   
+    <div class="alert alert-success">
+        {{result}}
+    </div>
+{% endif %}
+
+    <div class="plan-table">
+            <table class="table" style="text-align:center">
+                <thead class="bg-primary text-white">
+                    <th>Secteur</th>
+                    <th>Matériel</th>
+                    <th>Quantité prévue (Tonne)</th>
+                    <th>Heure début</th>
+                    <th>Heure fin</th>
+                    <th>Distance totale (Km)</th>
+                    <th>Nombre de points</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                {% for d in data %}
+                <form action="" method="POST">
+                    <tr>
+                        <td><input class="form-control" type="text" name="secteur" value="{{d.secteur}}" readonly></td>
+                        <td>
+                            <select name="vehicle" id="vehicle" class="form-control">
+                                <option value="{{d.code}}" selected>{{d.vehicle}}</option>
+                                {% for v in vehicles %}
+                                    <option value="{{v.code}}">{{v.code}}_{{v.matricule}}_{{v.genre}}_{{v.volume}}m3</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input class="form-control" type="number" id="qte_dechets" step="0.1" name="qte_dechets" value="{{d.qte_dechets}}"></td>
+                        <td><input class="form-control" type="time" id="heure_debut" name="heure_debut" value="{{d.heure_debut}}"></td>
+                        <td><input class="form-control" type="time" id="heure_fin" name="heure_fin" value="{{d.heure_fin}}"></td>
+                        <td><input class="form-control" type="number" id="kilometrage" step="0.1" name="kilometrage" value="{{d.kilometrage}}"></td>
+                        <td><input class="form-control" type="number" id="nombre_points" step="1" name="nombre_points" value="{{d.nombre_points}}"></td>
+                        <td><button class="btn btn-success btn-sm" type="submit"><i class="fas fa-check"></i></button></td>
+                    </tr>
+                </form>
+                {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    
+
+
+{% endblock %}
+{% block javascripts %}
+
+{% endblock %}

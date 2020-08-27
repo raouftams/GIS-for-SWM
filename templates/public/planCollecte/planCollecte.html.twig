@@ -1,0 +1,125 @@
+{% extends "base.html.twig" %}
+{%block title %}Plan de collecte{% endblock %}
+{%block header %}Plan de collecte{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{asset('css/table.css')}}">
+	<link rel="stylesheet" href="{{asset('css/plancollecte.css')}}">
+
+{% endblock %}
+
+{%block body %}
+<div class="plan-container">
+	<h2 class="text-center">Plans de collecte</h2>
+	<div class="actions">
+		<ul>
+			<li>
+				<div class="row">
+					<form action="" method="POST">
+						<div class="form-group" >
+							<label for="inputPlan">Selectionner un plan</label>
+							<select name="code_plan" class="form-control col-md-10" style="border: 1px solid rgb(219, 219, 219);float: left;">
+							{% for c in codes %}
+								<option value="{{c.code_plan}}">{{c.code_plan}}_{{c.date}}</option>
+							{% endfor %}
+							</select>
+							<button class="btn btn-outline-info btn-sm btn-submit" style="border: 1px solid transparent; float:left;" type="submit">OK</button>
+						</div>
+					</form>
+				</div>
+			</li>
+			<li>
+			<a class="btn-utiliser" onclick="usePlan('{{code_plan}}')" style="color:green"><i class="fas fa-check"></i> Utiliser</a>
+			</li>
+			<li>
+				<a class="btn-modifier" href="{{path('editPlan', {code: code_plan})}}" style="color:orange" title="Modifier le plan"><i class="fa fa-edit"></i> Modifier</a>
+			</li>
+			<li>
+			<a class="btn-supprimer" onclick="deletePlan('{{code_plan}}')" style="color:red" title="Supprimer le plan"><i class="fas fa-trash-alt"></i> Supprimer</a>
+			</li>
+			<li>
+				<a class="btn btn-primary btn-md btn-nouveau-plan" href="{{path('analyseVrp')}}" title="Nouveau plan"><i class="fas fa-plus"></i></a>
+			</li>
+		</ul>
+	</div>
+	<div class="info-plan">
+		<ul>
+			<li><b>Code plan:</b> {{code_plan}}</li>
+			<li><b>Date plan:</b> {{date_plan}}</li>
+			<li><b>Etat du plan:</b> {{etat_plan}}</li>
+		</ul>
+	</div>
+</div>
+
+
+<div class="plan-table">
+	<div class="tableFixHead">
+		<table class="table" style="text-align:center">
+			<thead class="bg-primary text-white">
+				<th>Secteur</th>
+				<th>Matériel</th>
+				<th>Quantité prévue (Tonne)</th>
+				<th>Heure début</th>
+				<th>Heure fin</th>
+				<th>Distance totale (Km)</th>
+				<th>Nombre de points</th>
+			</thead>
+			<tbody>
+			{% for d in data %}
+				<tr>
+					<td>{{d.secteur}}</td>
+					<td>{{d.vehicle}} m3</td>
+					<td>{{d.qte_dechets}}</td>
+					<td>{{d.heure_debut}}</td>
+					<td>{{d.heure_fin}}</td>
+					<td>{{d.kilometrage}}</td>
+					<td>{{d.nombre_points}}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+	function usePlan(code){
+		var data = {
+			"code_plan": code,
+		};
+		var url = "{{path('usePlan', {code: code_plan})}}";
+		url.replace("code_plan", code);
+		$.ajax({
+			url: url,
+            type: 'POST',
+            contentType: 'JSON',
+            data: data,
+            success: function(response) { 
+				alert(response);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+				alert("Erreur: " + errorThrown);
+            }
+		});
+	}
+
+	function deletePlan(code){
+		var url = "{{path('deletePlan', {code: code_plan})}}";
+		url.replace("code_plan", code);
+		$.ajax({
+			url: url,
+            success: function(response) { 
+				alert(response);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+				alert("Erreur: " + errorThrown);
+            }
+		});
+	}
+</script>
+{% endblock %}

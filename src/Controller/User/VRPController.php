@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\Date;
 
 class VRPController extends AbstractController{
 
@@ -24,6 +25,7 @@ class VRPController extends AbstractController{
         $this->app->loadModel('Vehicle');
         $this->app->loadModel('CET');
         $this->app->loadModel('Secteur');
+        $this->app->loadModel('Plan');
     }
 
     /**
@@ -373,7 +375,7 @@ class VRPController extends AbstractController{
             array_push($plan, ["vehicle"=>$vehicle["Name"], "rotations"=>$rotations]);
         }
        
-        $result = ["routes" => $vehiclesCollection, "stops" => $stopsCollection, "plan" => $plan];
+        $result = ["plan" => $plan];
         return new Response(json_encode($result));
         
     }
@@ -514,17 +516,41 @@ class VRPController extends AbstractController{
         
         $i = 0;
 		$unsavedRotations = [];
-        $initialiser = $this->app->Points->updateAll(["circuitsecondaire"=>null]);
+        /*$initialiser = $this->app->Points->updateAll(["circuitsecondaire"=>null]);
         $initsecteurs = $this->app->Secteur->initSecteurs();
+        */
         foreach($plan as $value){
             $nom = explode("_",$value["vehicle"]);
             $codeVehicle = $nom[1];
             foreach($value["rotations"] as $rotation){
                 if($this->checkRotation($rotation)){
                     if($i < count($secteurs)){
-						$date = date("Y-m-d H:i:s",$rotation["demarrage_parc"]/1000);
+						$date = date("Y-m-d H:i",$rotation["demarrage_parc"]/1000);
 						$date_array = explode(" ",$date);
-						$demarrage = $date_array[1];
+                        $demarrage = $date_array[1];
+                        $date = date("Y-m-d H:i",$rotation["fin_rotation"]/1000);
+						$date_array = explode(" ",$date);
+                        $fin = $date_array[1];
+                        
+
+                        $plan_rotation = [
+                            "code_plan" => 'plan_2',
+                            "heure_debut" => $demarrage,
+                            "heure_fin" => $fin,
+                            "vehicle" => $codeVehicle,
+                            "secteur" => $secteurs[$i],
+                            "qte_dechets" => floatval(number_format($rotation["quantite_dechets"], 2, ',', ' ')),
+                            "kilometrage" => floatval(number_format($rotation["distance_totale"], 2, ',',' ')),
+                            "nombre_points" => count($rotation["ordres"]),
+                            "date" => date("Y-m-d"),
+                            "etat" => "not used"
+
+                        ];
+
+                        $this->app->Plan->add($plan_rotation);
+
+
+                        /*
                         if($this->app->Secteur->exist($secteurs[$i])== false){
                             $this->app->Secteur->add(["code"=>$secteurs[$i], "vehicule"=>$codeVehicle, "horaire"=>$demarrage, "qtedechet"=>$rotation["quantite_dechets"]]);
                         }else{
@@ -541,6 +567,7 @@ class VRPController extends AbstractController{
                                 $savePoint = $this->app->Points->update($codePoint,["circuitsecondaire"=>$secteurs[$i]]);
                             }
                         }
+                        */
                         
                         $i++;
                     }
@@ -550,8 +577,9 @@ class VRPController extends AbstractController{
             }
             
         }
-        $this->app->Secteur->updateGeom();
-        return new Response("Données mises à jour avec succes.");
+        
+        //$this->app->Secteur->updateGeom();
+        return new Response("Données mises à jour avec succès.");
     }
 
     public function checkRotation($rotation){

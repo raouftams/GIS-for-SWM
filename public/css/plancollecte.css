@@ -1,0 +1,122 @@
+.plan-container{
+    border: 1px solid transparent;
+    width: 100%;
+    background-color: #ffffff;
+    margin-bottom: 0;
+}
+.plan-container h2{
+    border: 0px solid transparent;
+    background-color: #2274BF;
+    color: white;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    text-align: center;
+    height: 60px;
+    padding-top: 10px;
+}
+
+.actions ul{
+    list-style: none;   
+    border: 1px solid transparent;
+    display: flex;
+    width: 100%; 
+    padding-left: 0;
+}
+.actions ul li{
+    display: inline-block;
+}
+
+.form-group select{
+    width: 140%;
+}
+
+.btn-nouveau-plan{
+    border: 1px solid transparent;
+    position: absolute;
+    right: 0;
+    top: 10%;
+    margin-top: 32px;
+    margin-left: 100%;
+    align-content: flex-end;
+
+}
+
+.btn-modifier{
+    border: 1px solid transparent;
+    margin-top: 32px;
+    position: absolute;
+    right: 43%;
+    top: 10%;
+    color: rgb(255, 238, 0);
+    cursor: pointer;
+}
+
+.btn-utiliser{
+    border: 1px solid transparent;
+    margin-top: 32px;
+    position: absolute;
+    right: 53%;
+    top: 10%;
+    color: rgb(4, 189, 4);
+    cursor: pointer;
+}
+.btn-supprimer{
+    border: 1px solid transparent;
+    margin-top: 32px;
+    position: absolute;
+    right: 33%;
+    top: 10%;
+    color: rgb(218, 23, 23);
+    cursor: pointer;
+}
+
+.btn-submit{
+    border: 1px solid transparent;
+    margin-top: 34px;
+    position: absolute;
+    right: 68%;
+    top: 10%;
+}
+
+.form-group{
+    margin-left: 5%;
+}
+
+.action .btn{
+    border: 1px solid transparent;
+    padding-top: 5px;
+}
+
+.plan-table{
+    border: 1px solid transparent;
+    width: 100%;
+    margin-top: 0;
+}
+
+.plan-table th, td{
+    white-space:nowrap;
+}
+
+.info-plan{
+    border: 0px solid transparent;
+    background-color: rgb(245, 245, 245);
+    margin-bottom: 0;
+}
+
+.info-plan ul{
+    list-style: none;
+}
+
+.info-plan li{
+    display: inline-block;
+    border: 1px solid transparent;
+    margin-left: 0;
+    margin-right: 15%;
+    margin-bottom: 0;
+}
+
+@media only screen and (max-width: 970px){
+    .btn-modifier{
+        margin-top: 40px;
+    }
+}
