@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<!-- jQuery -->
+	<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+	<!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+
+	<script src="{{asset('js/leaflet/leaflet.js')}}"></script>
+
+	<script src="{{asset('js/leaflet/esriservices/esri-leaflet.js')}}"></script>
+	<script src="{{asset('js/leaflet/locate/L.Control.Locate.min.js')}}"></script>
+
+	<script src=" https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
+
+	<!-- Load Esri Leaflet from CDN -->
+	<script src="https://unpkg.com/esri-leaflet@2.1.1"></script>
+
+	<!-- Esri Leaflet GP -->
+	<script src="https://unpkg.com/esri-leaflet-gp@2.0.3"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+	<script src="{{asset('js/leaflet/Leaflet.Editable.js')}}"></script>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+
+	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+	<!-- Material Design Bootstrap -->
+	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+	<link rel="stylesheet" href="{{asset('js/leaflet/leaflet.css')}}" />
+	<link rel="stylesheet" href="{{asset('js/leaflet/locate/L.Control.Locate.min.css')}}">
+	<link rel="stylesheet" href="{{asset('js/leaflet/Leaflet.Editable.js')}}">
+	<link rel="stylesheet" href="{{asset('css/popup.css')}}">
+	<link rel="stylesheet" href="{{asset('css/maps.css')}}">
+
+    
+
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg fixed-top ">
+		<h2 class="navbar-brand" >Modifier la gémetrie</h2>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+		  <ul class="navbar-nav">
+				<li class="nav-item active">
+				  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-home"></i>Tableau de bord <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<i class="fas fa-table"></i> &nbsp; Tables
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					  <a class="dropdown-item" href='{{path("pointsIndex")}}'>Points</a>
+					  <a class="dropdown-item" href='{{path("bacsIndex")}}'>Bacs</a>
+					  <a class="dropdown-item" href='{{path("vehiclesIndex")}}'>Véhicules</a>
+					  <a class="dropdown-item" href='{{path("tournees")}}'>Rotations</a>
+					  <a class="dropdown-item" href='{{path("employesIndex")}}'>Employés</a>
+					</div>
+				  </li>
+				<li class="nav-item">
+				  <a class="nav-link" href="{{path('maps')}}"><i class="fas fa-map-marked-alt"></i>&nbsp; Maps</a>
+				</li>
+				<li class="nav-item">
+				  <a class="nav-link" href="{{path('planCollecte')}}"><i class="fas fa-calendar-alt"></i>Plan de collecte</a>
+				</li>
+				{% if is_granted("ROLE_ADMIN")%}
+				<li class="nav-item">
+				  <a class="nav-link" href="{{path('analyseVrp')}}"><i class="fas fa-route"></i>Analyse</a>
+				</li>
+				<li class="nav-item">
+				  <a class="nav-link" href="{{path('addUser')}}"><i class="fas fa-user-alt"></i>Utilisateurs</a>
+				</li>
+				{% endif %}
+			</ul>
+			<ul class="navbar-nav ml-auto">
+          		<li class="nav-item"><a class="nav-link logout" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
+          		</li>
+        	</ul>
+		</div>
+	</nav>
+
+    <div id="map"></div>
+    
+    <div class="analysis">
+        <button class="btn btn-sauvegarder" onclick="saveSectorization()">Sauvegarder</button>
+
+        <div class="alert alert-success" role="alert" id="alert-success" style="display:none; bottom: 0px;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div id="alert-success-content"></div>
+        </div>
+        <div class="alert alert-danger" role="alert" id="alert-danger" style="display:none; bottom: 0px;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div id="alert-danger-content"></div>
+        </div>
+    </div>
+	
+
+	
+<script type="text/javascript">
+
+	//OSM tiles attribution and URL
+	var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+	var osmURL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib = '&copy; ' + osmLink;
+		
+	//Carto tiles attribution and URL
+	var cartoLink = '<a href="http://cartodb.com/attributions">CartoDB</a>';
+	var cartoURL = 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+	var cartoAttrib = '&copy; ' + osmLink + ' &copy; ' + cartoLink;
+
+	//Stamen Toner tiles attribution and URL
+	var stamenURL = 'http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}';
+	var stamenAttrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+	//Creation of map tiles
+	var osmMap = L.tileLayer(osmURL, {attribution: osmAttrib});
+	var cartoMap = L.tileLayer(cartoURL, {attribution: cartoAttrib});
+	var stamenMap = L.tileLayer(stamenURL,{
+			attribution: stamenAttrib,
+			subdomains: 'abcd',
+			minZoom: 0,
+			maxZoom: 20,
+			ext: 'png'
+		});
+	var map = L.map('map',{ drawControl: true, editable: true }).setView([36.7206251, 3.1854975], 13);
+	L.esri.basemapLayer('Topographic').addTo(map);
+	
+	//Base layers definition and addition
+	var baseLayers = {
+			"Esri Topographic": L.esri.basemapLayer('Topographic'),
+			"OSM Mapnik": osmMap,
+			"Carto DarkMatter": cartoMap,
+			"Stamen Toner": stamenMap,
+			"Esri imagery": L.esri.basemapLayer('Imagery')
+		};
+	  
+		 //Add baseLayers to map as control layers
+		 L.control.layers(baseLayers).addTo(map);
+
+
+
+	function getPointColor(colorsArray, s){
+		return colorsArray[s];
+	}
+	
+	var groupSecteurs = L.featureGroup();
+	var secteurColors = [];
+	$.ajax({url:"{{path('getNewSecteurs', {planSecCode: code_plan_sectorisation})}}",
+		success: function(response){
+
+			function onEachFeature(feature, layer) {
+				layer.bindPopup('<p><b>Code: </b>' + feature.properties.code + '</p><p><b>Horaire de collecte: </b>' + feature.properties.horaire + '</p><p><b>Véhicule:</b> ' + feature.properties.vehicule + '</p><p><b>Quantité de déchets:</b> ' + feature.properties.qtedechet + '</p>');
+				groupSecteurs.addLayer(layer);
+                function numbers() {return Math.floor(Math.random() * 256);} 
+                
+                secteurColors[feature.properties.code] ="rgb(" + numbers() + ", " + numbers() + ", " + numbers()+")";
+			}
+
+			var secteurs = JSON.parse(response);
+			window.lyrSecteurs = L.geoJSON(secteurs.features, {		
+				onEachFeature: onEachFeature,
+			});
+	
+
+		},
+		error: function e(error){
+			alert("erreur");
+		}
+	});
+
+
+
+	$.ajax({url:"{{path('getPoints')}}",
+		success: function(response){
+			var myIcon = L.icon({
+				iconUrl: '{{asset("img/leaflet/marker.png")}}',
+				iconSize: [30, 30],
+				iconAnchor: [0,0],
+				popupAnchor: [9, -20]
+			});
+
+			function onEachFeature(feature, layer) {
+				var fonction = "getPoint('code')";
+				fonction = fonction.replace("code", feature.properties.code_point);
+				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p><a href="#popup1"><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white">edit</button></a>');
+			}
+
+			window.points = JSON.parse(response);
+
+			window.lyrPoints = L.geoJSON(window.points, {
+				pointToLayer: function x(features, coordinates) {
+							return L.circleMarker(coordinates, {color: getPointColor(secteurColors, features.properties.helpcreategeom),
+                                                fillColor: getPointColor(secteurColors, features.properties.helpcreategeom),
+                                                fillOpacity: 1,
+												radius: 5
+                                                });
+					},
+				onEachFeature: onEachFeature
+				}).addTo(map);
+		},
+		error: function e(error){
+			alert("Error: "+ error);
+		}
+	});
+	
+    map.addLayer(groupSecteurs);
+
+	
+	
+	var drawPluginOptions = {
+		position: 'topright',
+		draw: {
+		    polygon: false,
+		    // disable toolbar item by setting it to false
+		    polyline: false,
+		    circle: false, // Turns off this drawing tool
+		    rectangle: false,
+		    marker: false,
+		},
+		edit: {
+            featureGroup: groupSecteurs,
+            remove: false,
+            edit: true
+       	}
+	};
+	var drawControl = new L.Control.Draw(drawPluginOptions);
+	map.addControl(drawControl);
+	var editableLayers = new L.FeatureGroup();
+	map.addLayer(editableLayers);
+
+	map.on('draw:created', function(e) {
+	  var type = e.layerType;
+	  window.layer = e.layer;
+
+	  if (type === 'marker') {
+	    window.layer.bindPopup('A popup!');
+	  }
+
+	  editableLayers.addLayer(window.layer);
+
+	});
+
+
+	function select(){
+		var selected = [];
+		window.lyrPoints.eachLayer(function (marker) {
+	        if (!window.layer.contains(marker.getLatLng())) {
+	            marker.remove();
+	        }else{
+				var m = marker.toGeoJSON();
+				L.extend(m.properties, marker.properties);
+				selected.push(m);
+			}
+			map.removeLayer(window.layer);
+	    });
+		console.log(selected);
+	}
+
+
+	//Get Location from gps
+	var lc = L.control.locate({
+	    position: 'topright',
+	    strings: {
+	        title: "Show me where I am."
+		},
+		initialZoomLevel: false,
+		cacheLocation: true,
+		showCompass: false,
+		drawCircle: false
+	}).addTo(map);
+
+	
+	function saveSectorization(){
+		var secteursJson = groupSecteurs.toGeoJSON();
+		$.ajax({
+			url: "{{path('saveSectorization')}}",
+			type: 'POST',
+	        contentType: 'JSON',
+	        data: JSON.stringify(secteursJson),
+			success: function(response){
+				document.getElementById("alert-success-content").innerHTML = "Données mises à jour avec success.";
+				$('#alert-success').show();
+				setTimeout(function() {$('#alert-success').hide()},3000);
+			},
+			error: function(error){
+				document.getElementById("alert-danger-content").innerHTML = "Erreur du serveur.";
+				$('#alert-danger').show();
+				setTimeout(function() {$('#alert-danger').hide()},3000);
+			}
+		});
+	}
+
+	
+
+</script>
+<script>
+	function processAjaxData(response, urlPath){
+		document.getElementById("popup1").innerHTML = response.html;
+		document.title = response.pageTitle;
+		window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
+	}
+	
+	window.onpopstate = function(e){
+		if(e.state){
+			document.getElementById("popup1").innerHTML = e.state.html;
+			document.title = e.state.pageTitle;
+		}
+	};
+
+	
+
+</script>
+</body>
+</html>
+
+

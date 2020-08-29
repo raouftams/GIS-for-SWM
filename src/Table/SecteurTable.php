@@ -11,18 +11,20 @@ class SecteurTable extends Table{
      * @return array tableau
      */
     public function all(){
-      return $this->query('SELECT code, horaire, qtedechet, vehicule, ST_AsGeoJson(geom, 5) as geojson
-      FROM "public".secteurs
-      ');
+      return $this->query("SELECT s.code, rp.heure_debut, rp.qte_dechets, rp.vehicle, ST_AsGeoJson(s.geom, 5) as geojson
+      FROM secteurs s, plan_sectorisation ps, plan_collecte pc, rotation_prevue rp
+	  where s.sectorisation = ps.code_plan and rp.secteur = s.code and ps.code_plan = pc.sectorisation and rp.code_plan = pc.code_plan and pc.etat = ?
+      ", ['used']);
 	}
 	
 	/**
      * @return array tableau
      */
     public function allTournee(){ 
-		return $this->query('SELECT code, horaire, qtedechet, vehicule
-		FROM "public".secteurs where horaire is not null
-		');
+		return $this->query("SELECT code, rp.heure_debut, rp.qte_dechets, rp.vehicle
+		FROM secteurs s, plan_sectorisation ps, plan_collecte pc, rotation_prevue rp
+		where s.sectorisation = ps.code_plan and rp.secteur = s.code and ps.code_plan = pc.sectorisation and rp.code_plan = pc.code_plan and pc.etat = ?
+		", ['used']);
 	  }
 
     /**
@@ -36,6 +38,16 @@ class SecteurTable extends Table{
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Retourne les secteurs d'un plan de sectorisation donné
+	 * @return array
+	 */
+	public function getPlanSecteurs($codeSectorisation){
+		return $this->query("SELECT code, ST_AsGeoJson(geom, 5) as geojson
+      	FROM secteurs where sectorisation = ?
+		", [$codeSectorisation]);
 	}
 
     /**

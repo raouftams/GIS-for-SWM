@@ -323,34 +323,22 @@
 	
 
 
-	function getPointColor(s){
-		return  s == 'C013-A11' ? '#ff0000':
-				s == 'C013-A12' ? '#008000':
-				s == 'C013-A21' ? '#6b8464':
-				s == 'C013-A22' ? '#0000ff':
-				s == 'C013-B11' ? '#ffa500':
-				s == 'C013-B12' ? '#2607ed':
-				s == 'C013-B21' ? '#07eda4':
-				s == 'C013-C11' ? '#ffff00':
-				s == 'C013-C12' ? '#cc1a58':
-				s == 'C013-C21' ? '#4b0082':
-				s == 'C013-C22' ? '#ee82ee':
-				s == 'C013-D11' ? '#2e50d9':
-				s == 'C013-D12' ? '#54f719':
-				s == 'C013-D21' ? '#f76002':
-				s == 'C013-D22' ? '#c4128f':
-				s == 'C013-E11' ? '#0791ed':
-				 '#4dccff';
+	function getPointColor(colorsArray, s){
+		return colorsArray[s];
 	}
 	
 	var groupSecteurs = L.featureGroup();
-	
+	var secteurColors = [];
 	$.ajax({url:"{{path('getSecteurs')}}",
 		success: function(response){
 
 			function onEachFeature(feature, layer) {
 				layer.bindPopup('<p><b>Code: </b>' + feature.properties.code + '</p><p><b>Horaire de collecte: </b>' + feature.properties.horaire + '</p><p><b>Véhicule:</b> ' + feature.properties.vehicule + '</p><p><b>Quantité de déchets:</b> ' + feature.properties.qtedechet + '</p>');
 				groupSecteurs.addLayer(layer,{style: densityStyle(feature)});
+				function numbers() {return Math.floor(Math.random() * 256);} 
+                
+                secteurColors[feature.properties.code] ="rgb(" + numbers() + ", " + numbers() + ", " + numbers()+")";
+			
 			}
 
 			var secteurs = JSON.parse(response);
@@ -426,8 +414,8 @@
 
 			window.lyrPoints = L.geoJSON(window.points, {
 				pointToLayer: function x(features, coordinates) {
-							return L.circleMarker(coordinates, {color: getPointColor(features.properties.secteur),
-                                                fillColor: getPointColor(features.properties.secteur),
+							return L.circleMarker(coordinates, {color: getPointColor(secteurColors, features.properties.secteur),
+                                                fillColor: getPointColor(secteurColors, features.properties.secteur),
                                                 fillOpacity: 1,
 												radius: 5
                                                 });

@@ -25,7 +25,6 @@ class VRPController extends AbstractController{
         $this->app->loadModel('Vehicle');
         $this->app->loadModel('CET');
         $this->app->loadModel('Secteur');
-        $this->app->loadModel('Plan');
     }
 
     /**
@@ -375,7 +374,7 @@ class VRPController extends AbstractController{
             array_push($plan, ["vehicle"=>$vehicle["Name"], "rotations"=>$rotations]);
         }
        
-        $result = ["plan" => $plan];
+        $result = ["routes" => $vehiclesCollection, "stops" => $stopsCollection, "plan" => $plan];
         return new Response(json_encode($result));
         
     }
@@ -485,7 +484,7 @@ class VRPController extends AbstractController{
                 "MaxTotalTime" =>(int)$vehicle["chargeHoraire"]*60,
                 "MaxTotalTravelTime" => 120,
                 "MaxTotalDistance" => 80
-              ];
+            ];
             $feature = ["attributes"=>$attributes];
             array_push($features, $feature);
             
@@ -507,47 +506,81 @@ class VRPController extends AbstractController{
 
 
     /**
-     * @Route("admin/maps/VRP/saveResults", methods={"POST","GET"}, name="saveVrpResults")
+     * @Route("dashboard/maps/VRP/saveResults", methods={"POST","GET"}, name="saveVrpResults")
      */
     public function saveResults(Request $request){
+
+        //chargement des dépendances
+        $this->app->loadModel('PlanSectorisation');
+        $this->app->loadModel('PlanCollecte');
+        $this->app->loadModel('RotationPrevue');
+
         $data = $request->getContent();
-		$plan = json_decode($data,true)["plan"];
-        $secteurs = ['C013-A11', 'C013-B11', 'C013-C11', 'C013-A12', 'C013-B12', 'C013-C12', 'C013-A21', 'C013-B21', 'C013-C21', 'C013-A22', 'C013-B22','C013-D11','C013-D12','C013-D21','C013-D22', 'C013-E11','C013-E12','C013-E21','C013-E22'];
-        
-        $i = 0;
+        $plan = json_decode($data,true)["plan"];
+                
 		$unsavedRotations = [];
-        /*$initialiser = $this->app->Points->updateAll(["circuitsecondaire"=>null]);
-        $initsecteurs = $this->app->Secteur->initSecteurs();
-        */
+        
+        //Création d'un nouveau plan de sectorisation
+        $planSecCode = "Plan_Sect" . rand(01, 10);
+        while($this->app->PlanSectorisation->exist($planSecCode)){
+            $planSecCode = "Plan_Sect" . rand(01, 10);
+        }
+        $plan_sectorisation = [
+            "code_plan" => $planSecCode,
+            "date" => date('d-m-Y')
+        ];
+        $this->app->PlanSectorisation->add($plan_sectorisation);
+
+        // Création d'un nouveau plan de collecte
+        $planCode = "Plan_C" . rand(01, 10);
+        while($this->app->PlanCollecte->exist($planCode)){
+            $planCode = "Plan_C" . rand(01, 10);
+        }
+        $plan_collecte = [
+            "code_plan" => $planCode,
+            "date" => date("d-m-Y"),
+            "sectorisation" => $planSecCode,
+            "etat" => 'not used'
+        ];
+        $this->app->PlanCollecte->add($plan_collecte);
+
+        // Création des rotations prévues
         foreach($plan as $value){
             $nom = explode("_",$value["vehicle"]);
             $codeVehicle = $nom[1];
             foreach($value["rotations"] as $rotation){
                 if($this->checkRotation($rotation)){
-                    if($i < count($secteurs)){
-						$date = date("Y-m-d H:i",$rotation["demarrage_parc"]/1000);
-						$date_array = explode(" ",$date);
-                        $demarrage = $date_array[1];
-                        $date = date("Y-m-d H:i",$rotation["fin_rotation"]/1000);
-						$date_array = explode(" ",$date);
-                        $fin = $date_array[1];
-                        
 
-                        $plan_rotation = [
-                            "code_plan" => 'plan_2',
-                            "heure_debut" => $demarrage,
-                            "heure_fin" => $fin,
-                            "vehicle" => $codeVehicle,
-                            "secteur" => $secteurs[$i],
-                            "qte_dechets" => floatval(number_format($rotation["quantite_dechets"], 2, ',', ' ')),
-                            "kilometrage" => floatval(number_format($rotation["distance_totale"], 2, ',',' ')),
-                            "nombre_points" => count($rotation["ordres"]),
-                            "date" => date("Y-m-d"),
-                            "etat" => "not used"
+                    $secteurCode = "C013-S" . rand(01, 99);
+                    while($this->app->Secteur->exist($secteurCode)){
+                        $secteurCode = "C013-S" . rand(01, 99);
+                    }
+                    $this->app->Secteur->add([
+                        "code" => $secteurCode,
+                        "sectorisation" => $planSecCode
+                    ]);
 
-                        ];
 
-                        $this->app->Plan->add($plan_rotation);
+					$date = date("Y-m-d H:i",$rotation["demarrage_parc"]/1000);
+					$date_array = explode(" ",$date);
+                    $demarrage = $date_array[1];
+                    $date = date("Y-m-d H:i",$rotation["fin_rotation"]/1000);
+					$date_array = explode(" ",$date);
+                    $fin = $date_array[1];
+
+                    $rotation_prevue = [
+                        "code_plan" => $planCode,
+                        "heure_debut" => $demarrage,
+                        "heure_fin" => $fin,
+                        "vehicle" => $codeVehicle,
+                        "secteur" => $secteurCode,
+                        "qte_dechets" => floatval(number_format($rotation["quantite_dechets"], 2, '.', '')),
+                        "kilometrage" => floatval(number_format($rotation["distance_totale"], 2, '.','')),
+                        "nombre_points" => count($rotation["ordres"]),
+                    ];
+                    
+                    
+                    $this->app->RotationPrevue->add($rotation_prevue);
 
 
                         /*
@@ -555,32 +588,36 @@ class VRPController extends AbstractController{
                             $this->app->Secteur->add(["code"=>$secteurs[$i], "vehicule"=>$codeVehicle, "horaire"=>$demarrage, "qtedechet"=>$rotation["quantite_dechets"]]);
                         }else{
                             $this->app->Secteur->update($secteurs[$i],["vehicule"=>$codeVehicle, "horaire"=>$demarrage,"qtedechet"=>$rotation["quantite_dechets"]]);
-                        }
+                        }*/
                         foreach($rotation["ordres"] as $stop){
                             $codePoint = explode("_",$stop["properties"]["Name"])[0];
 							$frequence = explode("_",$stop["properties"]["Name"]);
 							$frequence = end($frequence);
                             $sequence = intval($stop["properties"]['Sequence']);
-                            if($frequence == 1){
-                                $savePoint = $this->app->Points->update($codePoint,["ordrecollecte"=>$sequence, "secteur"=>$secteurs[$i], "circuitprincipal"=>$secteurs[$i]]);
-                            }else{
-                                $savePoint = $this->app->Points->update($codePoint,["circuitsecondaire"=>$secteurs[$i]]);
+                            if ($frequence == 1) {
+                                $savePoint = $this->app->Points->update($codePoint,["helpcreategeom"=>$secteurCode]);
                             }
                         }
-                        */
+                    
                         
-                        $i++;
-                    }
                 }else{
                     array_push($unsavedRotations, ["vehicle"=>$value["vehicle"], "rotation"=>$rotation]);
                 }
             }
-            
         }
         
-        //$this->app->Secteur->updateGeom();
-        return new Response("Données mises à jour avec succès.");
-    }
+        $update = $this->app->PlanSectorisation->updateGeomSecteurs($planSecCode);
+        return $this->updateGeometry($planSecCode);
+	}
+	
+	/**
+	 * @Route("dashboard/EditGeom/{planSecCode}", methods={"POST","GET"}, name="EditGeom")
+	 */
+	public function updateGeometry($planSecCode){
+		return $this->render('public/editNewGeometry.html.twig',[
+			"code_plan_sectorisation" => $planSecCode
+		]);
+	}
 
     public function checkRotation($rotation){
         $cpt = 0;
@@ -598,7 +635,7 @@ class VRPController extends AbstractController{
     }
 
     /**
-     * @Route("admin/maps/editPointTime", methods={"POST","GET"}, name="editPointTime")
+     * @Route("dashboard/maps/editPointTime", methods={"POST","GET"}, name="editPointTime")
      */
     public function editPointTime(Request $request){
         $date = "Mon 20 July 2020";
@@ -621,5 +658,7 @@ class VRPController extends AbstractController{
         $newTime = [$date, "".$time.""];
 
         return strtotime(implode(" ", $newTime))*1000+60*60*1000;
-    }
+	}
+	
+
 }

@@ -72,6 +72,27 @@ class MapController extends AbstractController{
 	}
 
 	/**
+	 * @Route("/dashboard/maps/getnewsecteurs/{planSecCode}", methods={"POST","GET"}, name="getNewSecteurs")
+	 */
+	public function getNewSecteurs($planSecCode){
+		$secteurs = $this->app->Secteur->getPlanSecteurs($planSecCode);
+		$features = [];
+        foreach($secteurs as $secteur){
+		  unset($secteur['geom']);
+		  for ($i=0; $i <count($secteur) ; $i++) { 
+			  unset($secteur[$i]);
+		  }
+		  $geometry=json_decode($secteur['geojson']);
+		  unset($secteur['geojson']);
+          $feature = ["type"=>"Feature", "geometry"=>$geometry, "properties"=>$secteur];
+          array_push($features, $feature);
+        }
+		$featureCollection = ["type"=>"FeatureCollection", "features"=>$features];
+		return new Response(json_encode($featureCollection)); 
+	}
+
+
+	/**
 	 * @Route("/dashboard/maps/getQuartiers", name="getQuartiers")
 	 */
 	public function getQuartier(){

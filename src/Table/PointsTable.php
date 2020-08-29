@@ -12,7 +12,7 @@ class PointsTable extends Table{
      * @return array tableau
      */
     public function all(){
-      return $this->query('SELECT code_point, libelle, adresse, modecollecte, activites,secteur, quantited,frequence,debut_fenetre_temps1, fin_fenetre_temps1, X, Y,geom, ST_AsGeoJson(geom, 5) as geojson
+      return $this->query('SELECT code_point, libelle, adresse, modecollecte, activites,secteur, quantited,frequence,debut_fenetre_temps1, fin_fenetre_temps1, helpcreategeom, X, Y,geom, ST_AsGeoJson(geom, 5) as geojson
       FROM "public".points_collecte
       ');
     }
@@ -142,6 +142,36 @@ class PointsTable extends Table{
       GROUP BY secteur
       ');
     }
-  }
+
+
+    /**
+     * mettre à jour la table point_collecte pour l'utilisation d'un nouveau plan de collect
+     * @return boolean
+     */
+    public function updateSectorisationPoints(){
+      $secteurs = $this->query("SELECT code 
+      from secteurs s, plan_sectorisation ps, plan_collecte pc
+      where s.sectorisation = ps.code_plan 
+			and ps.code_plan = pc.sectorisation and pc.etat = 'used' 
+      ");
+
+      foreach ($secteurs as $secteur) {
+        $points = $this->query("SELECT p.code_point 
+        from points_collecte as p 
+        join secteurs s on ST_WITHIN(p.geom, s.geom) where s.code = ?
+        ", [$secteur['code']]);
+
+        foreach ($points as $point) {
+          $this->query('UPDATE points_collecte 
+          set secteur = ?
+          where code_point = ?
+          ', [$secteur["code"], $point["code_point"]]);
+        }
+
+      }
+      return true;
+
+    }
+}
 
  ?>

@@ -14,8 +14,11 @@ class PlanController extends AbstractController{
   public function __construct(){
    // parent::__construct();
     $this->app = new AppController();
-	$this->app->loadModel('Plan');
+	$this->app->loadModel('RotationPrevue');
+	$this->app->loadModel('PlanCollecte');
+	$this->app->loadModel('PlanSectorisation');
 	$this->app->loadModel('Vehicle');
+	$this->app->loadModel('Points');
   }
 
 
@@ -23,14 +26,14 @@ class PlanController extends AbstractController{
       * @Route("/dashboard/planCollecte", methods={"POST","GET"}, name="planCollecte")
     */    
     public function index(){
-		$date_plan = $code_plan = $etat = $etat_plan = null;
+		$date_plan = $code_plan = $etat = $etat_plan = $validite = null;
 		if(!empty($_POST)){
-			$used_plan = $this->app->Plan->getPlan($_POST["code_plan"]);
+			$used_plan = $this->app->RotationPrevue->getPlan($_POST["code_plan"]);
 		}else{
-			$used_plan = $this->app->Plan->getUsedPlan();
+			$used_plan = $this->app->RotationPrevue->getUsedPlan();
 		}
 
-		$codes = $this->app->Plan->getCodes();
+		$codes = $this->app->PlanCollecte->All();
 		foreach($used_plan as $k=>$line){
 			for ($i=0; $i < count($line); $i++) { 
 				unset($used_plan[$k][$i]);
@@ -40,6 +43,7 @@ class PlanController extends AbstractController{
 			$code_plan = $line["code_plan"];
 			$date_plan = $line["date"];	
 			$etat = $line["etat"];
+			$validite = $line["fin_validite"];
 		}
 
 		if ($etat == 'used') {
@@ -53,7 +57,8 @@ class PlanController extends AbstractController{
 			"codes" => $codes,
 			"date_plan" => $date_plan,
 			"code_plan" => $code_plan,
-			"etat_plan" => $etat_plan
+			"etat_plan" => $etat_plan,
+			"fin_validite" => $validite
 		]);       
 	}
 	
@@ -65,11 +70,11 @@ class PlanController extends AbstractController{
 		if(!empty($_POST)){
 			$secteur = $_POST["secteur"];
 			unset($_POST["secteur"]);
-			$this->app->Plan->edit($code, $secteur, $_POST);
+			$this->app->RotationPrevue->edit($code, $secteur, $_POST);
 			$result = "Plan modifié avec succès";
 		}
 		$vehicles = $this->app->Vehicle->vehiculesEnMarche();
-		$used_plan = $this->app->Plan->getPlan($code);
+		$used_plan = $this->app->RotationPrevue->getPlan($code);
 		foreach($used_plan as $k=>$line){
 			for ($i=0; $i < count($line); $i++) { 
 				unset($used_plan[$k][$i]);
@@ -90,8 +95,9 @@ class PlanController extends AbstractController{
       * @Route("/dashboard/usePlan/{code}", methods={"POST", "GET"}, name="usePlan")
 	*/
 	public function usePlan($code, Request $request){
-		$init = $this->app->Plan->initPlanUse();
-		$result = $this->app->Plan->setInUse($code);
+		$init = $this->app->PlanCollecte->initPlanUse();
+		$result = $this->app->PlanCollecte->setInUse($code);
+		$updatePoints = $this->app->Points->updateSectorisationPoints();
 		return new Response("Opération réussie, Le plan selectionner est en cours d'utilisation");
 	}
 
@@ -99,15 +105,15 @@ class PlanController extends AbstractController{
       * @Route("/dashboard/deletePlan/{code}", methods={"POST", "GET"}, name="deletePlan")
 	*/
 	public function deletePlan($code){
-		$plan = $this->app->Plan->getPlan($code);
-		foreach ($plan as $line) {
-			if ($line["etat"] == 'used') {
-				return new Response("Attention: Le plan est en cours d'utilisation, choisissez un autre plan puis réessayer.");
-			}
+		$plan = $this->app->PlanCollecte->getEtat($code);
+		if ($plan[0]["etat"] == 'used') {
+			return new Response("Attention: Le plan est en cours d'utilisation, choisissez un autre plan puis réessayer.");
 		}
-		$this->app->Plan->deletePlan($code);
+		$this->app->RotationPrevue->delete($code);
+		$this->app->PlanCollecte->deletePlan($code);
 		return new Response("Opération réussie, Le plan a été supprimé.");
 	}
+
 
 
     
