@@ -12,8 +12,9 @@ class PointsTable extends Table{
      * @return array tableau
      */
     public function all(){
-      return $this->query('SELECT code_point, libelle, adresse, modecollecte, activites,secteur, quantited,frequence,debut_fenetre_temps1, fin_fenetre_temps1, helpcreategeom, X, Y,geom, ST_AsGeoJson(geom, 5) as geojson
-      FROM "public".points_collecte
+      return $this->query('SELECT pc.code_point, pc.libelle, pc.adresse, pc.modecollecte, pc.activites,pc.secteur, pc.quantited,pc.frequence,pc.debut_fenetre_temps1, pc.fin_fenetre_temps1, helpcreategeom, X, Y,geom, s.sequence, ST_AsGeoJson(geom, 5) as geojson
+      FROM "public".points_collecte pc, sequence_collecte s
+      WHERE code_point = s.point and s.secteur = pc.secteur 
       ');
     }
 
@@ -171,6 +172,31 @@ class PointsTable extends Table{
       }
       return true;
 
+    }
+
+    public function sequencePointSecteur($fields){
+      $sql_parts = [];
+      $attributes = [];
+      $indexes = [];
+      foreach ($fields as $k => $v) {
+        $sql_parts[] = "?";
+        $indexes[] = $k;
+        $attributes[] = $v;
+      }
+      $sql_part = implode(',', $sql_parts);
+      $index = implode(',', $indexes);
+      $this->query("INSERT into sequence_collecte ($index) Values ($sql_part)", $attributes, true);
+    }
+
+    public function deleteSequence($codeSectorisation){
+      $secteurs = $this->query('SELECT code from secteurs WHERE sectorisation = ?
+      ', [$codeSectorisation]);
+
+      foreach($secteurs as $secteur){
+        $this->query('DELETE from sequence_collecte WHERE secteur = ?', [$secteur['code']]);
+      }
+
+      return true;
     }
 }
 

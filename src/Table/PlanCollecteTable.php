@@ -86,6 +86,14 @@ class PlanCollecteTable extends Table{
 		return true;
 	}
 
+
+	/**
+	 * @return array
+	 */
+	public function getSectorisationPlan($code){
+		return $this->query('SELECT sectorisation from plan_collecte where code_plan = ?', [$code]);
+	}
+
 }
   
 

@@ -313,7 +313,7 @@
 	}
 	function densityStyle(feature){
         return {
-            "fillColor": getColour(feature.properties.qtedechet), // Call function to get fill colour
+            "fillColor": getColour(feature.properties.qte_dechets), // Call function to get fill colour
             "weight": 2, //
             "opacity": 1, //
             "color": '#000', //
@@ -333,7 +333,7 @@
 		success: function(response){
 
 			function onEachFeature(feature, layer) {
-				layer.bindPopup('<p><b>Code: </b>' + feature.properties.code + '</p><p><b>Horaire de collecte: </b>' + feature.properties.horaire + '</p><p><b>Véhicule:</b> ' + feature.properties.vehicule + '</p><p><b>Quantité de déchets:</b> ' + feature.properties.qtedechet + '</p>');
+				layer.bindPopup('<p><b>Code: </b>' + feature.properties.code + '</p><p><b>Horaire de collecte: </b>' + feature.properties.heure_debut + '</p><p><b>Véhicule:</b> ' + feature.properties.vehicle + '</p><p><b>Quantité de déchets:</b> ' + feature.properties.qte_dechets + '</p>');
 				groupSecteurs.addLayer(layer,{style: densityStyle(feature)});
 				function numbers() {return Math.floor(Math.random() * 256);} 
                 
@@ -407,7 +407,7 @@
 			function onEachFeature(feature, layer) {
 				var fonction = "getPoint('code')";
 				fonction = fonction.replace("code", feature.properties.code_point);
-				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p><a href="#popup1"><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white">edit</button></a>');
+				layer.bindPopup('<b>Code: ' + feature.properties.code_point + '</b><p><b>Libellé: </b>' + feature.properties.libelle + '</p><b>Adresse: </b>' + feature.properties.adresse + '</p><p><b>Séquence de collecte: </b>' + feature.properties.sequence + '</p><a href="#popup1"><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white">edit</button></a>');
 			}
 
 			window.points = JSON.parse(response);

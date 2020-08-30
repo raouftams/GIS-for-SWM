@@ -19,6 +19,7 @@ class PlanController extends AbstractController{
 	$this->app->loadModel('PlanSectorisation');
 	$this->app->loadModel('Vehicle');
 	$this->app->loadModel('Points');
+	$this->app->loadModel('Secteur');
   }
 
 
@@ -106,11 +107,22 @@ class PlanController extends AbstractController{
 	*/
 	public function deletePlan($code){
 		$plan = $this->app->PlanCollecte->getEtat($code);
+		
 		if ($plan[0]["etat"] == 'used') {
 			return new Response("Attention: Le plan est en cours d'utilisation, choisissez un autre plan puis réessayer.");
 		}
+
+		$sectorisation = $this->app->PlanCollecte->getSectorisationPlan($code)[0]["sectorisation"];
+
 		$this->app->RotationPrevue->delete($code);
 		$this->app->PlanCollecte->deletePlan($code);
+
+		//Supprimer le plan de sectorisation s'il n'est plus utilisé
+		if ($this->app->PlanSectorisation->isUsed($sectorisation) == false) {
+			$this->app->Points->deleteSequence($sectorisation);
+			$this->app->Secteur->deleteSectorisation($sectorisation);
+			$this->app->PlanSectorisation->deletePlan($sectorisation);
+		}
 		return new Response("Opération réussie, Le plan a été supprimé.");
 	}
 

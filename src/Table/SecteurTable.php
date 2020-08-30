@@ -121,6 +121,10 @@ class SecteurTable extends Table{
 		return $this->query('UPDATE secteurs 
 		set horaire = null, vehicule = null, geom = null, qtedechet= null');
 	}
+	
+	public function deleteSectorisation($codeSectorisation){
+		return $this->query('DELETE from secteurs where sectorisation = ?', [$codeSectorisation]);
+	}
 }
   
 

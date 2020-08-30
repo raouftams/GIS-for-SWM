@@ -593,9 +593,14 @@ class VRPController extends AbstractController{
                             $codePoint = explode("_",$stop["properties"]["Name"])[0];
 							$frequence = explode("_",$stop["properties"]["Name"]);
 							$frequence = end($frequence);
-                            $sequence = intval($stop["properties"]['Sequence']);
+                            $sequence = intval($stop["properties"]['Sequence']) - 1;
                             if ($frequence == 1) {
                                 $savePoint = $this->app->Points->update($codePoint,["helpcreategeom"=>$secteurCode]);
+                                $update_sequence = $this->app->Points->sequencePointSecteur([
+                                    "point" => $codePoint, 
+                                    "secteur" => $secteurCode, 
+                                    "sequence" => $sequence
+                                    ]);
                             }
                         }
                     

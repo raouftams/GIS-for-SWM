@@ -73,6 +73,20 @@ class PlanSectorisationTable extends Table{
         return true;
     }
 
+     
+
+    /**
+	 * Vérifier si un plan de sectorisation est utilisé
+	 * @return boolean
+	 */
+	public function isUsed($codeSectorisation){
+		$result = $this->query('SELECT count(code_plan) as cpt FROM plan_collecte where sectorisation = ?',[$codeSectorisation]);
+
+		if($result[0]["cpt"] == 0){
+			return false;
+		}
+		return true;
+	}
 }
 
 ?>
