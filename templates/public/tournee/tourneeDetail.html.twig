@@ -3,9 +3,18 @@
 {% block header %}Détails rotation{% endblock %}
 {% block stylesheets %}
 <link rel="stylesheet" href="{{asset('css/tourneeDetails.css')}}">
+<link rel="stylesheet" href="{{asset('css/popup.css')}}">
 {% endblock %}
 
 {% block body %}
+<div id="popup_image" class="overlay" style="z-index:100;">
+	<div class="popup">
+		<a class="close" href="#">&times;</a><br>
+		<div class="content" id="content">
+            <img id="ticket_image" src="{{asset('img/'~ ticket_image ~ '')}}">
+        </div>
+	</div>
+</div>
 
 <a href="{{path('tourneeMaps', {id:id_tournee})}}" class="btn btn-info btn-md">Maps</a>
 
@@ -49,7 +58,7 @@
     <div class="bare-info">
         <legend>
             <h3>Ticket de pesée</h3>
-            <button type="button" class="btn btn-success btn-sm btn-imprimer" onclick="imprimer('ticket_pesee')">Imprimer</button>
+            <a class="btn btn-success btn-sm btn-imprimer" href="#popup_image">Image</a>
         </legend>
     </div>
     <table class="mt-4">
@@ -59,7 +68,7 @@
                 <td>{{ticket.code}}</td>
 
                 <th style="padding-left: 200px;" class="font-weight-bold">Poids brute:</th>
-                <td>{{ticket.poids_brute}}</td>
+                <td>{{ticket.poids_brut}}</td>
             </tr>
             <tr>
                 <th class="font-weight-bold">CET:</th>
@@ -69,16 +78,11 @@
             </tr>
             <tr>
                 <th class="font-weight-bold">Date:</th>
-                <td>{{ticket.date_ticket}}</td>
-                <th style="padding-left: 200px;" class="font-weight-bold">Tare:</th>
-                <td>{{ticket.tare}}</td>
+                <td>{{ticket.date_pesee}}</td>
+                <th style="padding-left: 200px;" class="font-weight-bold">Heure pesée:</th>
+                <td>{{ticket.heure_pesee}}</td>
             </tr>
-            <tr>
-                <th class="font-weight-bold">Heure pesée:</th>
-                <td>{{ticket.heure_ticket}}</td>
-                <th style="padding-left: 200px;" class="font-weight-bold">Taux compaction:</th>
-                <td>{{ticket.taux_compaction}}</td>
-            </tr>
+            
         </tbody>
     </table>
 </div>
@@ -93,5 +97,7 @@ function imprimer(divName) {
    window.print();     
    document.body.innerHTML = originalContents;
    }
+
+   
 </script>
 {% endblock %}

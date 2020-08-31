@@ -1,0 +1,43 @@
+{% extends "userbase.html.twig" %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block body %}
+<h2>Rotations à effectuer</h2><br>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+            <th scope="col">Secteur</th>
+            <th scope="col">Véhicule</th>
+            <th scope="col">CET</th>
+            <th>Quantité prévue</th>
+            <th scope="col" style="margin-left: 40px;">Date</th>
+            <th scope="col" style="margin-left: 40px;">Heure</th>
+            <th scope="col">Actions</th>
+            </tr>
+        </thead>  
+        <tbody>
+        {% for tournee in tournees %}
+            <tr>
+                <td> {{ tournee.secteur }} </td>
+                <td>{{ tournee.marque }}_{{tournee.volume}}m&#179;_{{tournee.matricule}}</td>
+                <td>{{ tournee.designation }}</td>
+                <td>{{ tournee.qte_prevue }} Tonnes</td>
+                <td>{{ tournee.date }}</td>
+                <td>{{ tournee.heure_demarrage_parc }}</td>
+                <td class="th-sm">
+                    <div class="btn-group" style="text-align:center;">
+                        <a class="btn btn-sm btn-info" href="{{path('tourneeMaps', {id : tournee.id_tournee })}}"><i class="fas fa-map-marked-alt"></i></a>
+                        <a class="btn btn-sm btn-warning" href="{{path('userUpdateTournee', {id : tournee.id_tournee })}}"><i class="far fa-edit"></i></a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

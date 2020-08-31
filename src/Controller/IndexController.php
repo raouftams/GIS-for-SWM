@@ -56,7 +56,7 @@ class IndexController extends AbstractController{
         unset($t[$i]);
       }
     }
-		return $this->render("userbase.html.twig", ["tournees"=>$tournees]);
+		return $this->render("public/userDashboard.html.twig", ["tournees"=>$tournees]);
 	}
 
  

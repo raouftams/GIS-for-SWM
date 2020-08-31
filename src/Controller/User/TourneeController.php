@@ -3,15 +3,17 @@
 namespace App\Controller\User;
 
 use App\Controller\AppController;
+use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class TourneeController extends AbstractController{
 
 
-  public function __construct(){
+  public function __construct(ParameterBagInterface $parameterBag){
    // parent::__construct();
     $this->app = new AppController();
     $this->app->loadModel('Tournee');
@@ -19,7 +21,9 @@ class TourneeController extends AbstractController{
     $this->app->loadModel('Vehicle');
     $this->app->loadModel('Equipe');
     $this->app->loadModel('Secteur');
-    $this->app->loadModel('RotationPrevue');
+	$this->app->loadModel('RotationPrevue');
+	
+	$this->parameterBag = $parameterBag;
     
   }
 
@@ -54,7 +58,7 @@ class TourneeController extends AbstractController{
       }
       $vehicle = $this->app->Vehicle->getVehicle($bon[0]["vehicule"]);
       $vehicleName = "".$vehicle["code"]." ".$vehicle["matricule"]." ".$vehicle["genre"]; 
-      return $this->render('public/tournee/tourneeDetail.html.twig', ["bon" => $bon[0], "vehicle"=>$vehicleName, "ticket"=>$ticket[0], "id_tournee" => $id]);
+      return $this->render('public/tournee/tourneeDetail.html.twig', ["bon" => $bon[0], "vehicle"=>$vehicleName, "ticket"=>$ticket[0], "id_tournee" => $id, "ticket_image" => $ticket[0]["image_name"]]);
   }
 
     /**
@@ -218,13 +222,13 @@ class TourneeController extends AbstractController{
 	 */
 	public function getSecteursVehicles(){
 		$secteurs = $this->app->Secteur->allTournee();
-    $vehicules = $this->app->Vehicle->all();
-    $equipes = $this->app->Equipe->all();
-    foreach($secteurs as $key => $value ){
-      for ($i=0; $i < count($value); $i++) { 
-        unset($secteurs[$key][$i]);
-      }
-    }
+		$vehicules = $this->app->Vehicle->all();
+		$equipes = $this->app->Equipe->all();
+		foreach($secteurs as $key => $value ){
+		for ($i=0; $i < count($value); $i++) { 
+			unset($secteurs[$key][$i]);
+		}
+		}
     
 		$data = ["secteurs"=>$secteurs, "vehicules"=>$vehicules, "equipes"=>$equipes];
 		return new Response(json_encode($data));
@@ -443,5 +447,74 @@ class TourneeController extends AbstractController{
         return new Response(json_encode($result));
     }
 
-    
+    /**
+     * @Route("user/tournee/updateTournee/{id}", methods={"POST","GET"}, name="userUpdateTournee")
+     */
+    public function userUpdate($id){
+		$result = $erreur = null;
+		$tournee = $this->app->Tournee->findWithId($id)[0];
+		$ticketPesee = $this->app->Tournee->getTicketPesee($id)[0];
+		if (!empty($_POST)) {
+			try {
+			$tourneeData = [
+				"heure_demarrage_parc" =>  $_POST['heure_demarrage_parc'],
+				"heure_debut_secteur" =>  $_POST['heure_debut_secteur'],
+				"heure_fin_secteur" => $_POST['heure_fin_secteur'],
+				"heure_fin_rotation" => $_POST['heure_fin_rotation'],
+				"duree_attente" => $_POST['duree_attente'],
+				"qte_realise" => $_POST['qte_realise'],
+				"kilometrage" => $_POST['kilometrage'],
+				"carburant" => $_POST['carburant']
+			];
+			$ticketData = [
+				"date_pesee" =>  $_POST['date_pesee'],
+				"heure_pesee" =>  $_POST['heure_pesee'],
+				"poids_brut" => $_POST['poids_brut'],
+				"poids_net" => $_POST['poids_net'],
+				"montant" => $_POST['montant'],
+				"image_name" => $this->uploadImage($ticketPesee['code'], $_FILES)
+			];
+			$this->app->Tournee->edit($id, $tourneeData);
+			$this->app->Tournee->updateTicketPesee($id, $ticketData);
+			$result = "Données inserées avec succès.";
+		} catch (\Throwable $th) {
+			$erreur = "Données saisies non valides.";
+		}
+        
+      }
+      return $this->render('public/tournee/updateTournee.html.twig', [
+		  "tournee" => $tournee, 
+		  "ticket"=>$ticketPesee,
+		  "result" => $result,
+		  "erreur" => $erreur
+		  ]);
+	}
+	
+
+	private function uploadImage($code_ticket, $files){
+		$imageFileType = strtolower(pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION));
+		$target_dir = $this->parameterBag->get('kernel.project_dir') . '/public/img/'; 
+		$target_file = $target_dir . basename($code_ticket .".". $imageFileType);
+		$uploadOk = 1;
+		// Check if image file is a actual image or fake image
+		$check = getimagesize($files["image"]["tmp_name"]);
+		if($check == false) {
+			return "File is not an image.";
+			$uploadOk = 0;
+		}
+		if (file_exists($target_file)) {
+			echo "Sorry, file already exists.";
+			$uploadOk = 0;
+		}
+		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+			echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+			$uploadOk = 0;
+		}
+		
+		if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+			return $code_ticket .".". $imageFileType;
+		} 
+		
+
+	}
 }   

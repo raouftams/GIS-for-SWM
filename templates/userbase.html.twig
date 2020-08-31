@@ -19,7 +19,7 @@
 	<!-- Material Design Bootstrap -->
 	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/userBase.css')}}">
-        
+    {% block stylesheets %}{% endblock %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
@@ -43,53 +43,19 @@
 
         <div class="container mt-4">
             <div class="interface">
-              <div id="main_content">
-                <h2>Rotations à effectuer</h2><br>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                            <th scope="col">Secteur</th>
-                            <th scope="col">Véhicule</th>
-                            <th scope="col">CET</th>
-                            <th>Quantité prévue</th>
-                            <th scope="col" style="margin-left: 40px;">Date</th>
-                            <th scope="col" style="margin-left: 40px;">Heure</th>
-                            <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
+                <div id="main_content">
+                    {% block body %}
+                    {% endblock %}
                     
-                
-                            <tbody>
-                            {% for tournee in tournees %}
-                                <tr>
-                                    <td> {{ tournee.secteur }} </td>
-                                    <td>{{ tournee.marque }}_{{tournee.volume}}m&#179;_{{tournee.matricule}}</td>
-                                    <td>{{ tournee.designation }}</td>
-                                    <td>{{ tournee.qte_prevue }} Tonnes</td>
-                                    <td>{{ tournee.date }}</td>
-                                    <td>{{ tournee.heure_demarrage_parc }}</td>
-
-                                    <td class="th-sm">
-                                        <div class="btn-group" style="text-align:center;">
-                                            <a class="btn btn-sm btn-info" href="{{path('tourneeMaps', {id : tournee.id_tournee })}}"><i class="fas fa-info-circle"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
-            </div>
         </div>
-        <footer>
-            <h5></h5>
-        </footer>
+
 
 
 </body>
+
+{% block javascripts %}{% endblock %}
 </html>
 
 
