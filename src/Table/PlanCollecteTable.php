@@ -94,6 +94,15 @@ class PlanCollecteTable extends Table{
 		return $this->query('SELECT sectorisation from plan_collecte where code_plan = ?', [$code]);
 	}
 
+
+	/**
+	 * retourne le code du plan de collecte utilisé
+	 * @return array
+	 */
+	public function getUsedPlan(){
+		return $this->query('SELECT code_plan from plan_collecte where etat = ?',['used']);
+	}
+
 }
   
 

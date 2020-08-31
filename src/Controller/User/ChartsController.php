@@ -17,6 +17,8 @@ class ChartsController extends AbstractController{
     $this->app->loadModel('Bacs');
     $this->app->loadModel('Tournee');
     $this->app->loadModel('Secteur');
+    $this->app->loadModel('PlanCollecte');
+    $this->app->loadModel('RotationPrevue');
     
   }
 
@@ -33,8 +35,8 @@ class ChartsController extends AbstractController{
    * @Route("/dashboard/charts/data1", name="getdatachart1")
    */
   public function QteParSec(){
-    
-    $qtesec = $this->app->Secteur->qte(); 
+    $code_plan = $this->app->PlanCollecte->getUsedPlan()[0]['code_plan'];
+    $qtesec = $this->app->RotationPrevue->qte($code_plan); 
     foreach ($qtesec as $key => $value) {
       unset($qtesec[$key][0]);
       unset($qtesec[$key][1]);

@@ -24,9 +24,46 @@ class RotationPrevueTable extends Table{
 	public function getUsedPlan(){
 		return $this->query('SELECT p.code_plan, p.etat, p."date", rp.secteur, v.code, v.genre, v.marque, v.matricule, v.volume, equipe, qte_dechets, kilometrage, rp.carburant, rp.heure_debut, rp.heure_fin, rp.nombre_points, p.fin_validite
 		FROM rotation_prevue rp, vehicule v, plan_collecte p
-		WHERE v.code = rp.vehicle and p.etat = ?
+		WHERE v.code = rp.vehicle and rp.code_plan = p.code_plan and  p.etat = ?
         ',['used']);
-    }
+	}
+	
+	/**
+	 * retourne les équipes du plan utilisé
+	 * @return array
+	 */
+	public function getEquipes(){
+		return $this->query('SELECT equipe
+		FROM rotation_prevue rp, plan_collecte p
+		WHERE rp.code_plan = p.code_plan and p.etat = ?
+		group by equipe
+        ',['used']);
+	}
+
+	/**
+	 * retourne les véhicules du plan utilisé
+	 * @return array
+	 */
+	public function getVehicles(){
+		return $this->query('SELECT v.code, v.genre, v.marque, v.matricule, v.volume
+		FROM rotation_prevue rp, vehicule v, plan_collecte p
+		WHERE rp.code_plan = p.code_plan and v.code = rp.vehicle and p.etat = ?
+		group by v.code
+        ',['used']);
+	}
+
+	/**
+	 * retourne les secteurs du plan utilisé
+	 * @return array
+	 */
+	public function getSecteurs(){
+		return $this->query('SELECT secteur
+		FROM rotation_prevue rp, plan_collecte p
+		WHERE rp.code_plan = p.code_plan and p.etat = ?
+        ',['used']);
+	}
+
+	
     
     /**
 	 * @return array
@@ -88,6 +125,17 @@ class RotationPrevueTable extends Table{
 	public function delete($code_plan){
 		return $this->query('DELETE from rotation_prevue WHERE code_plan = ?',[$code_plan]);
 	}
+
+	/**
+     * Retourne la quantité de déchets pour chaque secteur
+     * @return array tableau
+     */
+    public function qte($plan){
+		return $this->query('SELECT secteur as label, qte_dechets as data
+		FROM rotation_prevue 
+		where code_plan = ?
+		',[$plan]);
+	  }
 
 }
   

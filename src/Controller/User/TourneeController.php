@@ -19,6 +19,7 @@ class TourneeController extends AbstractController{
     $this->app->loadModel('Vehicle');
     $this->app->loadModel('Equipe');
     $this->app->loadModel('Secteur');
+    $this->app->loadModel('RotationPrevue');
     
   }
 
@@ -60,56 +61,56 @@ class TourneeController extends AbstractController{
      * @Route("/dashboard/tournee/{id}/update", methods={"POST","GET"}, name="updateTournee")
      */
     public function update($id){
-		$secteurs = $this->app->Secteur->allTournee();
-		$vehicules = $this->app->Vehicle->vehiculesEnMarche();
-		$equipes = $this->app->Equipe->all();
-		if(empty($_POST)){
-			$tournee = $this->app->Tournee->findWithId($id);
-			$t = $tournee[0];
-			for ($i=0; $i < count($t) ; $i++) { 
-				unset($t[$i]);
-			}
-			return $this->render('public/tournee/edit.html.twig', [
-			"tournee_id"=> $id,
-			"tournee"=>$t, 
-			"vehicles"=>$vehicules, 
-			"secteurs"=> $secteurs, 
-			"equipes" => $equipes,
-			"result"=>null]);
-		}
+      $secteurs = $this->app->Secteur->allTournee();
+      $vehicules = $this->app->Vehicle->vehiculesEnMarche();
+      $equipes = $this->app->Equipe->all();
+      if(empty($_POST)){
+        $tournee = $this->app->Tournee->findWithId($id);
+        $t = $tournee[0];
+        for ($i=0; $i < count($t) ; $i++) { 
+          unset($t[$i]);
+        }
+        return $this->render('public/tournee/edit.html.twig', [
+        "tournee_id"=> $id,
+        "tournee"=>$t, 
+        "vehicles"=>$vehicules, 
+        "secteurs"=> $secteurs, 
+        "equipes" => $equipes,
+        "result"=>null]);
+      }
 
-		$this->app->Tournee->edit($id, [
-            "date" => $_POST['date'],
-            "qte_prevue" => $_POST['qte_prevue'],
-            "heure_demarrage_parc" =>  $_POST['heure_demarrage_parc'],
-            "secteur" =>  $_POST['secteur'],
-            "vehicle" => $_POST['vehicle'],
-            "cet" => $_POST['cet'],
-            "equipe" => intval($_POST['equipe'])
-		]);
-		$this->app->Tournee->updateBonTransport($id, [
-			"date" => $_POST["date"],
-			"heure_debut" => $_POST["heure_demarrage_parc"],
-			"vehicule" => $_POST["vehicle"],
-			"equipe" => $_POST["equipe"],
-			"secteur" => $_POST["secteur"]
-		]);
-		$this->app->Tournee->updateTicketPesee($id, [
-			"date_ticket" => $_POST["date"]
-		]);
-		$tournee = $this->app->Tournee->findWithId($id);
-		$t = $tournee[0];
-		for ($i=0; $i < count($t) ; $i++) { 
-			unset($t[$i]);
-		}
-		return $this->render('public/tournee/edit.html.twig', [
-			"tournee_id"=> $id,
-			"tournee"=>$t, 
-			"vehicles"=>$vehicules, 
-			"secteurs"=> $secteurs, 
-			"equipes" => $equipes,
-			"result"=> "Rotation mise à jour avec succés."]);
-      
+      $this->app->Tournee->edit($id, [
+              "date" => $_POST['date'],
+              "qte_prevue" => $_POST['qte_prevue'],
+              "heure_demarrage_parc" =>  $_POST['heure_demarrage_parc'],
+              "secteur" =>  $_POST['secteur'],
+              "vehicle" => $_POST['vehicle'],
+              "cet" => $_POST['cet'],
+              "equipe" => intval($_POST['equipe'])
+      ]);
+      $this->app->Tournee->updateBonTransport($id, [
+        "date" => $_POST["date"],
+        "heure_debut" => $_POST["heure_demarrage_parc"],
+        "vehicule" => $_POST["vehicle"],
+        "equipe" => $_POST["equipe"],
+        "secteur" => $_POST["secteur"]
+      ]);
+      $this->app->Tournee->updateTicketPesee($id, [
+        "date_ticket" => $_POST["date"]
+      ]);
+      $tournee = $this->app->Tournee->findWithId($id);
+      $t = $tournee[0];
+      for ($i=0; $i < count($t) ; $i++) { 
+        unset($t[$i]);
+      }
+      return $this->render('public/tournee/edit.html.twig', [
+        "tournee_id"=> $id,
+        "tournee"=>$t, 
+        "vehicles"=>$vehicules, 
+        "secteurs"=> $secteurs, 
+        "equipes" => $equipes,
+        "result"=> "Rotation mise à jour avec succés."]);
+        
     } 
 
     /**
@@ -144,16 +145,29 @@ class TourneeController extends AbstractController{
 
         return new Response("Tournée mise à jour avec succes.");
        
+    }
+
+    /**
+     * @Route("dashboard/tournee/getRotationsPrevues", name="getRotationsPrevues")
+     */
+    public function getRotationsPrevues(){
+      $data = $this->app->RotationPrevue->getUsedPlan();
+      foreach($data as $k=>$line){
+        for ($i=0; $i <count($line) ; $i++) { 
+          unset($data[$k][$i]);
+        }
       }
-
-
+      return new Response(json_encode($data));
+    }
+    
+    
     /**
      * @Route("/dashboard/tournees/addTournee", methods={"POST","GET"}, name="addTournee")
      */
     public function ajouter(){
-      $secteurs = $this->app->Secteur->allTournee();
-      $vehicules = $this->app->Vehicle->vehiculesEnMarche();
-      $equipes = $this->app->Equipe->all();
+      $secteurs = $this->app->RotationPrevue->getSecteurs();
+      $vehicules = $this->app->RotationPrevue->getVehicles();
+      $equipes = $this->app->RotationPrevue->getEquipes();
       if (!empty($_POST)) {
         $tournee = $this->app->Tournee->ajouter([
             "date" => $_POST['date'],

@@ -156,7 +156,7 @@
 					<select name="secteur" id="secteurs" class="form-control" onchange="setVehicles()">
 							<option selected>Choisir Secteur</option>
 						{% for secteur in secteurs %}
-						<option value="{{secteur.code}}">{{secteur.code}}</option>
+						<option value="{{secteur.secteur}}">{{secteur.secteur}}</option>
 						{% endfor %}
 					</select>
 					</div>
@@ -192,7 +192,7 @@
 					<label for="inputLongitude">Equipe</label>
 					<select name="equipe" id="equipe" class="form-control">
 							{% for equipe in equipes %}
-								<option value="{{equipe.id}}">{{equipe.id}}</option>
+								<option value="{{equipe.equipe}}">{{equipe.equipe}}</option>
 							{% endfor %}
 							<option value="2">2</option>
 					</select>
@@ -281,13 +281,11 @@
 </script>
 
   <script>
-	  $.ajax({url: "{{path('getSecteursVehiclesEquipes')}}",
+	  $.ajax({url: "{{path('getRotationsPrevues')}}",
 			success: function(response){
 				result = JSON.parse(response);
 
-				window.vehicules = result.vehicules;
-				window.secteurs = result.secteurs;
-				window.equipes = result.equipes;
+				window.data = result;
 			},
 			error: function e(error){
 				alert("Error: "+ error);
@@ -315,31 +313,17 @@
 		var date = document.getElementById("date").value;
 		var heure = document.getElementById("heure").value;
 		var select_equipe = document.getElementById("equipe");
-		window.secteurs.forEach(function(obj) {
-			if(obj.code == secteur){
-				window.vehicules.forEach(function(vehicle){
-					if(vehicle.code == obj.vehicule){
-						var existe = false;
-						
-						var date_saisie = new Date(date);
-						if(existe == true && date_saisie.getTime() != window.date_tournee.getTime()){
-							opt = document.createElement('option');
-							opt.appendChild( document.createTextNode(vehicle.code + "_" + vehicle.matricule + "_" + vehicle.genre+"_"+vehicle.volume));
-							opt.value = vehicle.code;
-							select_vehicle.appendChild(opt);
-						}else{ 
-							if(existe == false){
-								opt = document.createElement('option');
-								opt.appendChild( document.createTextNode(vehicle.code + "_" + vehicle.matricule + "_" + vehicle.genre + "_" + vehicle.volume));
-								opt.value = vehicle.code;
-								select_vehicle.appendChild(opt);
-							}	
-						}
-					}
-				});
+		window.data.forEach(function(obj) {
+			if(obj.secteur == secteur){
+					opt = document.createElement('option');
+					opt.appendChild( document.createTextNode(obj.code + "_" + obj.matricule + "_" + obj.genre+"_"+obj.volume+"m3"));
+					opt.value = obj.code;
+					select_vehicle.appendChild(opt);	
 
-				document.getElementById("heure").value = obj.horaire;
-				document.getElementById("qte_prevue").value = obj.qtedechet;
+					$("#equipe").val(obj.equipe);
+
+					document.getElementById("heure").value = obj.heure_debut;
+					document.getElementById("qte_prevue").value = obj.qte_dechets;
 			}
 		});
 		
