@@ -49,8 +49,8 @@ class IndexController extends AbstractController{
 	public function userIndex(Security $security){
     $user_id = $security->getUser()->getId();
     $user = $this->getDoctrine()->getRepository(User::class)->find($user_id);
-    $id_equipe = $user->getIdEquipe();
-    $tournees = $this->app->Tournee->getTourneesEquipe($id_equipe);
+    $code_equipe = $user->getCodeEquipe();
+    $tournees = $this->app->Tournee->getTourneesEquipe($code_equipe);
     foreach($tournees as $t){
       for ($i=0; $i <count($t) ; $i++) { 
         unset($t[$i]);

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200610192857 extends AbstractMigration
+final class Version20200901112002 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,9 +22,8 @@ final class Version20200610192857 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
-        $this->addSql('CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username VARCHAR(180) NOT NULL, roles CLOB NOT NULL --(DC2Type:json)
-        , password VARCHAR(255) NOT NULL, id_equipe INTEGER NOT NULL, date_inscription DATETIME NOT NULL)');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649F85E0677 ON user (username)');
+        $this->addSql('CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, code_equipe VARCHAR(255) DEFAULT NULL, roles CLOB NOT NULL --(DC2Type:array)
+        , date_inscription DATE NOT NULL)');
     }
 
     public function down(Schema $schema) : void

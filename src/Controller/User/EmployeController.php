@@ -14,6 +14,7 @@ class EmployeController extends AbstractController{
    // parent::__construct();
     $this->app = new AppController();
     $this->app->loadModel('Employe');
+    $this->app->loadModel('Equipe');
   }
 
 
@@ -32,6 +33,7 @@ class EmployeController extends AbstractController{
     */    
     public function addEmploye(){
       $result = null;
+      $equipes = $this->app->Equipe->all();
         if(!empty($_POST)){
           $employe = $this->app->Employe->create([
             "matricule" => $_POST["matricule"],
@@ -45,14 +47,14 @@ class EmployeController extends AbstractController{
             "debut_contrat" => $_POST["debut_contrat"],
             "fin_contrat" => $_POST["fin_contrat"],
             "heure_pause" => $_POST["heure_pause"],            
-            "equipe" => intval($_POST["equipe"]),
             "debut_conge" => $_POST["debut_conge"],
-            "fin_conge" => $_POST["fin_conge"]
+            "fin_conge" => $_POST["fin_conge"],
+            "equipe" => $_POST["equipe"]
           ]);
           
           $result = "Employé ajouté avec succes.";
         }   
-        return $this->render('admin/employes/add.html.twig',["result"=>$result]);   
+        return $this->render('admin/employes/add.html.twig',["result"=>$result, "equipes" =>$equipes]);   
     }
 
     /**
@@ -61,6 +63,7 @@ class EmployeController extends AbstractController{
     public function editEmploye($matricule){
       $result = null;
       $employe = $this->app->Employe->find($matricule)[0];
+      $equipes = $this->app->Equipe->all();
         if(!empty($_POST)){
           $e = $this->app->Employe->edit($matricule, [
             "matricule" => $_POST["matricule"],
@@ -74,14 +77,14 @@ class EmployeController extends AbstractController{
             "debut_contrat" => $_POST["debut_contrat"],
             "fin_contrat" => $_POST["fin_contrat"],
             "heure_pause" => $_POST["heure_pause"],            
-            "equipe" => intval($_POST["equipe"]),
             "debut_conge" => $_POST["debut_conge"],
-            "fin_conge" => $_POST["fin_conge"]
+            "fin_conge" => $_POST["fin_conge"],
+            "equipe" => $_POST["equipe"]
           ]);
           
           $result = "Employé modifé avec succes.";
         }   
-        return $this->render('admin/employes/edit.html.twig',["result"=>$result, "employe"=>$employe]);   
+        return $this->render('admin/employes/edit.html.twig',["result"=>$result, "employe"=>$employe, "equipes" => $equipes]);   
     }
     
 }

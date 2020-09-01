@@ -175,7 +175,7 @@ class TourneeController extends AbstractController{
       if (!empty($_POST)) {
         $tournee = $this->app->Tournee->ajouter([
             "date" => $_POST['date'],
-            "qte_prevu" => $_POST['qte_prevue'],
+            "qte_prevue" => $_POST['qte_prevue'],
             "qte_realise" => null,
             "taux_realisation" => null,
             "kilometrage" => null,
@@ -189,7 +189,7 @@ class TourneeController extends AbstractController{
             "secteur" =>  $_POST['secteur'],
             "vehicle" => $_POST['vehicle'],
             "cet" => $_POST['cet'],
-            "equipe" => intval($_POST['equipe'])
+            "equipe" => $_POST['equipe']
         ]);
         $tournee = $this->app->Tournee->initialiser($tournee[0]["max"]);
         
@@ -197,7 +197,7 @@ class TourneeController extends AbstractController{
             "secteurs" => $secteurs,
             "vehicles" => $vehicules,
             "equipes" => $equipes,
-            "result" => "Tournée inserée"
+            "result" => "Rotation inserée avec succès."
           ]);
       }
       return $this->render('public/tournee/add.html.twig',[

@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -20,6 +21,7 @@ class UserFixtures extends Fixture
         $user->setUsername("Admin");
         $user->setPassword($this->encoder->encodePassword($user, 'admin'));
         $user->setRoles(['ROLE_ADMIN','ROLE_USER','ROLE_SUPERUSER']);
+        $user->setDateInscription(new DateTime());
         $manager->persist($user);
         $manager->flush();
 
@@ -27,7 +29,8 @@ class UserFixtures extends Fixture
         $user->setUsername("User");
         $user->setPassword($this->encoder->encodePassword($user, 'user'));
         $user->setRoles(['ROLE_USER']);
-        $user->setIdEquipe(1);
+        $user->setDateInscription(new DateTime());
+        $user->setCodeEquipe("C013-E01");
         $manager->persist($user);
         $manager->flush();
 
@@ -35,6 +38,7 @@ class UserFixtures extends Fixture
         $user->setUsername("Superuser");
         $user->setPassword($this->encoder->encodePassword($user, 'superuser'));
         $user->setRoles(['ROLE_USER','ROLE_SUPERUSER']);
+        $user->setDateInscription(new DateTime());
         $manager->persist($user);
         $manager->flush();
     }

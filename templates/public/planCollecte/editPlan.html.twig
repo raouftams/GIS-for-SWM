@@ -19,6 +19,7 @@
                 <thead class="bg-primary text-white">
                     <th>Secteur</th>
                     <th>Matériel</th>
+                    <th>Equipe</th>
                     <th>Quantité prévue (Tonne)</th>
                     <th>Heure début</th>
                     <th>Heure fin</th>
@@ -36,6 +37,14 @@
                                 <option value="{{d.code}}" selected>{{d.vehicle}}</option>
                                 {% for v in vehicles %}
                                     <option value="{{v.code}}">{{v.code}}_{{v.matricule}}_{{v.genre}}_{{v.volume}}m3</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="equipe" id="equipe" class="form-control">
+                                <option value="{{d.equipe}}" selected>{{d.equipe}}</option>
+                                {% for e in equipes %}
+                                    <option value="{{e.code}}">{{e.code}}_{{e.nb_employes}}_employés</option>
                                 {% endfor %}
                             </select>
                         </td>

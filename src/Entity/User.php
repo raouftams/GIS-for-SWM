@@ -5,11 +5,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
-
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, Serializable 
+class User implements UserInterface, Serializable
 {
     /**
      * @ORM\Id()
@@ -19,49 +18,38 @@ class User implements UserInterface, Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
-
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=255)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $id_equipe = 0;
+    private $codeEquipe;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="array")
      */
-    private $date_inscription;
+    private $roles = [];
 
-    public function __construct()
-    {
-        $this->date_inscription = new \DateTime();
-    }
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $dateInscription;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
-        return (string) $this->username;
+        return $this->username;
     }
 
     public function setUsername(string $username): self
@@ -71,10 +59,31 @@ class User implements UserInterface, Serializable
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles()
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getCodeEquipe(): ?string
+    {
+        return $this->codeEquipe;
+    }
+
+    public function setCodeEquipe(?string $codeEquipe): self
+    {
+        $this->codeEquipe = $codeEquipe;
+
+        return $this;
+    }
+
+    public function getRoles(): ?array
     {
         return $this->roles;
     }
@@ -86,17 +95,14 @@ class User implements UserInterface, Serializable
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getPassword(): string
+    public function getDateInscription(): ?\DateTimeInterface
     {
-        return (string) $this->password;
+        return $this->dateInscription;
     }
 
-    public function setPassword(string $password): self
+    public function setDateInscription(\DateTimeInterface $dateInscription): self
     {
-        $this->password = $password;
+        $this->dateInscription = $dateInscription;
 
         return $this;
     }
@@ -134,29 +140,5 @@ class User implements UserInterface, Serializable
             $this->username,
             $this->password,
         ) = unserialize($serialized, ['allowed_class' => false]);
-    }
-
-    public function getIdEquipe(): ?int
-    {
-        return $this->id_equipe;
-    }
-
-    public function setIdEquipe(int $id_equipe): self
-    {
-        $this->id_equipe = $id_equipe;
-
-        return $this;
-    }
-
-    public function getDateInscription(): ?\DateTimeInterface
-    {
-        return $this->date_inscription;
-    }
-
-    public function setDateInscription(\DateTimeInterface $date_inscription): self
-    {
-        $this->date_inscription = $date_inscription;
-
-        return $this;
     }
 }

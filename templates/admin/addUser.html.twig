@@ -54,7 +54,7 @@
                         Chef d'équipe
                     {%endif%}
                     </td>
-				<td class="th-sm">{{ user.getIdEquipe }}</td>
+				<td class="th-sm">{{ user.getCodeEquipe }}</td>
 				<td class="th-sm">{{ user.getDateInscription.date|date("m/d/Y")}}</td>
                 
 				<td class="th-sm">
@@ -98,10 +98,10 @@
         </div>
         <div class="form-group col-md-4">
             <label>Choisir Equipe:</label>
-            <select name="id_equipe" class="form-control">
+            <select name="equipe" class="form-control">
             <option value="0" selected>Choisir equipe</option>
             {% for equipe in equipes %}
-                <option value="{{equipe.id}}">{{equipe.id}}</option>
+                <option value="{{equipe.code}}">{{equipe.code}}</option>
             {% endfor %}
             </select>
         </div>

@@ -6,6 +6,7 @@ use App\Controller\AppController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\User;
+use DateTime;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController{
@@ -32,7 +33,7 @@ class UserController extends AbstractController{
             $username = $_POST['username'];
     		$password = $_POST['password'];
             $role = $_POST['role'];
-            $equipe =  intval($_POST['id_equipe']);
+            $equipe =  $_POST['equipe'];
             
             if ($role == 'Administrateur') {
                 $roles = ['ROLE_ADMIN','ROLE_SUPERUSER','ROLE_USER'];
@@ -48,7 +49,8 @@ class UserController extends AbstractController{
             $user->setUsername($username);
             $user->setPassword($this->encoder->encodePassword($user, $password));
             $user->setRoles($roles);
-            $user->setIdEquipe($equipe);
+            $user->setCodeEquipe($equipe);
+            $user->setDateInscription(new DateTime());
             $manager->persist($user);
             $manager->flush();
             $users = $this->getDoctrine()->getRepository(User::class)->findAll();

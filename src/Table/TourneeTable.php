@@ -131,8 +131,19 @@ class TourneeTable extends Table{
      * @return boolean 
      */
     public function ajouter($fields){
-        $ajout = $this->create($fields);
-        return $this->query('SELECT max(id_tournee) from "public".tournee');
+      $sql_parts = [];
+      $indexes= [];
+      $attributes = [];
+      foreach ($fields as $k => $v) {
+        $sql_parts[] = "?";
+        $indexes[] = $k;
+        $attributes[] = $v;
+      }
+      $sql_part = implode(',', $sql_parts);
+      $index = implode(',', $indexes);
+      $ajout = $this->query("INSERT INTO {$this->table} ($index) values ($sql_part)", $attributes, true);
+    
+      return $this->query('SELECT max(id_tournee) from "public".tournee');
     }
 
     /**
@@ -255,9 +266,9 @@ class TourneeTable extends Table{
       "heure_debut" => $tournee["heure_demarrage_parc"],
       "vehicule" => $tournee["vehicle"],
       "heure_fin" => null,
-      "equipe" => $tournee["equipe"],
       "tournee" => $tournee["id_tournee"],
-      "secteur" => $tournee["secteur"]
+      "secteur" => $tournee["secteur"],
+      "equipe" => $tournee["equipe"],
     ];
     $ajout = $this->addBonTicket("bon_transport", $bon);
 
@@ -266,11 +277,11 @@ class TourneeTable extends Table{
       "cet" => null,
       "date_ticket" => null,
       "heure_ticket" => null,
-      "poids_brute" => null,
-      "tare" => null,
+      "poids_brut" => null,
       "poids_net" => null,
-      "taux_compaction" => null,
-      "tournee" => $tournee["id_tournee"]
+      "tournee" => $tournee["id_tournee"],
+      "montant" => null,
+      "image_name" => null,
     ];
 
     return $this->addBonTicket("ticket_pesee", $ticket);

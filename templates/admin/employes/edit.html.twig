@@ -67,7 +67,10 @@
         <div class="form-group col-md-4">
             <label for="inputAddress">equipe:</label>
             <select name="equipe" id="etat" class="form-control">
-                <option value="1">1</option>
+                <option value="{{employe.equipe}}" selected>{{employe.equipe}}</option>
+                {% for e in equipes %}
+                  <option value="{{e.code}}">{{e.code}}_{{e.nb_employes}}employés</option>
+                {% endfor %}
             </select>
         </div>         
     </div>

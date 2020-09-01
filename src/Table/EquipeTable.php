@@ -12,7 +12,7 @@ class EquipeTable extends Table{
      * @return array tableau
      */
     public function all(){
-      return $this->query('SELECT id
+      return $this->query('SELECT code, nb_employes
       FROM "public".equipe
       ');
     }

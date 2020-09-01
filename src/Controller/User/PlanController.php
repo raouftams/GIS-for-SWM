@@ -20,6 +20,7 @@ class PlanController extends AbstractController{
 	$this->app->loadModel('Vehicle');
 	$this->app->loadModel('Points');
 	$this->app->loadModel('Secteur');
+	$this->app->loadModel('Equipe');
   }
 
 
@@ -33,7 +34,7 @@ class PlanController extends AbstractController{
 		}else{
 			$used_plan = $this->app->RotationPrevue->getUsedPlan();
 		}
-
+		
 		$codes = $this->app->PlanCollecte->All();
 		foreach($used_plan as $k=>$line){
 			for ($i=0; $i < count($line); $i++) { 
@@ -75,6 +76,7 @@ class PlanController extends AbstractController{
 			$result = "Plan modifié avec succès";
 		}
 		$vehicles = $this->app->Vehicle->vehiculesEnMarche();
+		$equipes = $this->app->Equipe->all();
 		$used_plan = $this->app->RotationPrevue->getPlan($code);
 		foreach($used_plan as $k=>$line){
 			for ($i=0; $i < count($line); $i++) { 
@@ -87,6 +89,7 @@ class PlanController extends AbstractController{
 		return $this->render("public/planCollecte/editPlan.html.twig",[
 			"data" => $used_plan,
 			"vehicles" => $vehicles,
+			"equipes" => $equipes,
 			"code_plan" => $code,
 			"result" => $result
 		]);
