@@ -11,7 +11,9 @@
 	<div class="popup">
 		<a class="close" href="#">&times;</a><br>
 		<div class="content" id="content">
-            <img id="ticket_image" src="{{asset('img/'~ ticket_image ~ '')}}">
+            {% if ticket_image != null %}
+                <img id="ticket_image" src="{{asset('img/'~ ticket_image ~ '')}}">
+            {% endif %}
         </div>
 	</div>
 </div>
