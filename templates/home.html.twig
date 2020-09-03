@@ -21,6 +21,7 @@
 	<!-- Material Design Bootstrap -->
 	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/home.css')}}">
+    <link rel="stylesheet" href="{{asset('css/popup.css')}}">
 </head>
 <body>
 
@@ -40,8 +41,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
                 </li>
-                <li class="nav-item"><a class="nav-link login" href="{{path('login')}}" ><i class="fas fa-sign-in-alt"></i>&nbsp; Se connecter </a> 
-                </li>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li class="nav-item">
+                        <a class="nav-link logout"href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link login" href="#popup-login" ><i class="fas fa-sign-in-alt"></i>&nbsp; Se connecter </a> 
+                    </li>
+                {% endif %}
+                
             </ul>
         </div>
     </nav>
@@ -89,7 +97,29 @@
         </div>
     </section>
 
+    <div id="popup-login" class="overlay">
+		<div class="popup" style="width: 40%; margin-top: 100px;">
+			<a class="close" href="#">&times;</a>
+			<div class="content" id="content">
+                <div class="container" style="width: 100% !important;">
+				<h2 class="font-weight-bold">Identifiez vous</h2>
+                <br>
+                <form class="login-form" style="width: 100%;" method="post" action="{{path('login')}}">
+                    <div class="form-row">
+                        <label>Nom d'utilisateur</label>
+                        <input class="form-control" type="text" placeholder="username" name="_username" required/>
+                    </div>
+                    <div class="form-row">
+                        <label>Mot de passe:</label>
+                        <input class="form-control" type="password" placeholder="password" name="_password" required/>
+                    </div>
 
+                    <button class="btn btn-info btn-login">Se connecter</button>
+                </form>
+            </div>
+			</div>
+		</div>
+	</div>
 </body>
 
 

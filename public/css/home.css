@@ -120,11 +120,14 @@ form{
     font-weight: bold;
 }
 
-.btn-envoyer{
+.btn-envoyer, .btn-login{
     border: 1px solid #1d8097;
     background-color: #1d8097!important;
 }
 
+.container h2{
+    color: #1d8097;
+}
 
 @media only screen and (max-width: 830px){
     .jumbotron img{
