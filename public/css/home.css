@@ -63,18 +63,21 @@ body::-webkit-scrollbar-thumb{
 }
 
 .jumbotron{
-
-    background-image: url('../img/collecte.png');
-    background-repeat: no-repeat;
-    background-size: 100%, 100%;
     width: 100%;
-    height: 670px;
+    height: 100vh;
     color: rgb(216, 213, 213);
+    background-color: #1d8097;
+}
+
+.jumbotron img{
+    width: 60%;
+    height: 100%;
+    float: right;
 }
 
 .text-intro{
     border: 1px solid transparent;
-    width: 40%;
+    width: 50%;
     
 }
 
@@ -93,10 +96,10 @@ section{
     width: 100%;
 }
 #contact{
-    height: 90vh;
+    height: 100vh;
 }
 #presentation{
-    height: 95vh;
+    height: 100vh;
 }
 
 form{
@@ -123,3 +126,21 @@ form{
 }
 
 
+@media only screen and (max-width: 830px){
+    .jumbotron img{
+        width: 90%;
+    }
+    .text-intro{
+        width: 95%;
+        text-align: center;
+        display: inline-block;
+        position: absolute;
+        color: #fff;
+        z-index: 100;
+        font-weight: bold;
+    }
+    .text-intro p,.text-intro h2{
+        text-shadow: 2px 2px #3a3b3b;
+    }
+    
+}
