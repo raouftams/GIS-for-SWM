@@ -27,7 +27,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+          <span class="collapse-bars"><i class="fas fa-bars"></i></span>
         </button>
         <a class="navbar-brand font-weight-bold" href="#">GDMA BabEzzouar</a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -62,7 +62,7 @@
                 <h2 class="display-4 font-weight-bold">Collecte et transport des DMA BabEzzouar</h2>
                 <p class="">Vous êtes habitant de la commune BabEzzouar?</p>
                 <p class="">Vous pouvez consulter le planning de collecte et nous contacter pour plus d'informations supplémentaires.</p>
-                <br><br>
+                <br>
                 <a class="btn btn-outline-info btn-md jumbotron-btn" href="">Planning</a>
                 <a class="btn btn-outline-info btn-md jumbotron-btn" href="#contact">Contact</a>
             </div>
@@ -129,9 +129,11 @@
             var $nav = $(".fixed-top");
             var $link = $(".nav-link");
             var $brand = $(".navbar-brand");
+            var $collapseBars = $(".collapse-bars");
             $nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
             $link.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
             $brand.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+            $collapseBars.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
         });
     });
     $(function() {
