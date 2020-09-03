@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -20,12 +21,20 @@ class IndexController extends AbstractController{
     
   }
 
+
+    /**
+     * @Route("/", name="home")
+     */
+    public function index(){
+      return $this->render('home.html.twig'); 
+    }
+
     /**
      * @Route("/index", name="handleLogin")
      */
     public function loginHandler(AuthorizationCheckerInterface $authChecker, Security $security){
 		  if ($authChecker->isGranted('ROLE_SUPERUSER')) {
-		  	return $this->index();
+		  	return $this->adminIndex();
 		  }else{
 		  	return $this->userIndex($security);
 		  }
@@ -34,7 +43,7 @@ class IndexController extends AbstractController{
     /**
 	 * @Route("/dashboard", name="dashboard")
 	 */
-    public function index(){
+    public function adminIndex(){
 
       $tournees = $this->app->Tournee->getTourneesEnAttente();
       $nbTourneesAttente = count($tournees);

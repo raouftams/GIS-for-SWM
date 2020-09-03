@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil</title>
+    <!-- jQuery -->
+    <script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+    <!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="{{asset('js/popper.min.js')}}"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+    <!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+	<!-- Google Fonts Roboto -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+	<!-- Material Design Bootstrap -->
+	<link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/home.css')}}">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand font-weight-bold" href="#">GDMA BabEzzouar</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto nav-links">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{path('home')}}"><i class="fas fa-home"></i> Accueil <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href=""><i class="fas fa-calendar-alt"></i> Planning</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+                </li>
+                <li class="nav-item"><a class="nav-link login" href="{{path('login')}}" ><i class="fas fa-sign-in-alt"></i>&nbsp; Se connecter </a> 
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <section id="presentation">
+        <div class="container-fluid jumbotron">
+            <div class="text-intro">
+                <br><br><br>
+                <h2 class="display-4">Collecte et transport des DMA Bab Ezzouar</h2>
+                <p class="lead">Vous êtes habitant de la commune BabEzzouar?</p>
+                <p class="lead">Vous pouvez consulter le planning de collecte et nous contacter pour plus d'informations supplémentaires.</p>
+                <br><br>
+                <a class="btn btn-outline-info btn-md jumbotron-btn" href="">Planning</a>
+                <a class="btn btn-outline-info btn-md jumbotron-btn" href="#contact">Contact</a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact">
+        <div class="container">
+            <form action="" method="POST">
+                <h2 class="font-weight-bold">Envoyez un message</h2>
+                <div class="form-row">
+                    <label>Nom et prénom: </label>
+                    <input class="form-control" type="text">
+                </div>
+                <div class="form-row">
+                    <label>Email: </label>
+                    <input class="form-control" type="email">
+                </div>
+                <div class="form-row">
+                    <label>Objet: </label>
+                    <input class="form-control" type="text">
+                </div>
+                <div class="form-row">
+                    <label>Message: </label>
+                    <textarea class="form-control" cols="30" rows="5"></textarea>
+                </div>
+                <button class="btn btn-info btn-envoyer">Envoyer</button>
+            </form>
+        </div>
+        <div>
+            <a href="#presentation" class="go-up"><i class="fas fa-angle-double-up"></i>&nbsp; Go up</a>
+        </div>
+    </section>
+
+
+</body>
+
+
+<script>
+    $(function () {
+        $(document).scroll(function () {
+            var $nav = $(".fixed-top");
+            var $link = $(".nav-link");
+            var $brand = $(".navbar-brand");
+            $nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+            $link.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+            $brand.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+        });
+    });
+    $(function() {
+        $(".nav-link, .jumbotron-btn").on('click', function(){
+            $("html, body").animate({
+                scrollTop: $($.attr(this, 'href')).offset().top
+            }, 1000);
+        });
+        $(".go-up").on('click', function(){
+            $("html, body").animate({
+                scrollTop: $($.attr(this, 'href')).offset().top
+            }, 1000);
+        });
+    });
+    
+</script>
+<script>
+    function processAjaxData(response, urlPath){
+        document.getElementById("main_content").innerHTML = response.html;
+        document.title = response.pageTitle;
+        window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
+    }
+    window.onpopstate = function(e){
+        if(e.state){
+            document.getElementById("main_content").innerHTML = e.state.html;
+            document.title = e.state.pageTitle;
+        }
+    };
+    
+
+</script>
+</html>
