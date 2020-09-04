@@ -1,0 +1,18 @@
+.table-title{
+    border: 1px solid #ffffff;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    background-color: #fff;
+    color: #1d8097;
+    display: flex;
+}
+
+.btn-edit{
+    border: 1px solid #1d8097;
+    background-color: #1d8097 !important;
+}
+
+.btn-group{
+    border: 1px solid transparent;
+    margin-left: 50%;
+}

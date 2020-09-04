@@ -28,6 +28,27 @@ class PlanningTable extends Table{
         ',['used']);
     }
 
+    /**
+     * retourne le planning d'un véhicule 
+     * @return array
+     */
+    public function vehiclePlanning($code_vehicle){
+        return $this->query("SELECT pc.jour, pc.heure 
+        from planning_collecte pc, rotation_prevue rp
+        Where pc.rotation = rp.id_rotation_prevue and rp.vehicle = ?
+        ", [$code_vehicle]);
+    }
+    /**
+     * retourne le planning d'une équipe 
+     * @return array
+     */
+    public function equipePlanning($code_equipe){
+        return $this->query("SELECT pc.jour, pc.heure 
+        from planning_collecte pc, rotation_prevue rp
+        Where pc.rotation = rp.id_rotation_prevue and rp.equipe = ?
+        ", [$code_equipe]);
+    }
+
 	/**
 	 * @return boolean
 	 */

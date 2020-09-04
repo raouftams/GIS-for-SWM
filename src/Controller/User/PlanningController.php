@@ -16,6 +16,7 @@ class PlanningController extends AbstractController{
     $this->app = new AppController();
     $this->app->loadModel('Planning');
     $this->app->loadModel('Secteur');
+    $this->app->loadModel('RotationPrevue');
   }
 
 
@@ -25,9 +26,12 @@ class PlanningController extends AbstractController{
     public function index(){
         $planning = $this->app->Planning->getUsedPlanning();
         $secteurs = $this->app->Secteur->all();
+        $vehicles = $this->app->RotationPrevue->getVehicles();
+        $equipes = $this->app->RotationPrevue->getEquipes();
         $jours = ["samedi","dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi"];
-        $features = [];
-        $plan = [];
+
+        //Planning des secteurs
+        $features = [];$plan = [];
         foreach($secteurs as $secteur){
             foreach($planning as $rotation){
                 if($secteur["code"] == $rotation["secteur"]){
@@ -36,13 +40,61 @@ class PlanningController extends AbstractController{
                     $features[$index] = $feature;
                 }
             }
-            $plan[] = ["secteur" => $rotation["secteur"], "features"=>$features];
+            $plan[] = ["secteur" => $secteur["code"], "features"=>$features];
             $features = [];
         }
-        return $this->render('public/planning_collecte.html.twig', [
-            "plan" => $plan
-        ]);
+        //Planning des véhicules
+        $features = []; $heures = []; $feature = [];
+        foreach ($vehicles as $vehicle) {
+            $vehicleData = $this->app->Planning->vehiclePlanning($vehicle["code"]);
+            foreach($jours as $jour){    
+                foreach($vehicleData as $data){
+                    if($data["jour"] == $jour){
+                        $heures[] = $data["heure"];
+                    }
+                }
+                
+                $index = array_search($jour, $jours);
+                $features[$index] = $heures;
+                $heures = [];
+            }
+            $vehiclePlan[] = [
+                "code_vehicle" => $vehicle["code"],
+                "matricule" => $vehicle["matricule"],
+                "genre" => $vehicle["genre"],
+                "volume" => $vehicle["volume"],
+                "features" => $features
+            ];
+            $features = $features = [];
+        }
+        
+        //Planning des équipes
+        $features = []; $heures = []; $feature = [];
+        foreach ($equipes as $equipe) {
+            $equipeData = $this->app->Planning->equipePlanning($equipe["equipe"]);
+            foreach($jours as $jour){    
+                foreach($equipeData as $data){
+                    if($data["jour"] == $jour){
+                        $heures[] = $data["heure"];
+                    }
+                }
+                
+                $index = array_search($jour, $jours);
+                $features[$index] = $heures;
+                $heures = [];
+            }
+            $equipePlan[] = [
+                "code_equipe" => $equipe["equipe"],
+                "features" => $features
+            ];
+            $features = $features = [];
+        }
 
+        return $this->render('public/planning_collecte.html.twig', [
+            "plan" => $plan,
+            "vehiclePlan" => $vehiclePlan,
+            "equipePlan" => $equipePlan
+        ]);
     }
 	
 

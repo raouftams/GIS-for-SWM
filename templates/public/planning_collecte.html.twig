@@ -2,12 +2,46 @@
 
 {% block stylesheets %}
 <link rel="stylesheet" href="{{asset('css/table.css')}}">
+<link rel="stylesheet" href="{{asset('css/planning.css')}}">
 {% endblock %}
 {%block body %}
-<div class="container">
-    <h2 style="text-align:center;" class="font-weight-bold">Planning de collecte d'une semaine</h2>
-    <hr>
-    <button class="btn btn-info">Modifier</button>
+<div class="table-title">
+    <h2 class="font-weight-bold">Planning d'une semaine</h2>
+    <div class="btn-group">
+        <button class="btn btn-info btn-sm btn-edit"><i class="far fa-edit"></i></button>
+        <button class="btn btn-info btn-sm btn-edit"><i class="fas fa-print"></i></button>
+    </div>
+</div>
+<div class="tableFixHead">
+<table class="table">
+    <thead>
+        <th></th>
+        <th class="font-weight-bold">Samedi</th>
+        <th class="font-weight-bold">Dimanche</th>
+        <th class="font-weight-bold">Lundi</th>
+        <th class="font-weight-bold">Mardi</th>
+        <th class="font-weight-bold">Mercredi</th>
+        <th class="font-weight-bold">Jeudi</th>
+        <th class="font-weight-bold">Vendredi</th>
+    </thead>
+    <tbody>
+        {% for p in plan %}
+        <tr>
+            <td valign="top" class="font-weight-bold">{{p.secteur}}</td>
+            {% for r in p.features %}
+                <td>{{r.heure}}</td>
+            {%endfor%}
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+</div>
+
+<br>
+<div class="table-title mt-4">
+    <h2 class="font-weight-bold">Planning des véhicules</h2>
+    <button class="btn btn-info btn-sm btn-edit" style="margin-left: 58%;" onclick="imprimer()"><i class="fas fa-print"></i></button>
+    <br>
 </div>
 <div class="tableFixHead">
 <table class="table">
@@ -22,11 +56,50 @@
         <th>Vendredi</th>
     </thead>
     <tbody>
-        {% for p in plan %}
+        {% for p in vehiclePlan %}
         <tr>
-            <td valign="top">{{p.secteur}}</td>
+            <td valign="top">{{p.code_vehicle}}_{{p.matricule}}_{{p.genre}}_{{p.volume}}m3</td>
             {% for r in p.features %}
-                <td>{{r.heure}}</td>
+                <td>
+                    {% for h in r %}
+                        <li style="list-style:none;">{{h}}</li>
+                    {% endfor %}
+                </td>
+            {%endfor%}
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+</div>
+<br>
+
+<div class="table-title mt-4">
+    <h2 class="font-weight-bold" >Planning des équipes</h2>
+    <button class="btn btn-info btn-sm btn-edit" style="margin-left: 60%;"><i class="fas fa-print"></i></button>
+    <br>
+</div>
+<div class="tableFixHead">
+<table class="table">
+    <thead>
+        <th></th>
+        <th>Samedi</th>
+        <th>Dimanche</th>
+        <th>Lundi</th>
+        <th>Mardi</th>
+        <th>Mercredi</th>
+        <th>Jeudi</th>
+        <th>Vendredi</th>
+    </thead>
+    <tbody>
+        {% for p in equipePlan %}
+        <tr>
+            <td valign="top">{{p.code_equipe}}</td>
+            {% for r in p.features %}
+                <td>
+                    {% for h in r %}
+                        <li style="list-style:none;">{{h}}</li>
+                    {% endfor %}
+                </td>
             {%endfor%}
         </tr>
         {%endfor%}
