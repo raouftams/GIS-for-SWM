@@ -105,7 +105,7 @@ class TourneeTable extends Table{
     }   
 
     /**
-     * Retourne la quantité de dechets prévue et réalisée
+     * Retourne la quantité de dechets prévue et réalisée de l'annér actuele
      * @return array
      */
     public function qteRealiseEtPrevue(){
@@ -115,7 +115,56 @@ class TourneeTable extends Table{
       GROUP BY label
       ORDER BY label');
     } 
+    
+    /**
+     * Retourne la quantité de dechets prévue et réalisée de l'année actuele par secteurs
+     * @return array
+     */
+    public function qtesParSEcteurs(){
+      return $this->query('SELECT	secteur AS labels, sum(qte_prevue) AS prevue, sum(qte_realise) AS realise
+      FROM tournee 
+      WHERE date_trunc(\'year\', date) = date_trunc(\'year\', current_date)  
+            GROUP BY labels
+            ORDER BY labels');
+    }
 
+    /**
+     * Retourne l'historique des tournées effectuées  where etat <> 'En attente'
+     * @return array
+     */
+    public function historique(){
+      return $this->query('SELECT id_tournee, date, secteur, taux_realisation , qte_prevue, qte_realise, kilometrage,carburant,
+      heure_demarrage_parc , heure_fin_rotation, heure_debut_secteur, heure_fin_secteur,heure_pesee, duree_attente,(heure_fin_rotation - heure_demarrage_parc)as temps_travail
+      , vehicle, cet, equipe
+      From tournee 
+      order by date');
+    }
+
+    /**
+     * Retourne les dernieres tournées effectuées du mois actuel  where etat <> 'En attente'
+     * @return array
+     */
+    public function tourneeMoisActuel(){
+      return $this->query('SELECT id_tournee, date, secteur, vehicle, equipe ,taux_realisation, qte_prevue, qte_realise, kilometrage,carburant
+      From tournee 
+      where date_trunc(\'month\', date) = date_trunc(\'month\', CURRENT_DATE) 
+      and date_trunc(\'year\', date) = date_trunc(\'year\', CURRENT_DATE)
+      ORDER BY date');
+    }
+
+    /**
+     * Retourne le bilan des tournees realisé non achevées where etat <> 'EN attente' AND taux_R <> 1
+     * @return array
+     */
+    public function tourneeIcompletes(){
+      return $this->query('SELECT id_tournee,id_rotation_prevue, code_plan, date, tr.equipe, tr.vehicle, tr.secteur, qte_dechets AS qte_p, qte_realise AS qte_r, 
+      nombre_points AS nbp_points, taux_realisation AS taux_r, (taux_realisation * nombre_points) AS nbr_points, 
+      heure_debut AS heure_depart_p ,heure_demarrage_parc AS heure_depart_r, heure_fin AS heure_finp, heure_fin_rotation AS heure_finr,
+      ro.kilometrage AS kilometrage_p, tr.kilometrage AS kilometrage_r, ro.carburant AS carburant_p, tr.carburant AS carburant_r
+      FROM tournee tr
+      JOIN rotation_prevue ro ON (ro.vehicle = tr.vehicle AND ro.equipe = tr.equipe AND ro.secteur = tr.secteur)
+      ORDER BY date');
+    }
 
     /**
      * @return array

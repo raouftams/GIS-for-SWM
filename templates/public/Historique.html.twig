@@ -1,0 +1,75 @@
+{% extends "base.html.twig" %}
+{% block title %}Historique des tournées{%endblock%}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{asset('css/table.css')}}">
+    
+    
+    <style>
+	    td{
+		    margin: auto;
+	    }
+    </style>
+{% endblock %}
+{% block header %}Historique des tournées{%endblock%}
+{% block body %}
+<div class="container-fluid mt-4">
+    <h3 style="color: #2274BF;" class="text-center font-weight-bold">Historique des tournées realisées</h3>
+        <div class="tableFixHead">
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Secteur</th>
+                <th scope="col">Taux de realisation</th>
+                <th scope="col">Quantité réalisée</th>
+                <th scope="col">Quantité prévue</th>
+                <th scope="col">Kilométrage</th>
+                <th scope="col">Carburant</th>
+                <th scope="col">Heure_demarrage_parc</th>
+                <th scope="col">Heure_fin_rotation</th>
+                <th scope="col">Heure_debut_secteur</th>
+                <th scope="col">Heure_fin_secteur</th>
+                <th scope="col">Heure_pesee</th>
+                <th scope="col">Duree_attente</th>
+                <th scope="col">Temps_travail</th>
+                <th scope="col">Vehicule</th>
+                <th scope="col">CET</th>
+                <th scope="col">Equipe</th>
+                </tr>
+            </thead>
+           
+            <tbody>
+                    
+                {% for ligne in table %}
+                    <tr>
+                        <td class="th-sm">{{ligne.id_tournee}}</td>
+                        <td class="th-sm">{{ligne.date}}</td>
+                        <td class="th-sm">{{ligne.secteur}}</td>
+                        <td class="th-sm">{{ligne.taux_realisation}}</td>
+                        <td class="th-sm">{{ligne.qte_prevue}}</td>
+                        <td class="th-sm">{{ligne.qte_realise}}</td>
+                        <td class="th-sm">{{ligne.kilometrage}}</td>
+                        <td class="th-sm">{{ligne.carburant}}</td>
+                        <td class="th-sm">{{ligne.heure_demarrage_parc}}</td>
+                        <td class="th-sm">{{ligne.heure_fin_rotation}}</td>
+                        <td class="th-sm">{{ligne.heure_debut_secteur}}</td>
+                        <td class="th-sm">{{ligne.heure_fin_secteur}}</td>
+                        <td class="th-sm">{{ligne.heure_pesee}}</td>
+                        <td class="th-sm">{{ligne.duree_attente}}</td>
+                        <td class="th-sm">{{ligne.temps_travail}}</td>
+                        <td class="th-sm">{{ligne.vehicle}}</td>
+                        <td class="th-sm">{{ligne.cet}}</td>
+                        <td class="th-sm">{{ligne.equipe}}</td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

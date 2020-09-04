@@ -1,0 +1,142 @@
+{% extends "base.html.twig" %}
+{% block title %}Bilan D'action{%endblock%}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{asset('css/dashboard.css')}}">
+    <link rel="stylesheet" href="{{asset('css/charts.css')}}">
+    <link rel="stylesheet" href="{{asset('css/table.css')}}">
+    <style>
+	    td{
+		    margin: auto;
+	    }
+    </style>
+{% endblock %}
+{% block header %}Bilan d'action{%endblock%}
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="jumbotron" style="height: 30%; width: 100%; padding-top: 0; border-radius: 5px;">
+        <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets (En tonne)</h3>
+        <hr>
+        <canvas id="ChartQteDechets" height="200" class="chartjs-render-monitor chart" style="display: block; width: 390px; height: 195px;"></canvas>
+    </div>
+
+
+    <div class="jumbotron" style="height: 30%; width: 100%; padding-top: 0; border-radius: 5px;">
+        <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets par secteur (En tonne)</h3>
+        <hr>
+        <canvas id="ChartQteParSecteur" height="200" class="chartjs-render-monitor chart" style="display: block; width: 390px; height: 195px;"></canvas>
+    </div>
+
+    <h3 style="color: #2274BF;" class="text-center font-weight-bold">Tournees incomplétes du mois</h3>
+    <div class="tableFixHead">
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">ID </th>
+                <th scope="col">Code plan</th>
+                <th scope="col">Date</th>
+                <th scope="col">Equipe</th>
+                <th scope="col">Vehicule</th>
+                <th scope="col">Secteur</th>
+                <th scope="col">Quantité prévue</th>
+                <th scope="col">Quantité collectée</th>
+                <th scope="col">Nb points</th>
+                <th scope="col">Taux realisation</th>
+                <th scope="col">Nb points ratés</th>
+                <th scope="col">Heure depart prévue</th>
+                <th scope="col">Heure depart enregistrée</th>
+                <th scope="col">Heure fin prévue</th>
+                <th scope="col">heure fin enregistrée</th>
+                <th scope="col">Kilométrage prévue</th>
+                <th scope="col">Kilométrage parcourus</th>
+                <th scope="col">Carburant prevue</th>
+                <th scope="col">carburant consommé</th>
+                </tr>
+            </thead>
+           
+           <tbody>
+                    
+                {% for tournee in tIncompletes %}
+                    <tr>
+                        <td class="th-sm">{{tournee.id_tournee}}</td>
+                        <td class="th-sm">{{tournee.code_plan}}</td>
+                        <td class="th-sm">{{tournee.date}}</td>
+                        <td class="th-sm">{{tournee.equipe}}</td>
+                        <td class="th-sm">{{tournee.vehicle}}</td>
+                        <td class="th-sm">{{tournee.secteur}}</td>
+                        <td class="th-sm">{{tournee.qte_p}}</td>
+                        <td class="th-sm">{{tournee.qte_r}}</td>
+                        <td class="th-sm">{{tournee.nbp_points}}</td>
+                        <td class="th-sm">{{tournee.taux_r}}</td>
+                        <td class="th-sm">{{tournee.nbr_points}}</td>
+                        <td class="th-sm">{{tournee.heure_depart_p}}</td>
+                        <td class="th-sm">{{tournee.heure_depart_r}}</td>
+                        <td class="th-sm">{{tournee.heure_finp}}</td>
+                        <td class="th-sm">{{tournee.heure_finr}}</td>
+                        <td class="th-sm">{{tournee.kilometrage_p}}</td>
+                        <td class="th-sm">{{tournee.kilometrage_r}}</td>
+                        <td class="th-sm">{{tournee.carburant_p}}</td>
+                        <td class="th-sm">{{tournee.carburant_r}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <br>
+    
+    <h3 style="color: #2274BF;" class="text-center font-weight-bold">Tournees de ce mois_ci</h3>
+    <div class="tableFixHead">
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Secteur</th>
+                <th scope="col">Vehicule</th>
+                <th scope="col">Equipe</th>
+                <th scope="col">Taux de réalisation</th>
+                <th scope="col">Quantité prévue</th>
+                <th scope="col">Quantité realisée</th>
+                <th scope="col">Kilométrage</th>
+                <th scope="col">Carburant</th>
+                
+                
+                </tr>
+            </thead>
+           
+           <tbody>
+                    
+                {% for tournee in Tournees %}
+                    <tr>
+                        <td class="th-sm">{{tournee.id_tournee}}</td>
+                        <td class="th-sm">{{tournee.date}}</td>
+                        <td class="th-sm">{{tournee.secteur}}</td>
+                        <td class="th-sm">{{tournee.vehicle}}</td>
+                        <td class="th-sm">{{tournee.equipe}}</td>
+                        <td class="th-sm">{{tournee.taux_realisation}}</td>
+                        <td class="th-sm">{{tournee.qte_prevue}}</td>
+                        <td class="th-sm">{{tournee.qte_realise}}</td>
+                        <td class="th-sm">{{tournee.kilometrage}}</td>
+                        <td class="th-sm">{{tournee.carburant}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <a class="btn btn-info btn-ajouter" href="{{path('Historique')}}">Historique des tournées</a>
+    
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<!-- jQuery -->
+<script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
+<!-- jsChart-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script src="{{asset('js/Bilan.js')}}"></script>
+<script src="{{asset('js/chartQteDechets.js')}}"></script>
+
+
+{% endblock %}
