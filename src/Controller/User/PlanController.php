@@ -109,6 +109,8 @@ class PlanController extends AbstractController{
       * @Route("/dashboard/deletePlan/{code}", methods={"POST", "GET"}, name="deletePlan")
 	*/
 	public function deletePlan($code){
+		$this->app->loadModel("Planning");
+		
 		$plan = $this->app->PlanCollecte->getEtat($code);
 		
 		if ($plan[0]["etat"] == 'used') {
@@ -117,6 +119,7 @@ class PlanController extends AbstractController{
 
 		$sectorisation = $this->app->PlanCollecte->getSectorisationPlan($code)[0]["sectorisation"];
 
+		$this->app->Planning->delete($code);
 		$this->app->RotationPrevue->delete($code);
 		$this->app->PlanCollecte->deletePlan($code);
 

@@ -526,10 +526,13 @@
 			contentType: 'JSON',
 			data: data,
 			success: function(response){
-				alert(response);
-				$('#btn-save-recalculate').hide();
-				$('#btn-analyse').show();
-				$('#loading-image').hide();
+				var result = JSON.parse(response);
+				alert(result.message);
+
+				var path = "{{path('EditGeom', {planSecCode: 'code_plan'})}}";
+				path = path.replace('code_plan', result.code_plan_sect);
+				window.location.replace(path);
+				
 				
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown){

@@ -1,0 +1,36 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{asset('css/table.css')}}">
+{% endblock %}
+{%block body %}
+<div class="container">
+    <h2 style="text-align:center;" class="font-weight-bold">Planning de collecte d'une semaine</h2>
+    <hr>
+    <button class="btn btn-info">Modifier</button>
+</div>
+<div class="tableFixHead">
+<table class="table">
+    <thead>
+        <th></th>
+        <th>Samedi</th>
+        <th>Dimanche</th>
+        <th>Lundi</th>
+        <th>Mardi</th>
+        <th>Mercredi</th>
+        <th>Jeudi</th>
+        <th>Vendredi</th>
+    </thead>
+    <tbody>
+        {% for p in plan %}
+        <tr>
+            <td valign="top">{{p.secteur}}</td>
+            {% for r in p.features %}
+                <td>{{r.heure}}</td>
+            {%endfor%}
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+</div>
+{% endblock %}

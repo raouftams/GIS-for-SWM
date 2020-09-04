@@ -99,7 +99,8 @@ class RotationPrevueTable extends Table{
 		}
 		$val = implode(',',$val);
 		$sql_part = implode(',', $sql_parts);
-		return $this->query("INSERT INTO {$this->table} ($sql_part) values ($val)", $attributes,true);
+		$ajout = $this->query("INSERT INTO {$this->table} ($sql_part) values ($val)", $attributes,true);
+		return $this->query("SELECT max(id_rotation_prevue) as id from {$this->table}");
 		
 	}
 

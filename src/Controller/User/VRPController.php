@@ -514,11 +514,13 @@ class VRPController extends AbstractController{
         $this->app->loadModel('PlanSectorisation');
         $this->app->loadModel('PlanCollecte');
         $this->app->loadModel('RotationPrevue');
+        $this->app->loadModel('Planning');
 
         $data = $request->getContent();
         $plan = json_decode($data,true)["plan"];
-                
-		$unsavedRotations = [];
+            
+        $unsavedRotations = [];
+        $jours = ["samedi","dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi"];
         
         //Création d'un nouveau plan de sectorisation
         $planSecCode = "Plan_Sect" . rand(01, 10);
@@ -580,7 +582,16 @@ class VRPController extends AbstractController{
                     ];
                     
                     
-                    $this->app->RotationPrevue->add($rotation_prevue);
+                    $id = $this->app->RotationPrevue->add($rotation_prevue);
+                    foreach($jours as $jour){
+                        $planning = [
+                            "jour" => $jour,
+                            "heure" => $demarrage,
+                            "rotation" => $id[0]['id']
+                        ];
+                        $this->app->Planning->add($planning);
+                    }
+                    
 
 
                         /*
@@ -612,7 +623,8 @@ class VRPController extends AbstractController{
         }
         
         $update = $this->app->PlanSectorisation->updateGeomSecteurs($planSecCode);
-        return $this->updateGeometry($planSecCode);
+        return new Response(json_encode(["message"=>"Données sauvegarder avec succès. veuillez modifier la géometrie des secteurs."
+            ,"code_plan_sect" => $planSecCode]));
 	}
 	
 	/**
