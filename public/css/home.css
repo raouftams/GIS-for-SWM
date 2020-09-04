@@ -109,6 +109,9 @@ section{
 #presentation{
     height: 100vh;
 }
+#planning{
+    height: 100vh;
+}
 
 form{
     border: 1px solid transparent;
@@ -154,4 +157,20 @@ form{
         text-shadow: 2px 2px #3a3b3b;
     }
     
+}
+
+/* home planning table css */
+
+.tableFixHead  { overflow-y: auto; height: 70vh; }
+.tableFixHead thead th { position: sticky; top: 0;}	
+table  { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px 16px; }
+th{ background-color: #fff;}
+
+.tableFixHead::-webkit-scrollbar{
+	width: 10px;
+	background-color: #9ec4cc;
+}
+.tableFixHead::-webkit-scrollbar-thumb{
+	background-color: #1d8097;
 }

@@ -26,7 +26,30 @@ class IndexController extends AbstractController{
      * @Route("/", name="home")
      */
     public function index(){
-      return $this->render('home.html.twig'); 
+      $this->app->loadModel("Planning");
+      $this->app->loadModel("Secteur");
+      $planning = $this->app->Planning->getUsedPlanning();
+        $secteurs = $this->app->Secteur->all();
+        $jours = ["samedi","dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi"];
+
+        //Planning des secteurs
+        $features = [];$plan = [];
+        foreach($secteurs as $secteur){
+            foreach($planning as $rotation){
+                if($secteur["code"] == $rotation["secteur"]){
+                    $feature = ["heure" => $rotation["heure"]];
+                    $index = array_search($rotation["jour"], $jours);
+                    $features[$index] = $feature;
+                }
+            }
+            $plan[] = ["secteur" => $secteur["code"], "features"=>$features];
+            $features = [];
+        }
+       
+
+        return $this->render('home.html.twig', [
+            "plan" => $plan
+        ]);
     }
 
     /**

@@ -36,7 +36,7 @@
                     <a class="nav-link" href="{{path('home')}}"><i class="fas fa-home"></i> Accueil <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href=""><i class="fas fa-calendar-alt"></i> Planning</a>
+                    <a class="nav-link" href="#planning"><i class="fas fa-calendar-alt"></i> Planning</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
@@ -63,12 +63,48 @@
                 <p class="">Vous êtes habitant de la commune BabEzzouar?</p>
                 <p class="">Vous pouvez consulter le planning de collecte et nous contacter pour plus d'informations supplémentaires.</p>
                 <br>
-                <a class="btn btn-outline-info btn-md jumbotron-btn" href="">Planning</a>
+                <a class="btn btn-outline-info btn-md jumbotron-btn" href="#planning">Planning</a>
                 <a class="btn btn-outline-info btn-md jumbotron-btn" href="#contact">Contact</a>
             </div>
         </div>
     </section>
     
+    <section id="planning">
+        <div class="container">
+            <div class="table-title">
+                <h2 class="font-weight-bold">Planning d'une semaine</h2>
+                <br>
+            </div>
+            <div class="tableFixHead">
+            <table class="table">
+                <thead>
+                    <th></th>
+                    <th class="font-weight-bold">Samedi</th>
+                    <th class="font-weight-bold">Dimanche</th>
+                    <th class="font-weight-bold">Lundi</th>
+                    <th class="font-weight-bold">Mardi</th>
+                    <th class="font-weight-bold">Mercredi</th>
+                    <th class="font-weight-bold">Jeudi</th>
+                    <th class="font-weight-bold">Vendredi</th>
+                </thead>
+                <tbody>
+                    {% for p in plan %}
+                    <tr>
+                        <td valign="top" class="font-weight-bold">{{p.secteur}}</td>
+                        {% for r in p.features %}
+                            <td>{{r.heure}}</td>
+                        {%endfor%}
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div>
+            <a href="#presentation" class="go-up"><i class="fas fa-angle-double-up"></i>&nbsp; Go up</a>
+        </div>
+    </section>
+
     <section id="contact">
         <div class="container">
             <form action="" method="POST">
