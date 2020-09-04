@@ -1,0 +1,157 @@
+
+body::-webkit-scrollbar{
+	width: 10px;
+	background-color: #78a8b3;
+}
+body::-webkit-scrollbar-thumb{
+	background-color: #1d8097;
+}
+.navbar{
+    box-shadow: none;
+    background-color: #1d8097;
+}
+
+.nav-link{
+    color: #ffffff;
+    margin-right: 30px;
+    border-bottom: 2px solid transparent;
+}
+.nav-link:hover{
+    color: #ffffff;
+    border-bottom: 2px solid #ffffff;
+}
+
+.navbar-brand{
+    color: #fff;
+    margin-left: 30px;
+}
+.navbar-brand:hover{
+    color: #fff;
+    margin-left: 30px;
+}
+
+.collapse-bars{
+    color: #fff;
+}
+
+.fixed-top.scrolled {
+    background-color: #fff !important;
+    transition: background-color 200ms linear;
+    border-bottom: 1px solid #dcdfe0;
+}
+
+.nav-link.scrolled {
+    color: #1d8097;
+    margin-right: 30px;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-link.scrolled:hover {
+    color: #1d8097;
+    margin-right: 30px;
+    border-bottom: 2px solid #1d8097;
+}
+
+.navbar-brand.scrolled{
+    color: #1d8097;
+}
+
+.collapse-bars.scrolled{
+    color: #1d8097;
+}
+
+.jumbotron-btn{
+    border: 2px solid  rgb(216, 213, 213) !important;
+    background-color:  rgb(216, 213, 213);
+    color: #ffffff !important;
+}
+
+.container-fluid{
+    width: 100% !important;
+}
+
+.jumbotron{
+    width: 100%;
+    height: 100vh;
+    color: rgb(216, 213, 213);
+    background-color: #1d8097;
+}
+
+.jumbotron img{
+    width: 60%;
+    height: 100%;
+    float: right;
+}
+
+.text-intro{
+    border: 1px solid transparent;
+    width: 50%;
+    
+}
+
+.container h2{
+    text-align: center;
+    font-weight: bold;
+}
+.container{
+    border: 1px solid transparent;
+    width:100%;
+    padding-top: 70px;
+    text-align:center
+}
+
+section{
+    width: 100%;
+}
+#contact{
+    height: 100vh;
+}
+#presentation{
+    height: 100vh;
+}
+
+form{
+    border: 1px solid transparent;
+    display: inline-block;
+    width: 70%;
+}
+
+.form-row{
+    border:1px solid transparent;
+    margin-bottom: 20px;
+}
+
+.go-up{
+    border: 1px solid transparent;
+    margin-left: 20px;
+    color: #1d8097;
+    font-weight: bold;
+}
+
+.btn-envoyer, .btn-login{
+    border: 1px solid #1d8097;
+    background-color: #1d8097!important;
+}
+
+.container h2{
+    color: #1d8097;
+}
+
+@media only screen and (max-width: 830px){
+    .jumbotron img{
+        width: 90%;
+    }
+    .text-intro{
+        width: 95%;
+        text-align: center;
+        display: inline-block;
+        position: absolute;
+        color: #fff;
+        z-index: 100;
+        font-weight: bold;
+    }
+    .text-intro p,.text-intro h2{
+        text-shadow: 2px 2px #3a3b3b;
+    }
+    
+}
