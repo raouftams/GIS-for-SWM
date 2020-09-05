@@ -129,6 +129,11 @@
 						&nbsp; <strong> Bilan </strong>
 					</a>	
 
+					<a href="{{path('planningCollecte')}}" class="btn-menu">
+						<i class="fas fa-calendar-week"></i>
+						&nbsp; <strong> Planning </strong>
+					</a>
+
 					{% if is_granted("ROLE_ADMIN")%}
 					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>Utilisateurs</b></a>
 					{% endif %}
