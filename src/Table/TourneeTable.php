@@ -167,6 +167,20 @@ class TourneeTable extends Table{
     }
 
     /**
+     * Retourne les valeurs realisées et prevus du mois actuel
+     * @return array
+     */
+    public function tauxRealisees(){
+      return $this->query('SELECT sum(qte_dechets) AS qte_p, sum(qte_realise) AS qte_r,
+      sum(nombre_points) AS nbp_points, sum((taux_realisation * nombre_points)) AS nbr_points,
+      sum(ro.kilometrage) AS kilometrage_p, sum(tr.kilometrage) AS kilometrage_r, sum(ro.carburant) AS carburant_p, sum(tr.carburant) AS carburant_r
+      FROM tournee tr
+	    JOIN rotation_prevue ro ON (ro.vehicle = tr.vehicle AND ro.equipe = tr.equipe AND ro.secteur = tr.secteur)
+      where date_trunc(\'month\', date) = date_trunc(\'month\', CURRENT_DATE) 
+      and date_trunc(\'year\', date) = date_trunc(\'year\', CURRENT_DATE)');
+    }
+
+    /**
      * @return array
      */
     public function findWithId($id){
@@ -291,6 +305,10 @@ class TourneeTable extends Table{
   public function getBonTransport($id){
     return $this->query('SELECT * FROM "public".bon_transport WHERE tournee = ?',[$id]);
   }
+  public function getBonCode($code){
+    return $this->query('SELECT * FROM "public".bon_transport WHERE code = ?',[$code]);
+  }
+  
 
   /**
    * @return array

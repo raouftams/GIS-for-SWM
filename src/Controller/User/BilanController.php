@@ -24,7 +24,7 @@ class BilanController extends AbstractController{
         $rotations = $this->app->Tournee->tourneeMoisActuel();
         return $this->render('public/Bilan.html.twig',['Tournees'=>$rotations, 'tIncompletes'=>$rotationsIncompletes]);
     }
-        //ajouter un tableau pour les tournees incomplesete dans la pages des bilans
+
     /**
     * @Route("/dashboard/Bilan/QteRealiseEtPrevue", name="BilanQteParMois")
     */
@@ -38,6 +38,22 @@ class BilanController extends AbstractController{
             array_push($qteRealisee, ["label" => $qtemois[$key]["label"], "data" => floatval($qtemois[$key]["realisedata"])]);
         }
         return new Response(json_encode(["qtePrevue"=>$qtePrevue, "qteRealisee"=>$qteRealisee]));
+    }  
+    
+    /**
+     * @Route("dasboard/Bilan/TauxDuMois", name="BilanTauxMois")
+     */
+    public function tauxMois(){
+        $data=$datap=$datar = [];
+        $tauxRealisee = $this->app->Tournee->tauxRealisees();
+        for( $i = 0; $i<count($tauxRealisee[0])/2; $i++){
+            array_push($data,floatval($tauxRealisee[0][$i]));
+        }
+        for( $i = 0; $i<count($data)-1; $i+=2){
+            array_push($datap, $data[$i]);
+            array_push($datar, $data[$i+1]);
+        }
+        return new Response(json_encode(["datar"=>$datar, "datap"=>$datap]));
     }
 
     /**
