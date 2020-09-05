@@ -13,6 +13,8 @@
 {% block header %}Bilan d'action{%endblock%}
 {% block body %}
 <div class="container-fluid mt-4">
+    <a class="btn btn-info btn-ajouter" href="{{path('Historique')}}"><i class="fa fa-hourglass" aria-hidden="true"></i> Historique des tournées</a>
+    <a class="btn btn-success btn-add btn-ajouter" href="{{path('AttachementBilan')}}"><i class="fa fa-calculator" aria-hidden="true"></i> Attachement du Bilan</a>
     <div class="jumbotron" style="height: 30%; width: 100%; padding-top: 0; border-radius: 5px;">
         <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets (En tonne)</h3>
         <hr>
@@ -129,7 +131,7 @@
         </table>
         
     </div>
-    <a class="btn btn-info btn-ajouter" href="{{path('Historique')}}">Historique des tournées</a>
+   
     
 </div>
 {% endblock %}

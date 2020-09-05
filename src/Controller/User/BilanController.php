@@ -84,7 +84,13 @@ class BilanController extends AbstractController{
         
         return $this->render('public/Historique.html.twig',['table'=>$tableHistorique]);
     }
-
     
-    //ajouter un filtre :mois année toutes
+    /**
+     * @Route("dashboard/Bilan/AttachementBilan", name = "AttachementBilan")
+     */
+    public function Attachement(){
+        // la quantité depuis les ticket de pesé 
+        // delimité par deux dates
+        return $this->render('public/Attachement.html.twig');
+    }
 }
