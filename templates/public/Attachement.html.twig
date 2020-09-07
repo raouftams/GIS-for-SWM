@@ -4,11 +4,59 @@
     <link rel="stylesheet" href="{{asset('css/dashboard.css')}}">
     <link rel="stylesheet" href="{{asset('css/charts.css')}}">
     <link rel="stylesheet" href="{{asset('css/table.css')}}">
-    
+    <style>
+    h3{
+        border: 1px solid transparent;
+        background-color: #2274BF;
+        color: white;
+        border-radius: 3px;
+        margin-bottom: 20px;
+        text-align: center;
+        height: 40px;
+    }
+    .addUser{
+        border: 1px solid transparent;
+        background-color: #ffffff;
+        border-radius: 3px;
+    }
+    .btn-ajouter{
+        width: 30%;
+        right: 17%;
+    }
+</style>
 {% endblock %}
 {% block header %}Attachement Bilan{%endblock%}
 {% block body %}
-    <p>roujiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii</p>
+    <div class="addUser">
+
+<h3 class="mb-4">Calculer l'attachement  mensuel</h3>
+
+
+<form action="" method="POST" style="text-align: center; margin-left: 20%;">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label >date debut</label>
+            <input type="date" name="datedeb" class="form-control">
+        </div>
+        <div class="form-group col-md-4">
+            <label>date fin</label>
+            <input type="date" name="datefin" class="form-control">
+        </div>
+    </div>
+    <div class="form-row">   
+        <div class="form-group col-md-4">
+            <label>CET:</label>
+            <select name="equipe" class="form-control">
+            <option value="0" selected>Choisir CET</option>
+            {% for CET in CETs %}
+                <option value="{{CET.code}}">{{CET.designation}}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-info btn-ajouter" >Calculer</button>
+</form>
+</div>
 {% endblock %}
 
 {% block javascripts %}

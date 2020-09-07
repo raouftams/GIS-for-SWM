@@ -26,5 +26,11 @@ class CETTable extends Table{
       ', [$code]);
     }
 
+    /**
+     * @return array
+     */
+    public function getAllCet(){
+      return $this->query('SELECT code, designation FROM CET');
+    }
 }
 ?>

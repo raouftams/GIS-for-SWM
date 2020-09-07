@@ -13,6 +13,7 @@ class BilanController extends AbstractController{
          $this->app = new AppController();
          $this->app->loadModel('Tournee');
          $this->app->loadModel('Secteur');
+         $this->app->loadModel('CET');
          
     }
 
@@ -90,7 +91,13 @@ class BilanController extends AbstractController{
      */
     public function Attachement(){
         // la quantité depuis les ticket de pesé 
-        // delimité par deux dates
-        return $this->render('public/Attachement.html.twig');
+        // delimité par deux dates et cet
+        $cet = $this->app->CET->getAllCet();
+        for ($i=0; $i<count($cet[0]); $i++){
+            unset($cet[0][$i]);
+        }
+        return $this->render('public/Attachement.html.twig',['CETs'=>$cet]);
     }
+
+    
 }
