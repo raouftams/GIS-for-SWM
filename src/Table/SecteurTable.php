@@ -11,7 +11,7 @@ class SecteurTable extends Table{
      * @return array tableau
      */
     public function all(){
-      return $this->query("SELECT s.code, rp.heure_debut, rp.qte_dechets, rp.vehicle, ST_AsGeoJson(s.geom, 5) as geojson
+      return $this->query("SELECT s.code, s.designation, rp.heure_debut, rp.qte_dechets, rp.vehicle, ST_AsGeoJson(s.geom, 5) as geojson
       FROM secteurs s, plan_sectorisation ps, plan_collecte pc, rotation_prevue rp
 	  where s.sectorisation = ps.code_plan and rp.secteur = s.code and ps.code_plan = pc.sectorisation and rp.code_plan = pc.code_plan and pc.etat = ?
       ", ['used']);

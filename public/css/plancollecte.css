@@ -6,7 +6,7 @@
 }
 .plan-container h2{
     border: 0px solid transparent;
-    background-color: #2274BF;
+    background-color: #1d8097;
     color: white;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
@@ -99,7 +99,7 @@
 
 .info-plan{
     border: 0px solid transparent;
-    background-color: rgb(245, 245, 245);
+    background-color: #9ac3cc;
     margin-bottom: 0;
 }
 

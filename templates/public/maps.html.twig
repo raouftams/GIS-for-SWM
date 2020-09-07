@@ -231,6 +231,33 @@
 		</div>
 	</div>
 
+	<div id="popup-secteurs" class="overlay">
+		<div class="popup" style="width:50%;">
+			<div class="alert alert-success" role="alert" id="alert-success-secteur" style="display:none; bottom: 0px;">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+			  </button>
+			  <div id="alert-success-popup-content"></div>
+			</div>
+			<div class="alert alert-danger" role="alert" id="alert-danger-secteur" style="display:none; bottom: 0px;">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<div id="alert-danger-popup-content"></div>
+			</div>
+			<a class="close" href="#">&times;</a><br>
+			<div class="content" id="content">
+				<form class="form">
+					<div class="form-row">
+						<label>Designation</label>
+						<input type="text" class="form-control" id="designation_secteur">
+					</div>
+				</form>
+				<button class="btn btn-primary btn-md" onclick="saveSecteur()">Sauvegarder</button>
+			</div>
+		</div>
+	</div>
+
 	
 
 <script type="text/javascript">
@@ -333,7 +360,9 @@
 		success: function(response){
 
 			function onEachFeature(feature, layer) {
-				layer.bindPopup('<p><b>Code: </b>' + feature.properties.code + '</p><p><b>Horaire de collecte: </b>' + feature.properties.heure_debut + '</p><p><b>Véhicule:</b> ' + feature.properties.vehicle + '</p><p><b>Quantité de déchets:</b> ' + feature.properties.qte_dechets + '</p>');
+				var fonction = "getSecteur('code')";
+				fonction = fonction.replace("code", feature.properties.code);
+				layer.bindPopup('<p><b>Code: </b>' + feature.properties.code + '</p><p><b>Horaire de collecte: </b>' + feature.properties.heure_debut + '</p><p><b>Véhicule:</b> ' + feature.properties.vehicle + '</p><p><b>Quantité de déchets:</b> ' + feature.properties.qte_dechets + '</p><a href="#popup-secteurs"><button onclick="'+fonction+'" class="btn btn-primary btn-sm text-white">modifier</button></a>');
 				groupSecteurs.addLayer(layer,{style: densityStyle(feature)});
 				function numbers() {return Math.floor(Math.random() * 256);} 
                 
@@ -342,6 +371,7 @@
 			}
 
 			var secteurs = JSON.parse(response);
+			window.sectors = secteurs;
 			
 			window.lyrSecteurs = L.geoJSON(secteurs.features, {		
 				style: densityStyle,
@@ -607,7 +637,38 @@
 		}
 	};
 
+	function getSecteur(code){
+		window.code_secteur = code;
+		window.sectors.features.forEach(function(obj){
+			if(obj.properties.code == code){
+				document.getElementById("designation_secteur").value = obj.properties.designation;
+			}
+		});
+	}
 	
+	function saveSecteur(){
+		var data = JSON.stringify({
+			code: window.code_secteur,
+			designation: document.getElementById("designation_secteur").value
+		});
+		$.ajax({
+			url: "{{path('editSecteurMap')}}",
+			method: 'POST',
+			contentType: 'JSON',
+			data : data,
+			success: function(response){
+				document.getElementById("alert-success-secteur").innerHTML = response;
+				$('#alert-success-secteur').show();
+				setTimeout(function() {$('#alert-success-secteur').hide()},5000);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				document.getElementById("alert-danger-secteur").innerHTML = "Erreur: Problème dans le serveur.";
+				$('#alert-danger-secteur').show();
+				setTimeout(function() {$('#alert-danger-secteur').hide()},5000);
+			}
+		});
+
+	}
 
 	function getPoint(code){
 		window.code = code;
@@ -701,8 +762,6 @@
 			debut_fenetre_temps1: document.getElementById("debut_fenetre_temps1").value,
 			fin_fenetre_temps1: document.getElementById("fin_fenetre_temps1").value
 		});
-
-		console.log(data);
 
 		$.ajax({
 			url: "{{path('editMapsPoint')}}",

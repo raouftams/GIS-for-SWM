@@ -22,7 +22,7 @@ class PlanningTable extends Table{
 	 * @return array
 	 */
 	public function getUsedPlanning(){
-		return $this->query('SELECT rp.secteur, pc.heure, pc.jour 
+		return $this->query('SELECT rp.secteur, pc.heure, pc.jour, rp.heure_debut, rp.heure_fin, rp.kilometrage
         from rotation_prevue rp, planning_collecte pc, plan_collecte plan
         Where pc.rotation = rp.id_rotation_prevue and rp.code_plan = plan.code_plan and plan.etat = ?
         ',['used']);
@@ -33,7 +33,7 @@ class PlanningTable extends Table{
      * @return array
      */
     public function vehiclePlanning($code_vehicle){
-        return $this->query("SELECT pc.jour, pc.heure 
+        return $this->query("SELECT pc.jour, pc.heure, rp.heure_debut, rp.heure_fin, rp.kilometrage 
         from planning_collecte pc, rotation_prevue rp
         Where pc.rotation = rp.id_rotation_prevue and rp.vehicle = ?
         ", [$code_vehicle]);
@@ -43,7 +43,7 @@ class PlanningTable extends Table{
      * @return array
      */
     public function equipePlanning($code_equipe){
-        return $this->query("SELECT pc.jour, pc.heure 
+        return $this->query("SELECT pc.jour, pc.heure , rp.heure_debut, rp.heure_fin
         from planning_collecte pc, rotation_prevue rp
         Where pc.rotation = rp.id_rotation_prevue and rp.equipe = ?
         ", [$code_equipe]);

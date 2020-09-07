@@ -61,9 +61,9 @@ nav>div>button{
 	padding-top: 10px;
 }
 .btn-menu:hover{
-	background-color: rgb(233, 230, 230);
-	border-left: 3px solid #2274BF;
-	color:#2274BF !important;
+	background-color: rgb(240, 236, 236);
+	border-left: 3px solid #1d8097;
+	color:#1d8097 !important;
 }
 
 .btn-logout{
@@ -98,7 +98,7 @@ nav>div>button{
 }
 .btn-sub-menu:hover{
 	background-color: rgb(233, 230, 230);
-	color: #2274BF;
+	color: #1d8097;
 }
 
 .btn-sub-menu:active{
@@ -106,7 +106,7 @@ nav>div>button{
 }
 
 .submenu-list{
-	border-left: 3px solid #2274BF !important;
+	border-left: 3px solid #1d8097 !important;
 }
 
 
@@ -137,8 +137,8 @@ nav>div>button{
     border: 2px solid transparent;
 }
 .top-nav .nav-link:hover{
-    color: #2274BF;
-    border-bottom: 2px solid #2274BF;
+    color: #1d8097;
+    border-bottom: 2px solid #1d8097;
     background-color: rgb(248, 248, 248);
 }
 
@@ -148,7 +148,7 @@ nav>div>button{
     background-color: rgb(248, 248, 248);
 }
 
-.top-nav .navbar-brand{color: #2274BF;}
+.top-nav .navbar-brand{color: #1d8097;}
 
 #submenu2{
 	width: 40%;
@@ -159,8 +159,8 @@ nav>div>button{
 	color: rgb(77, 77, 77) !important;
 }
 .top-nav .btn-drop-menu:hover{
-	border-bottom: 2px solid #2274BF;
-	color: #2274BF !important;
+	border-bottom: 2px solid #1d8097;
+	color: #1d8097 !important;
 	background-color: rgb(231, 231, 231) !important;
 }
 

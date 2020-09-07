@@ -90,7 +90,13 @@
                 <tbody>
                     {% for p in plan %}
                     <tr>
-                        <td valign="top" class="font-weight-bold">{{p.secteur}}</td>
+                        <td valign="top" class="font-weight-bold">
+                            {% if p.designation == null %}
+                                {{p.secteur}}
+                            {% else %}
+                                {{p.designation}}
+                            {% endif %}
+                        </td>
                         {% for r in p.features %}
                             <td>{{r.heure}}</td>
                         {%endfor%}

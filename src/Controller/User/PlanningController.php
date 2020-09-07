@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\Date;
 
 class PlanningController extends AbstractController{
 
@@ -40,17 +41,26 @@ class PlanningController extends AbstractController{
                     $features[$index] = $feature;
                 }
             }
-            $plan[] = ["secteur" => $secteur["code"], "features"=>$features];
+            if ($secteur["geojson"] != null) {
+                $plan[] = ["secteur" => $secteur["code"], "designation"=> $secteur["designation"], "features"=>$features];
+            }
             $features = [];
         }
         //Planning des véhicules
         $features = []; $heures = []; $feature = [];
+        $tempsTotal = $kilometrage = 0;
         foreach ($vehicles as $vehicle) {
             $vehicleData = $this->app->Planning->vehiclePlanning($vehicle["code"]);
             foreach($jours as $jour){    
                 foreach($vehicleData as $data){
+                    
                     if($data["jour"] == $jour){
                         $heures[] = $data["heure"];
+                        $kilometrage = $kilometrage + $data["kilometrage"];
+                        $debut = strtotime($data["heure_debut"]);
+                        $fin = strtotime($data["heure_fin"]);
+                        $calcul = ($fin - $debut)/3600;
+                        $tempsTotal = $tempsTotal + $calcul;
                     }
                 }
                 
@@ -63,12 +73,16 @@ class PlanningController extends AbstractController{
                 "matricule" => $vehicle["matricule"],
                 "genre" => $vehicle["genre"],
                 "volume" => $vehicle["volume"],
+                "kilometrage" => intval($kilometrage),
+                "tempsTotal" => intval($tempsTotal),
                 "features" => $features
             ];
             $features = $features = [];
+            $tempsTotal = $kilometrage = 0;
         }
         
         //Planning des équipes
+        $tempsTotal = 0;
         $features = []; $heures = []; $feature = [];
         foreach ($equipes as $equipe) {
             $equipeData = $this->app->Planning->equipePlanning($equipe["equipe"]);
@@ -76,6 +90,10 @@ class PlanningController extends AbstractController{
                 foreach($equipeData as $data){
                     if($data["jour"] == $jour){
                         $heures[] = $data["heure"];
+                        $debut = strtotime($data["heure_debut"]);
+                        $fin = strtotime($data["heure_fin"]);
+                        $calcul = ($fin - $debut)/3600;
+                        $tempsTotal = $tempsTotal + $calcul;
                     }
                 }
                 
@@ -85,9 +103,11 @@ class PlanningController extends AbstractController{
             }
             $equipePlan[] = [
                 "code_equipe" => $equipe["equipe"],
+                "tempsTotal" => intval($tempsTotal),
                 "features" => $features
             ];
             $features = $features = [];
+            $tempsTotal = 0;
         }
 
         return $this->render('public/planning_collecte.html.twig', [

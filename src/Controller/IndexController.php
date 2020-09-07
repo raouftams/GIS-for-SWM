@@ -42,7 +42,9 @@ class IndexController extends AbstractController{
                     $features[$index] = $feature;
                 }
             }
-            $plan[] = ["secteur" => $secteur["code"], "features"=>$features];
+            if ($secteur["geojson"] != null) {
+              $plan[] = ["secteur" => $secteur["code"], "designation"=> $secteur["designation"], "features"=>$features];
+            }
             $features = [];
         }
        

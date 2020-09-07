@@ -7,15 +7,15 @@ body::-webkit-scrollbar {
 		.analysis{ border: 1px solid transparent; width: 38%; float: right; margin-top: 60px; margin-right: 15px; resize: both; }
 		.control{border: 1px solid transparent; position: sticky; }
 		.navbar {position: fixed; height: 50px; box-shadow:none; border-bottom: 2px solid rgb(223, 222, 222); background-color: rgb(253, 253, 253);}
-    .navbar-brand{padding-top: 15px; color: #2274BF;}
+    .navbar-brand{padding-top: 15px; color: #1d8097;}
 
     .nav-link{
       color: rgb(132, 132, 132);
       border: 2px solid transparent;
     }
     .nav-link:hover{
-      color: #2274BF;
-      border-bottom: 2px solid #2274BF;
+      color: #1d8097;
+      border-bottom: 2px solid #1d8097;
       background-color: rgb(248, 248, 248);
     }
 
@@ -31,17 +31,20 @@ body::-webkit-scrollbar {
 
     .parameters-link, .parameters-link2{
       border:2px solid transparent;
-      color: #2274BF !important;
+      color: #1d8097 !important;
     }
     .parameters-link2{
       margin-left: 20%;
     }
 
     .parameters-link:hover, .parameters-link2:hover{
-      color: #579ad8 !important;
-      border-bottom: 2px solid #579ad8;
+      color: #6c9aa3 !important;
+      border-bottom: 2px solid #6c9aa3;
     }
 
+    .btn-to-table:hover{
+      color: #1d8097;
+    }
     legend{
       text-align: center;
     }
@@ -61,8 +64,8 @@ body::-webkit-scrollbar {
       position: fixed;
       bottom: 0; 
       left: 60%; 
-      border: 1px solid #2f8adf;
-      background-color: #2f8adf;
+      border: 1px solid #1d8097;
+      background-color: #1d8097;
       height: 50px;
     }
     #btn-save-recalculate{

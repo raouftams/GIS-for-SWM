@@ -164,7 +164,7 @@ class MapController extends AbstractController{
 	}
 
 	/**
-	 * @Route("user/maps/getBacs/{code_point}", methods={"POST","GET"}, name="getBacs")
+	 * @Route("dashboard/maps/getBacs/{code_point}", methods={"POST","GET"}, name="getBacs")
 	 */
 	public function getBacs($code_point){
 		$bacs = $this->app->Bacs->getBacsPoint($code_point);
@@ -194,7 +194,7 @@ class MapController extends AbstractController{
 
 
 	/**
-	 * @Route("admin/maps/saveSectorization", methods={"POST","GET"}, name="saveSectorization")
+	 * @Route("dashboard/maps/saveSectorization", methods={"POST","GET"}, name="saveSectorization")
 	 */
 	public function saveSectorization(Request $request){
 		$json = $request->getContent();
@@ -210,7 +210,7 @@ class MapController extends AbstractController{
 
 
 	/**
-	 * @Route("admin/maps/editPoints", methods={"POST","GET"}, name="editMapsPoint")
+	 * @Route("dashboard/maps/editPoints", methods={"POST","GET"}, name="editMapsPoint")
 	 */
 	public function editPointFromMaps(Request $request){
 		$date = "Mon 20 July 2020";
@@ -223,5 +223,16 @@ class MapController extends AbstractController{
         
 		$edit = $this->app->Points->update($code_point, $data);
 		return new Response("Données mises à jour avec Success");
+	}
+
+	/**
+	 * @Route("dashboard/maps/editSecteurMap", methods={"POST", "GET"}, name="editSecteurMap")
+	 */
+	public function editSecteurFromMaps(Request $request){
+		$data = json_decode($request->getContent(),true);
+		$code = $data["code"];
+		unset($data["code"]);
+		$this->app->Secteur->update($code, $data);
+		return new Response("Secteur modifié avec succès.");
 	}
 }

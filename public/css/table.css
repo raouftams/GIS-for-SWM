@@ -3,7 +3,7 @@
 	
 	table  { border-collapse: collapse; width: 100%; }
 	th, td { padding: 8px 16px; }
-	th     { background:#2a81d3; color: white; }
+	th     { background: #1d8097; color: #ffffff;}
 td {background-color: #ffffff;}
 
 .btn-add{
@@ -12,8 +12,8 @@ td {background-color: #ffffff;}
 
 .tableFixHead::-webkit-scrollbar{
 	width: 10px;
-	background-color: #afcbe6;
+	background-color: #78a8b3;
 }
 .tableFixHead::-webkit-scrollbar-thumb{
-	background-color: #2a81d3;
+	background-color: #1d8097;
 }

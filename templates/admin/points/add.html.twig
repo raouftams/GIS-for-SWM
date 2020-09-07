@@ -23,7 +23,7 @@
     	  }
     	</style>
     </head>
-    <body style="background-color: #f2f2f2;">
+    <body>
         <div class="navbar navbar-expand-lg fixed-top top-nav">
 			<a href="#" class="navbar-brand font-weight-bold">
 				GDMA Bab Ezzouar
@@ -84,10 +84,10 @@
 			</ul>
 			</div>
 		</div>
-<div class="row1" id="navbar">
+		<div class="row1" id="navbar">
           	<div class="col-xs-2">
-            	<nav class="aside " >
-					<h2 class="page-title" style="color:#2274BF;"><strong>Ajouter un point de collecte</strong></h2>
+            	<nav class="aside " id="myMenu" >
+					<h2 class="page-title" style="color:#1d8097;"><strong>GDMA Bab Ezzouar</strong></h2>
 					<div class="btn-group-vertical" style="width: 96%;">
 			
 					<a class="btn-menu" href="{{path('dashboard')}}" style="padding-left: 0px; ">
@@ -128,7 +128,17 @@
 					<a class="btn-menu" style="padding-left: 0px;" href="{{path('planCollecte')}}">
 						<i class="fas fa-calendar-alt"></i>
 						&nbsp; <strong>Plan de collecte </strong>
+					</a>
+					
+					<a class="btn-menu" style="padding-left: 0px;" href="{{path('Bilan')}}">
+						<i class="fas fa-clipboard-list"></i>
+						&nbsp; <strong> Bilan </strong>
 					</a>	
+
+					<a href="{{path('planningCollecte')}}" class="btn-menu">
+						<i class="fas fa-calendar-week"></i>
+						&nbsp; <strong> Planning </strong>
+					</a>
 
 					{% if is_granted("ROLE_ADMIN")%}
 					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>Utilisateurs</b></a>
