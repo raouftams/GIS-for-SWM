@@ -34,7 +34,7 @@
 	background-color: #afcbe6;
 }
 .table-tournee::-webkit-scrollbar-thumb{
-	background-color: #2a81d3;
+	background-color: #11998e;
 }
 .table-tournee .table::-webkit-scrollbar{
     display: none;
@@ -78,4 +78,16 @@
 
 .chart{
     width: 100% !important;
+}
+
+.btn-add-rotation{
+    border: 1px solid #11998e;
+    background-color: #11998e !important;
+    margin-left: 64.5%;
+}
+
+.apercu{
+    margin-left: 2%;
+    color: #383838;
+    font-weight: 400;
 }

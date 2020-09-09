@@ -86,17 +86,17 @@
 			
 					<a class="btn-menu" href="{{path('dashboard')}}" style="padding-left: 0px; ">
 						<i class="fas fa-tachometer-alt"></i>
-						 	&nbsp;<strong> Tableau de bord </strong><span class="sr-only">(current)</span>
+						 	&nbsp; Tableau de bord <span class="sr-only">(current)</span>
 					</a> 
 
 					<a class="btn-menu" style="padding-left: 0px;" href="{{path('charts')}}">
 						<i class="far fa-chart-bar"></i>
-						&nbsp; <strong> Statistiques </strong>
+						&nbsp;  Statistiques 
 					</a> 
 
 					<a class="btn-menu dropdown-toggle mr-4" data-toggle="collapse" data-target="#submenu1" style="padding-left: 0px;  color: rgb(77, 77, 77); ">
 						<i class="fas fa-table"></i>
-						&nbsp; <strong>Tables</strong>
+						&nbsp; Tables
 					</a>
                     	<div class="collapse" id="submenu1" aria-expanded="false" style="width: 100%;">
 							<ul class="flex-column pl-2 nav submenu-list">
@@ -110,32 +110,31 @@
 						
 					<a class="btn-menu" href="{{path('maps')}}" style="padding-left: 0px;">
 						<i class="fas fa-map-marked-alt"></i>
-						&nbsp; <strong>Maps</strong> 
+						&nbsp; Maps
 					</a> 
-					{% if is_granted("ROLE_ADMIN")%}
+					
 					<a class="btn-menu" style="padding-left: 0px;" href="{{path('analyseVrp')}}">
 						<i class="fas fa-route"></i>
-						&nbsp; <strong>Analyse VRP </strong>
+						&nbsp;  Analyse VRP  
 					</a>
-					{% endif %}
 
 					<a class="btn-menu" style="padding-left: 0px;" href="{{path('planCollecte')}}">
 						<i class="fas fa-calendar-alt"></i>
-						&nbsp; <strong>Plan de collecte </strong>
+						&nbsp; Plan de collecte 
 					</a>
 					
 					<a class="btn-menu" style="padding-left: 0px;" href="{{path('Bilan')}}">
 						<i class="fas fa-clipboard-list"></i>
-						&nbsp; <strong> Bilan </strong>
+						&nbsp; Bilan
 					</a>	
 
 					<a href="{{path('planningCollecte')}}" class="btn-menu">
 						<i class="fas fa-calendar-week"></i>
-						&nbsp; <strong> Planning </strong>
+						&nbsp;  Planning 
 					</a>
 
 					{% if is_granted("ROLE_ADMIN")%}
-					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;<b>Utilisateurs</b></a>
+					<a class="btn-menu" href="{{path('addUser')}}" style="padding-left: 0px;"><i class="fas fa-user-alt"></i>&nbsp;&nbsp;&nbsp;Utilisateurs</a>
 					{% endif %}
 					
 					</div>

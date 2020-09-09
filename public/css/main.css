@@ -6,20 +6,23 @@ body{
 	background-color: rgb(235, 235, 235);
 }
 body::-webkit-scrollbar{
-	display: none;
+	width: 8px;
+	background-color: #a9cfd8;
+}
+body::-webkit-scrollbar-thumb{
+	background-color: #1d8097;
 }
 .navbar{
 	margin-bottom: 30px;
 }
 nav{
 	position: fixed;
-	height: 100%;
-	width: 18%;
+	height: 100vh;
+	width: 20%;
 	background-color: white !important;
 	padding-top: 20px;
 	float: left;	
 	border: 1px solid transparent;
-	box-shadow: 3px 0 5px -2px #aaacad;
 }
 nav>hr{
 	background-color: white;
@@ -46,22 +49,22 @@ nav>div>button{
 	margin-top: 2%;
 	position: absolute;
 	height: auto;
-	width: 77%;
+	width: 75%;
 }
 
 
 .btn-menu{
 	border: 1px solid transparent;
-	border-bottom: 1px solid rgb(236, 236, 236);
 	width: 104%;
 	height: 45px;
 	color:rgb(77, 77, 77);
 	text-align: justify;
-	padding-left: 10px !important;
+	padding-left: 20px !important;
 	padding-top: 10px;
+	font-weight: 400;
 }
 .btn-menu:hover{
-	background-color: rgb(240, 236, 236);
+	background-color: rgb(252, 248, 248);
 	border-left: 3px solid #1d8097;
 	color:#1d8097 !important;
 }
@@ -76,7 +79,7 @@ nav>div>button{
 	height: 45px;
 	color:rgb(132, 132, 132);
 	text-align: justify;
-	padding-left: 10px !important;
+	padding-left: 20px !important;
 	padding-top: 10px;
 }
 
@@ -111,9 +114,13 @@ nav>div>button{
 
 
 .page-title{
-	text-align: center;
+	border: 1px solid #ffffff;
+	background-color: #ffffff;
+	border-bottom: 1px solid rgb(209, 209, 209);
+	width: 100%;
+	height: 50px;
 	font-size: 24px;
-	padding-left: 5px;
+	padding-left: 20px !important;
 	margin-top: 0px!important;
 }
 
@@ -162,6 +169,11 @@ nav>div>button{
 	border-bottom: 2px solid #1d8097;
 	color: #1d8097 !important;
 	background-color: rgb(231, 231, 231) !important;
+}
+
+.btn-primary{
+	border: 1px solid #1d8097;
+	background-color: #1d8097 !important;
 }
 
 @media only screen and (max-width: 970px){
