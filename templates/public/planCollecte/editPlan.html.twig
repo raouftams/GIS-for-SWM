@@ -15,11 +15,12 @@
 {% endif %}
 
     <div class="plan-table">
-            <table class="table" style="text-align:center">
+            <table class="table" >
                 <thead class="bg-primary text-white">
                     <th>Secteur</th>
                     <th>Matériel</th>
-                    <th>Equipe</th>
+                    <th>Equipe1</th>
+                    <th>Equipe2</th>
                     <th>Quantité prévue (Tonne)</th>
                     <th>Heure début</th>
                     <th>Heure fin</th>
@@ -31,9 +32,9 @@
                 {% for d in data %}
                 <form action="" method="POST">
                     <tr>
-                        <td><input class="form-control" type="text" name="secteur" value="{{d.secteur}}" readonly></td>
+                        <td><input class="form-control col-md-12" type="text" name="secteur" value="{{d.secteur}}" readonly></td>
                         <td>
-                            <select name="vehicle" id="vehicle" class="form-control">
+                            <select name="vehicle" id="vehicle" class="form-control col-md-12">
                                 <option value="{{d.code}}" selected>{{d.vehicle}}</option>
                                 {% for v in vehicles %}
                                     <option value="{{v.code}}">{{v.code}}_{{v.matricule}}_{{v.genre}}_{{v.volume}}m3</option>
@@ -41,8 +42,16 @@
                             </select>
                         </td>
                         <td>
-                            <select name="equipe" id="equipe" class="form-control">
+                            <select name="equipe" id="equipe" class="form-control col-md-12">
                                 <option value="{{d.equipe}}" selected>{{d.equipe}}</option>
+                                {% for e in equipes %}
+                                    <option value="{{e.code}}">{{e.code}}_{{e.nb_employes}}_employés</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="equipe2" id="equipe2" class="form-control col-md-12">
+                                <option value="{{d.equipe}}" selected>{{d.equipe2}}</option>
                                 {% for e in equipes %}
                                     <option value="{{e.code}}">{{e.code}}_{{e.nb_employes}}_employés</option>
                                 {% endfor %}

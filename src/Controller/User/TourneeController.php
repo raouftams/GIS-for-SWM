@@ -516,5 +516,27 @@ class TourneeController extends AbstractController{
 		} 
 		
 
-	}
+  }
+  
+  /**
+   * @Route("/dashboard/tournee/getTime", methods={"POST","GET"}, name="getTimeForDay")
+   */
+  public function getTimeTournee(Request $request){
+    $this->app->loadModel("Planning");
+    $data = json_decode($request->getContent(), true);
+    $jours = [
+      "6" => "samedi",
+      "0" => "dimanche", 
+      "1" => "lundi", 
+      "2" => "mardi", 
+      "3" => "mercredi", 
+      "4" => "jeudi", 
+      "5" => "vendredi"
+    ];
+    $date = strtotime($data["date"]);
+    $day = $jours[date('w', $date)];
+    $heure = $this->app->Planning->getTime($day, $data["secteur"]);
+
+    return new Response(json_encode($heure[0]));
+  }
 }   

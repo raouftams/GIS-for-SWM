@@ -30,7 +30,7 @@ h2{
 	
 	table  { border-collapse: collapse; width: 100%; }
 	th, td { padding: 8px 16px; }
-	th     { background: #ffffff; color: #1d8097;}
+	th     { background: #ffffff; color: #1d8097; white-space:nowrap;}
 td {background-color: #ffffff;}
 
 .btn-add{

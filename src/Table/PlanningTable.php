@@ -22,7 +22,7 @@ class PlanningTable extends Table{
 	 * @return array
 	 */
 	public function getUsedPlanning(){
-		return $this->query('SELECT rp.secteur, pc.heure, pc.jour, rp.heure_debut, rp.heure_fin, rp.kilometrage
+		return $this->query('SELECT rp.secteur, pc.heure, pc.jour, rp.heure_debut, rp.heure_fin, rp.kilometrage, rp.vehicle
         from rotation_prevue rp, planning_collecte pc, plan_collecte plan
         Where pc.rotation = rp.id_rotation_prevue and rp.code_plan = plan.code_plan and plan.etat = ?
         ',['used']);
@@ -45,8 +45,8 @@ class PlanningTable extends Table{
     public function equipePlanning($code_equipe){
         return $this->query("SELECT pc.jour, pc.heure , rp.heure_debut, rp.heure_fin
         from planning_collecte pc, rotation_prevue rp
-        Where pc.rotation = rp.id_rotation_prevue and rp.equipe = ?
-        ", [$code_equipe]);
+        Where pc.rotation = rp.id_rotation_prevue and (rp.equipe = ? or rp.equipe2 = ?)
+        ", [$code_equipe, $code_equipe]);
     }
 
 	/**
@@ -67,18 +67,10 @@ class PlanningTable extends Table{
 	}
 
 
-	public function edit($code, $secteur, $fields){
-		$sql_parts = [];
-      	$attributes = [];
-      	foreach ($fields as $k => $v) {
-      	  $sql_parts[] = "$k = ?";
-      	  $attributes[] = $v;
-		}
-        $attributes[] = $code;
-        $attributes[] = $secteur;
-      	$sql_part = implode(',', $sql_parts);
-		return $this->query("UPDATE {$this->table} SET $sql_part WHERE code_plan = ? and secteur = ?", $attributes, true);
-		
+	public function edit($jour, $secteur, $heure){
+        return $this->query("UPDATE planning_collecte set heure = ? 
+        Where jour = ? and rotation = (select id_rotation_prevue from rotation_prevue 
+        Where secteur = ?)", [$heure, $jour, $secteur]);
     }
     
     /**
@@ -96,6 +88,15 @@ class PlanningTable extends Table{
             Where rotation = ?",[$rotation["id_rotation_prevue"]]);
         }
         return true;
+    }
+
+    /**
+     * retourne l'heure de début d'un rotation dans un secteur à jour donnée
+     */
+    public function getTime($day, $secteur){
+        return $this->query("SELECT heure from planning_collecte
+        Where jour = ? and rotation = (select id_rotation_prevue from rotation_prevue
+        Where secteur = ?)", [$day, $secteur]);
     }
 
 

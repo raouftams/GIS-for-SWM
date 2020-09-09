@@ -11,7 +11,7 @@ class RotationPrevueTable extends Table{
      * @return array tableau
      */
     public function all(){
-        return $this->query('SELECT p.code_plan, secteur, v.code as codeVehicle, v.genre, v.marque, v.matricule, v.volume, equipe, qte_dechets, kilometrage, p.carburant, heure_debut, p.heure_fin, p.nombre_points, p.etat
+        return $this->query('SELECT p.code_plan, secteur, v.code as codeVehicle, v.genre, v.marque, v.matricule, v.volume, equipe, equipe2, qte_dechets, kilometrage, p.carburant, heure_debut, p.heure_fin, p.nombre_points, p.etat
 		FROM rotation_prevue p, vehicule v
         WHERE v.code = p.vehicle and p.etat is null
         ');
@@ -22,7 +22,7 @@ class RotationPrevueTable extends Table{
 	 * @return array
 	 */
 	public function getUsedPlan(){
-		return $this->query('SELECT p.code_plan, p.etat, p."date", rp.secteur, v.code, v.genre, v.marque, v.matricule, v.volume, equipe, qte_dechets, kilometrage, rp.carburant, rp.heure_debut, rp.heure_fin, rp.nombre_points, p.fin_validite
+		return $this->query('SELECT p.code_plan, p.etat, p."date", rp.secteur, v.code, v.genre, v.marque, v.matricule, v.volume, equipe, equipe2, qte_dechets, kilometrage, rp.carburant, rp.heure_debut, rp.heure_fin, rp.nombre_points, p.fin_validite
 		FROM rotation_prevue rp, vehicule v, plan_collecte p
 		WHERE v.code = rp.vehicle and rp.code_plan = p.code_plan and  p.etat = ?
         ',['used']);
@@ -69,7 +69,7 @@ class RotationPrevueTable extends Table{
 	 * @return array
 	 */
 	public function getPlan($code){
-		return $this->query('SELECT p.code_plan, p.etat, p."date", rp.secteur, v.code, v.genre, v.marque, v.matricule, v.volume, equipe, qte_dechets, kilometrage, rp.carburant, rp.heure_debut, rp.heure_fin, rp.nombre_points, p.fin_validite
+		return $this->query('SELECT p.code_plan, p.etat, p."date", rp.secteur, v.code, v.genre, v.marque, v.matricule, v.volume, equipe, equipe2, qte_dechets, kilometrage, rp.carburant, rp.heure_debut, rp.heure_fin, rp.nombre_points, p.fin_validite
 		FROM rotation_prevue rp, vehicule v, plan_collecte p
 		WHERE v.code = rp.vehicle and p.code_plan = rp.code_plan and p.code_plan = ?
         ',[$code]);

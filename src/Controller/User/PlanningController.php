@@ -42,7 +42,7 @@ class PlanningController extends AbstractController{
                 }
             }
             if ($secteur["geojson"] != null) {
-                $plan[] = ["secteur" => $secteur["code"], "designation"=> $secteur["designation"], "features"=>$features];
+                $plan[] = ["secteur" => $secteur["code"],  "designation"=> $secteur["designation"], "features"=>$features];
             }
             $features = [];
         }
@@ -110,13 +110,61 @@ class PlanningController extends AbstractController{
             $tempsTotal = 0;
         }
 
-        return $this->render('public/planning_collecte.html.twig', [
+        return $this->render('public/planning/planning_collecte.html.twig', [
             "plan" => $plan,
             "vehiclePlan" => $vehiclePlan,
             "equipePlan" => $equipePlan
         ]);
     }
-	
+    
+    
+    /**
+     * @Route("dashboard/planningCollecte/edit", methods={"POST", "GET"}, name="editPlanning")
+     */
+    public function editPlanning(){
+        if (!empty($_POST)) {
+            $jours = [
+                "1" => "samedi",
+                "2" => "dimanche", 
+                "3" => "lundi", 
+                "4" => "mardi", 
+                "5" => "mercredi", 
+                "6" => "jeudi", 
+                "7" => "vendredi"
+            ];
+
+            foreach($_POST as $k => $v){
+                $key = explode("_", $k);
+                $secteur = $key[0];
+                $day = $jours[$key[1]];
+                $this->app->Planning->edit($day, $secteur, $v);
+            }
+        }
+        $planning = $this->app->Planning->getUsedPlanning();
+        $secteurs = $this->app->Secteur->all();
+        $jours = ["samedi","dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi"];
+
+        //Planning des secteurs
+        $features = [];$plan = [];
+        foreach($secteurs as $secteur){
+            foreach($planning as $rotation){
+                if($secteur["code"] == $rotation["secteur"]){
+                    $feature = ["heure" => $rotation["heure"]];
+                    $index = array_search($rotation["jour"], $jours);
+                    $features[$index] = $feature;
+                    $vehicle = $rotation["vehicle"];
+                }
+            }
+            if ($secteur["geojson"] != null) {
+                $plan[] = ["secteur" => $secteur["code"], "vehicle" => $vehicle,  "designation"=> $secteur["designation"], "features"=>$features];
+            }
+            $features = [];
+        }
+
+        return $this->render('public/planning/editPlanning.html.twig', [
+            "plan" => $plan,
+        ]);
+    }
 
 
 

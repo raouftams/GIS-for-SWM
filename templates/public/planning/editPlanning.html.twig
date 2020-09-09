@@ -1,0 +1,49 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{asset('css/planning.css')}}">
+{% endblock %}
+{%block body %}
+<div class="table-title">
+    <h2 class="font-weight-bold">Modifier le planning</h2>
+    <div class="btn-group">
+        <button class="btn btn-primary btn-sm btn-edit"  type="submit" form="planning-form">Sauvegarder</button>
+    </div>
+</div>
+<div class="tableFixHead">
+<table class="table">
+    <thead>
+        <th class="font-weight-bold">Secteur</th>
+        <th class="font-weight-bold">Véhicule</th>
+        <th class="font-weight-bold">Samedi</th>
+        <th class="font-weight-bold">Dimanche</th>
+        <th class="font-weight-bold">Lundi</th>
+        <th class="font-weight-bold">Mardi</th>
+        <th class="font-weight-bold">Mercredi</th>
+        <th class="font-weight-bold">Jeudi</th>
+        <th class="font-weight-bold">Vendredi</th>
+    </thead>
+    <tbody>
+        <form action="" method="POST" id="planning-form">
+            {% for p in plan %}
+            <tr>
+                <td valign="top" class="font-weight-bold">
+                    {{p.secteur}}
+                </td>
+                <td>{{p.vehicle}}</td>
+                {% set day = 1 %}
+                {% for r in p.features %}
+                <td>
+                    <input type="time" name="{{p.secteur}}_{{day}}" value="{{r.heure}}" class="form-control">
+                    {% set day = day + 1 %}
+                </td>
+                {%endfor%}
+            </tr>
+            {%endfor%}
+        </form>
+    </tbody>
+</table>
+</div>
+
+
+{% endblock %}

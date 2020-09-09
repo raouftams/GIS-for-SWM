@@ -1,0 +1,120 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{asset('css/planning.css')}}">
+{% endblock %}
+{%block body %}
+<div class="table-title">
+    <h2 class="font-weight-bold">Planning d'une semaine</h2>
+    <div class="btn-group">
+        <button class="btn btn-info btn-sm btn-edit"><i class="far fa-edit"></i></button>
+        <button class="btn btn-info btn-sm btn-edit"><i class="fas fa-print"></i></button>
+    </div>
+</div>
+<div class="tableFixHead">
+<table class="table">
+    <thead>
+        <th class="font-weight-bold">Désignation</th>
+        <th class="font-weight-bold">Samedi</th>
+        <th class="font-weight-bold">Dimanche</th>
+        <th class="font-weight-bold">Lundi</th>
+        <th class="font-weight-bold">Mardi</th>
+        <th class="font-weight-bold">Mercredi</th>
+        <th class="font-weight-bold">Jeudi</th>
+        <th class="font-weight-bold">Vendredi</th>
+    </thead>
+    <tbody>
+        {% for p in plan %}
+        <tr>
+            <td valign="top" class="font-weight-bold">
+            {% if p.designation == null %}
+                {{p.secteur}}
+            {% else %}
+                {{p.designation}}
+            {% endif %}
+            </td>
+            {% for r in p.features %}
+                <td>{{r.heure}}</td>
+            {%endfor%}
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+</div>
+
+<br>
+<div class="table-title mt-4">
+    <h2 class="font-weight-bold">Planning des véhicules</h2>
+    <button class="btn btn-info btn-sm btn-edit" style="margin-left: 58%;" onclick="imprimer()"><i class="fas fa-print"></i></button>
+    <br>
+</div>
+<div class="tableFixHead">
+<table class="table">
+    <thead>
+        <th class="font-weight-bold">Véhicule</th>
+        <th class="font-weight-bold">Temps total (H)</th>
+        <th class="font-weight-bold">kilométrage total</th>
+        <th class="font-weight-bold">Samedi</th>
+        <th class="font-weight-bold">Dimanche</th>
+        <th class="font-weight-bold">Lundi</th>
+        <th class="font-weight-bold">Mardi</th>
+        <th class="font-weight-bold">Mercredi</th>
+        <th class="font-weight-bold">Jeudi</th>
+        <th class="font-weight-bold">Vendredi</th>
+    </thead>
+    <tbody>
+        {% for p in vehiclePlan %}
+        <tr>
+            <td valign="top" class="font-weight-bold">{{p.code_vehicle}}_{{p.matricule}}_{{p.genre}}_{{p.volume}}m3</td>
+            <td>{{p.tempsTotal}}</td>
+            <td>{{p.kilometrage}}</td>
+            {% for r in p.features %}
+                <td>
+                    {% for h in r %}
+                        <li style="list-style:none;">{{h}}</li>
+                    {% endfor %}
+                </td>
+            {%endfor%}
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+</div>
+<br>
+
+<div class="table-title mt-4">
+    <h2 class="font-weight-bold" >Planning des équipes</h2>
+    <button class="btn btn-info btn-sm btn-edit" style="margin-left: 60%;"><i class="fas fa-print"></i></button>
+    <br>
+</div>
+<div class="tableFixHead">
+<table class="table">
+    <thead>
+        <th class="font-weight-bold">Equipe</th>
+        <th class="font-weight-bold">Temps total (H)</th>
+        <th class="font-weight-bold">Samedi</th>
+        <th class="font-weight-bold">Dimanche</th>
+        <th class="font-weight-bold">Lundi</th>
+        <th class="font-weight-bold">Mardi</th>
+        <th class="font-weight-bold">Mercredi</th>
+        <th class="font-weight-bold">Jeudi</th>
+        <th class="font-weight-bold">Vendredi</th>
+    </thead>
+    <tbody>
+        {% for p in equipePlan %}
+        <tr>
+            <td valign="top" class="font-weight-bold">{{p.code_equipe}}</td>
+            <td style="text-align:center;">{{p.tempsTotal}}</td>
+            {% for r in p.features %}
+                <td>
+                    {% for h in r %}
+                        <li style="list-style:none;">{{h}}</li>
+                    {% endfor %}
+                </td>
+            {%endfor%}
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+</div>
+{% endblock %}

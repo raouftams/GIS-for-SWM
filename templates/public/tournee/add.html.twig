@@ -172,7 +172,7 @@
 
 					<div class="form-group col-md-4">
 						<label for="inputCode">Date:</label>
-						<input type="date" class="form-control" name="date" id="date">
+						<input type="date" class="form-control" name="date" id="date" onchange="setTime()">
 					</div>
 				</div>
 				<div class="form-row">
@@ -328,6 +328,26 @@
 		
 
 	} 
+
+	function setTime(){
+		var data = JSON.stringify({
+			secteur: document.getElementById("secteurs").value,
+			date: document.getElementById("date").value
+		})
+		$.ajax({
+			url: "{{path('getTimeForDay')}}",
+			method: "POST",
+			contentType: "JSON",
+			data: data,
+			success: function(response){
+				var time = JSON.parse(response).heure;
+				document.getElementById("heure").value = time;
+			},
+			error: function(){
+				alert("Erreur du server");
+			}
+		});
+	}
   </script>
 </body>
 </html>
