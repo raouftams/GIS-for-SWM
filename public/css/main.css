@@ -44,12 +44,14 @@ nav>div>button{
 }
 
 .interface{
-	right: 0;
+	border: 1px solid transparent;
+	padding-left: 10px;
 	margin: 40px;
 	margin-top: 2%;
 	position: absolute;
 	height: auto;
-	width: 75%;
+	width: 79%;
+	margin-left: 20% !important;
 }
 
 

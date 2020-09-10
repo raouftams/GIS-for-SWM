@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 {% block title %}Historique des rotations{%endblock%}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{asset('css/table.css')}}">
+    <link rel="stylesheet" href="{{asset('css/bilan.css')}}">
     
     
     <style>
@@ -12,8 +12,8 @@
 {% endblock %}
 {% block header %}Historique des rotations{%endblock%}
 {% block body %}
-<div class="container-fluid mt-4">
-    <h3 style="color: #2274BF;" class="text-center font-weight-bold">Historique des tournées realisées</h3>
+<div class="container-fluid">
+    <h3 class="text-center font-weight-bold table-title">Historique des tournées realisées</h3>
         <div class="tableFixHead">
         <table class="table">
             <thead>

@@ -3,7 +3,7 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="{{asset('css/dashboard.css')}}">
     <link rel="stylesheet" href="{{asset('css/charts.css')}}">
-    <link rel="stylesheet" href="{{asset('css/table.css')}}">
+    <link rel="stylesheet" href="{{asset('css/bilan.css')}}">
     <style>
 	    td{
 		    margin: auto;
@@ -12,28 +12,28 @@
 {% endblock %}
 {% block header %}Bilan d'action{%endblock%}
 {% block body %}
-<div class="container-fluid mt-4">
+<div class="container-fluid">
     <a class="btn btn-info btn-ajouter" href="{{path('Historique')}}"><i class="fa fa-hourglass" aria-hidden="true"></i> Historique des tournées</a>
     <a class="btn btn-success btn-add btn-ajouter" href="{{path('AttachementBilan')}}"><i class="fa fa-calculator" aria-hidden="true"></i> Attachement du Bilan</a>
     <div class="jumbotron" style="height: 30%; width: 100%; padding-top: 0; border-radius: 5px;">
-        <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets (En tonne)</h3>
+        <h3 class="text-center font-weight-bold">Quantité de déchets (En tonne)</h3>
         <hr>
         <canvas id="ChartQteDechets" height="200" class="chartjs-render-monitor chart" style="display: block; width: 390px; height: 195px;"></canvas>
     </div>
 
 
     <div class="jumbotron" style="height: 30%; width: 100%; padding-top: 0; border-radius: 5px;">
-        <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantité de déchets par secteur (En tonne)</h3>
+        <h3 class="text-center font-weight-bold">Quantité de déchets par secteur (En tonne)</h3>
         <hr>
         <canvas id="ChartQteParSecteur" height="200" class="chartjs-render-monitor chart" style="display: block; width: 390px; height: 195px;"></canvas>
     </div>
     <div class="jumbotron" style="height: 30%; width: 100%; padding-top: 0; border-radius: 5px;">
-        <h3 style="color: #2274BF;" class="text-center font-weight-bold">Quantitées du Mois</h3>
+        <h3 class="text-center font-weight-bold">Quantitées du Mois</h3>
         <hr>
         <canvas id="Charttauxmois" height="200" class="chartjs-render-monitor chart" style="display: block; width: 390px; height: 195px;"></canvas>
     </div>
 
-    <h3 style="color: #2274BF;" class="text-center font-weight-bold">Rotations incomplétes du mois</h3>
+    <h3 class="text-center font-weight-bold table-title">Rotations incomplétes du mois</h3>
     <div class="tableFixHead">
         <table class="table">
             <thead>
@@ -91,7 +91,7 @@
     </div>
     <br>
     
-    <h3 style="color: #2274BF;" class="text-center font-weight-bold">Rotations de ce mois_ci</h3>
+    <h3 class="text-center font-weight-bold table-title">Rotations de ce mois_ci</h3>
     <div class="tableFixHead">
         <table class="table">
             <thead>
