@@ -9,18 +9,25 @@
    ```sh
     $ symfony server:start
     ```
-
+# Database connection
+Our application uses php PDO for database connection, you can change the database configuration in :
+```
+    pfe/
+    |__src/
+    |  |__Core/
+    |  |  |__Database/
+    |  |  |  | PostgresDatabase.php -> method getPDO();
+```
 # Vehicle routing problem
  To use the vehicle routing problem in our app your have to:
 
 - Create an [ArcGis Developer](https://developers.arcgis.com/) account and get a token
-- Paste the token in VRPController file 
+- Paste the token in AppController file 
     ```
     pfe/
     |__src/
     |  |__controller/
-    |  |  |__User/
-    |  |  |  | VRPController.php -> function index();
+    |  |  | AppController.php -> attribut $token;
     ```
 
 
