@@ -192,9 +192,9 @@ nav>div>button{
 		display: block;
 		width: 100%;
 		text-align: center;
-		margin-left: auto;
+		margin-left: 0px !important;
 		margin-right: auto;
-		margin-top: 65px;
+		margin-top: 65px!important;
 	}
 
 	.navbar-toggler{

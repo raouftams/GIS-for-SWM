@@ -34,3 +34,16 @@ au-card-inner{
 canvas{
     margin-top: 10px;
 }
+
+@media only screen and (max-width: 970px){
+	.chart1, .chart2{
+        width: 100% !important;
+        height: 400px !important;
+        margin-bottom: 20px;
+    }
+
+    canvas{
+        width: 100%!important;
+        height: 80%!important;
+    }
+}

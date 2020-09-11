@@ -1,0 +1,21 @@
+
+.plan-table  { overflow-x: auto; height: 100vh;}
+	.plan-table thead th { position: sticky; top: 0; z-index:100;}
+	
+	table  { border-collapse: collapse; width: 100%; }
+	th, td { padding: 8px 16px; }
+	th     { background: #1d8097; color: #ffffff; white-space: nowrap;}
+td {background-color: #ffffff; min-width: 200px !important;}
+
+.btn-add{
+    float: right;
+}
+
+.plan-table::-webkit-scrollbar{
+    width: 8px;
+	height: 10px;
+	background-color: #78a8b3;
+}
+.plan-table::-webkit-scrollbar-thumb{
+	background-color: #1d8097;
+}

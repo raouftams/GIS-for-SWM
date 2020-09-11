@@ -10,21 +10,28 @@ td{
     padding-left: 20px;
 }
 .info-div{
-    border: 1px solid transparent;
     background-color: rgb(255, 255, 255);
 }
 .bare-info {
-    border: 1px solid transparent;
-    background-color: rgb(48, 125, 214);
+    border: 1px solid #1d8097;
+    background-color: #1d8097;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 h3{
     color: white;
     float: left;
     font-weight: 400;
+    margin-left: 10px;
 }
 
 .btn-imprimer{
     display: inline;
     margin-left: 68%;
+}
+
+.btn-image{
+    display: inline;
+    margin-left: 70%;
 }
