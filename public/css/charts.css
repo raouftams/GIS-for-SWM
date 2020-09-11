@@ -1,14 +1,27 @@
 .container-fluid{
     width: 100%;
-    float: left;
 }
-.col-5{
+.chart1{
     border: 1px solid transparent;
-    border-radius: 15px;
+    border-radius: 10px;
     background-color: #ffffff;
+    width: 49% !important;
     height: 350px;
-    margin: auto;
     box-shadow: 1px 2px rgb(224, 224, 224);
+    margin-right: 1% ;
+}
+
+.chart2{
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background-color: #ffffff;
+    width: 50% !important;
+    height: 350px;
+    box-shadow: 1px 2px rgb(224, 224, 224);
+}
+
+h3{
+    color: #1d8097;
 }
 
 .row{

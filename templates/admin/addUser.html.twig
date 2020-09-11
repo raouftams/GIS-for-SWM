@@ -6,8 +6,9 @@
 <style>
     h3{
         border: 1px solid transparent;
-        background-color: #2274BF;
+        background-color: #1d8097;
         color: white;
+        font-weight: bold;
         border-radius: 3px;
         margin-bottom: 20px;
         text-align: center;
@@ -73,7 +74,7 @@
 
 <h3 class="mb-4">Ajouter un utilisateur</h3>
 {% if result != null %}
-    <p class="alert alert-success font-weight-bold">{{result}}</p>
+    <p class="alert alert-success">{{result}}</p>
 {% endif %}
 
 <form action="{{path('addUser')}}" method="POST" style="text-align: center; margin-left: 20%;">

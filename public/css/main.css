@@ -20,9 +20,7 @@ nav{
 	height: 100vh;
 	width: 20%;
 	background-color: white !important;
-	padding-top: 20px;
 	float: left;	
-	border: 1px solid transparent;
 }
 nav>hr{
 	background-color: white;
@@ -47,7 +45,7 @@ nav>div>button{
 	border: 1px solid transparent;
 	padding-left: 10px;
 	margin: 40px;
-	margin-top: 2%;
+	margin-top: 20px !important;
 	position: absolute;
 	height: auto;
 	width: 79%;
@@ -116,14 +114,17 @@ nav>div>button{
 
 
 .page-title{
-	border: 1px solid #ffffff;
-	background-color: #ffffff;
-	border-bottom: 1px solid rgb(209, 209, 209);
+	border: 1px solid #1d8097;
+	background-color: #1d8097;
+	color: #ffffff !important;
 	width: 100%;
-	height: 50px;
+	height: 56px;
 	font-size: 24px;
 	padding-left: 20px !important;
-	margin-top: 0px!important;
+	padding-top: 10px !important;
+	margin-bottom: 20px;
+	box-shadow: 0px 0px 3px 0px #2e4146;
+	z-index: 100;
 }
 
 
@@ -177,6 +178,7 @@ nav>div>button{
 	border: 1px solid #1d8097;
 	background-color: #1d8097 !important;
 }
+
 
 @media only screen and (max-width: 970px){
 	nav{

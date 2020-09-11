@@ -1,5 +1,5 @@
 .navbar {position: fixed; box-shadow:none; border-bottom: 2px solid rgb(223, 222, 222); background-color: rgb(253, 253, 253); margin-bottom: 10px;}
-.navbar-brand{color: #2274BF;}
+.navbar-brand{color: #1d8097;}
 
 .navspan{
     color: rgb(132, 132, 132) !important;
@@ -11,8 +11,8 @@
     border: 2px solid transparent;
 }
 .nav-link:hover{
-    color: #2274BF;
-    border-bottom: 2px solid #2274BF;
+    color: #1d8097;
+    border-bottom: 2px solid #1d8097;
     background-color: rgb(248, 248, 248);
 }
 
@@ -29,15 +29,16 @@
     z-index: 100%;
 }
 .table thead{
-    background-color: #2a81d3;
-    color: #ffffff;
+    background-color: #fff;
+    color: #1d8097;
+    font-weight: bold;
 }
 .table th, td{
     white-space:nowrap;
 }
 
 .interface h2{
-    color: #2a81d3;
+    color: #1d8097;
     font-weight: bold;
 }
 
@@ -60,6 +61,6 @@ footer{
         background-color: #afcbe6;
     }
     .table-responsive::-webkit-scrollbar-thumb{
-        background-color: #2a81d3;
+        background-color: #1d8097;
     }
 }
