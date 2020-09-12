@@ -50,7 +50,7 @@ class TourneeTable extends Table{
      * @return array
      */
     public function tempvehicle(){
-      return $this->query('SELECT vehicle as label, sum(temps_travail) as data
+      return $this->query('SELECT vehicle as label, sum(heure_fin_rotation - heure_demarrage_parc) as data
       FROM "public".tournee 
       GROUP BY label
       order by label
@@ -73,7 +73,7 @@ class TourneeTable extends Table{
      * @return array
      */
     public function tempsequipe(){
-      return $this->query('SELECT equipe as label, sum(temps_travail) as data
+      return $this->query('SELECT equipe as label, sum(heure_fin_rotation - heure_demarrage_parc) as data
       FROM "public".tournee 
       GROUP BY label
       order by label
