@@ -16,7 +16,7 @@ $.ajax({url:"http://127.0.0.1:8000/dashboard/charts/data8",
                 labels: labels8,
                 datasets: [{
                     data: data8,
-                    backgroundColor: ["#005073", "#107dac","#189ad3", "#1ebbd7","#71c7ec","#3498DB", "#1ABC9C","#16A085", "#F1C40F","#F39C12","#105051"],
+                    backgroundColor: ["#C0392B", "#E74C3C","#9B59B6", "#8E44AD","#2980B9","#3498DB", "#1ABC9C","#16A085", "#F1C40F","#F39C12","#105051"],
                     hoverBackgroundColor: []
                     }]
                 },
