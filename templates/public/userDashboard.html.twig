@@ -1,22 +1,28 @@
 {% extends "userbase.html.twig" %}
 
 {% block stylesheets %}
-
+<link rel="stylesheet" href="{{asset('css/table.css')}}">
+<style>
+    .btn-primary{
+        background-color:  #1d8097 !important;
+    }
+</style>
 {% endblock %}
-
+{% block title %}Tableau de bord {%endblock%}
 {% block body %}
+
 <h2>Rotations à effectuer</h2><br>
 <div class="table-responsive">
     <table class="table table-hover">
         <thead>
             <tr>
-            <th scope="col">Secteur</th>
-            <th scope="col">Véhicule</th>
-            <th scope="col">CET</th>
-            <th>Quantité prévue</th>
-            <th scope="col" style="margin-left: 40px;">Date</th>
-            <th scope="col" style="margin-left: 40px;">Heure</th>
-            <th scope="col">Actions</th>
+            <th class="font-weight-bold" scope="col">Secteur</th>
+            <th class="font-weight-bold" scope="col">Véhicule</th>
+            <th class="font-weight-bold" scope="col">CET</th>
+            <th class="font-weight-bold">Quantité prévue</th>
+            <th class="font-weight-bold" scope="col" style="margin-left: 40px;">Date</th>
+            <th class="font-weight-bold" scope="col" style="margin-left: 40px;">Heure</th>
+            <th class="font-weight-bold" scope="col">Actions</th>
             </tr>
         </thead>  
         <tbody>
@@ -30,8 +36,43 @@
                 <td>{{ tournee.heure_demarrage_parc }}</td>
                 <td class="th-sm">
                     <div class="btn-group" style="text-align:center;">
-                        <a class="btn btn-sm btn-info" href="{{path('tourneeMaps', {id : tournee.id_tournee })}}"><i class="fas fa-map-marked-alt"></i></a>
-                        <a class="btn btn-sm btn-warning" href="{{path('userUpdateTournee', {id : tournee.id_tournee })}}"><i class="far fa-edit"></i></a>
+                        <a class="btn btn-sm btn-primary" href="{{path('tourneeMaps', {id : tournee.id_tournee })}}"><i class="fas fa-map-marked-alt"></i></a>
+                        <a class="btn btn-sm btn-unique" href="{{path('tourneeDetailUser', {id : tournee.id_tournee })}}"><i class="far fa-edit"></i></a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h2 class="mt-4">Rotations effectuées</h2><br>
+<div class="table-responsive tableFixHead">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+            <th class="font-weight-bold" scope="col">Secteur</th>
+            <th class="font-weight-bold" scope="col">Véhicule</th>
+            <th class="font-weight-bold" scope="col">CET</th>
+            <th class="font-weight-bold">Quantité prévue</th>
+            <th class="font-weight-bold" scope="col" style="margin-left: 40px;">Date</th>
+            <th class="font-weight-bold" scope="col" style="margin-left: 40px;">Heure</th>
+            <th class="font-weight-bold" scope="col">Actions</th>
+            </tr>
+        </thead>  
+        <tbody>
+        {% for tournee in allTournees %}
+            <tr>
+                <td> {{ tournee.secteur }} </td>
+                <td>{{ tournee.marque }}_{{tournee.volume}}m&#179;_{{tournee.matricule}}</td>
+                <td>{{ tournee.designation }}</td>
+                <td>{{ tournee.qte_prevue }} Tonnes</td>
+                <td>{{ tournee.date }}</td>
+                <td>{{ tournee.heure_demarrage_parc }}</td>
+                <td class="th-sm">
+                    <div class="btn-group" style="text-align:center;">
+                        <a class="btn btn-sm btn-primary" href="{{path('tourneeMaps', {id : tournee.id_tournee })}}"><i class="fas fa-map-marked-alt"></i></a>
+                        <a class="btn btn-sm btn-unique" href="{{path('tourneeDetailUser', {id : tournee.id_tournee })}}"><i class="far fa-edit"></i></a>
                     </div>
                 </td>
             </tr>

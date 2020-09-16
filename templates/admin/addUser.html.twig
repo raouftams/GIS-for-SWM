@@ -56,11 +56,11 @@
                     {%endif%}
                     </td>
 				<td class="th-sm">{{ user.getCodeEquipe }}</td>
-				<td class="th-sm">{{ user.getDateInscription.date|date("m/d/Y")}}</td>
+				<td class="th-sm">{{ user.getDateInscription.date|date("m/d/Y") }}</td>
                 
 				<td class="th-sm">
 					<div class="btn-group" >
-						<a class="btn btn-sm btn-warning" href=""><i class="fa fa-edit"></i></a>
+						<a class="btn btn-sm btn-primary" href=""><i class="fa fa-edit"></i></a>
 						<a class="btn btn-sm btn-danger" href="{{path('deleteUser', {id: user.id})}}"><i class="fas fa-trash-alt"></i></a>
 					</div>
 				</td>
@@ -107,7 +107,7 @@
             </select>
         </div>
     </div>
-    <button type="submit" class="btn btn-info btn-ajouter" >Ajouter</button>
+    <button type="submit" class="btn btn-primary btn-ajouter" >Ajouter</button>
 </form>
 </div>
 {% endblock %}

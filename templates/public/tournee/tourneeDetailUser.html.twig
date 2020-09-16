@@ -1,0 +1,82 @@
+{% extends "userbase.html.twig" %}
+{% block title %}Détails rotation{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{asset('css/tourneeDetails.css')}}">
+<link rel="stylesheet" href="{{asset('css/popup.css')}}">
+<style>
+    table{
+        text-align: left;
+    }
+    .btn-primary{
+        background-color: #1d8097 !important;
+        border: 1px solid #1d8097;
+    }
+    ul{
+        list-style: none;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<a href="{{path('userUpdateTournee', {id : id_tournee })}}" class="btn btn-primary btn-md">Mettre à jour</a>
+
+<div id="bon_transport" class="info-div">
+    <div class="bare-info">
+        <legend>
+            <h3>Bon de transport</h3>
+            <button type="button" class="btn btn-success btn-sm btn-imprimer" onclick="imprimer('bon_transport');">Imprimer</button>
+        </legend>
+    </div>
+    <table class="mt-4">
+        <tbody>
+            <tr>
+                <th class="font-weight-bold">Code:</th>
+                <td>{{bon.code}}</td>
+
+                <th class="font-weight-bold" style="padding-left: 180px;">Agents:</th>
+                <td>
+                    <ul>
+                        {% for agent in agents %}
+                            <li>{{agent.matricule}}_{{agent.nom}} {{agent.prenom}}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Secteur:</th>
+                <td>{{secteur.code}}_{{secteur.designation}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Véhicule:</th>
+                <td>{{vehicle}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Date:</th>
+                <td>{{bon.date}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Heure début:</th>
+                <td>{{bon.heure_debut}}</td>
+            </tr>
+            <tr>
+                <th class="font-weight-bold">Chauffeur:</th>
+                <td>{{chauffeur.matricule}}_{{chauffeur.nom}} {{chauffeur.prenom}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script>
+function imprimer(divName) {
+      var printContents = document.getElementById(divName).innerHTML;    
+   var originalContents = document.body.innerHTML;      
+   document.body.innerHTML = printContents;     
+   window.print();     
+   document.body.innerHTML = originalContents;
+   }
+
+   
+</script>
+{% endblock %}

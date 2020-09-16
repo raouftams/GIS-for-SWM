@@ -84,13 +84,19 @@ class IndexController extends AbstractController{
     $user_id = $security->getUser()->getId();
     $user = $this->getDoctrine()->getRepository(User::class)->find($user_id);
     $code_equipe = $user->getCodeEquipe();
-    $tournees = $this->app->Tournee->getTourneesEquipe($code_equipe);
-    foreach($tournees as $t){
+    $tourneesEnAttente = $this->app->Tournee->getTourneesEquipe($code_equipe);
+    $allTournees = $this->app->Tournee->getAllTourneesEquipe($code_equipe);
+    foreach($tourneesEnAttente as $t){
       for ($i=0; $i <count($t) ; $i++) { 
         unset($t[$i]);
       }
     }
-		return $this->render("public/userDashboard.html.twig", ["tournees"=>$tournees]);
+    foreach($allTournees as $t){
+      for ($i=0; $i <count($t) ; $i++) { 
+        unset($t[$i]);
+      }
+    }
+		return $this->render("public/userDashboard.html.twig", ["tournees"=>$tourneesEnAttente, "allTournees"=>$allTournees]);
 	}
 
  

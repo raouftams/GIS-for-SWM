@@ -48,6 +48,10 @@ class EmployeTable extends Table{
       return $this->query("UPDATE {$this->table} SET $sql_part WHERE matricule = ?", $attributes, true);
     }
 
+    public function getEmployesEquipe($equipe){
+      return $this->query("SELECT * from employe Where equipe = ?",[$equipe]);
+    }
+
   }
 
  ?>

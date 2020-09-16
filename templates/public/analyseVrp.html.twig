@@ -46,7 +46,7 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 		  <ul class="navbar-nav">
 				<li class="nav-item active">
-				  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-home"></i>Tableau de bord <span class="sr-only">(current)</span></a>
+				  <a class="nav-link" href="{{path('dashboard')}}"><i class="fas fa-tachometer-alt"></i>Tableau de bord <span class="sr-only">(current)</span></a>
 				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -66,15 +66,9 @@
 				<li class="nav-item">
 				  <a class="nav-link" href="{{path('planCollecte')}}"><i class="fas fa-calendar-alt"></i>Plan de collecte</a>
 				</li>
-				{% if is_granted("ROLE_ADMIN")%}
 				<li class="nav-item">
-				  <a class="nav-link" href="{{path('analyseVrp')}}"><i class="fas fa-route"></i>Analyse</a>
+				  <a class="nav-link disabled" href="{{path('analyseVrp')}}" disable><i class="fas fa-route"></i>Analyse</a>
 				</li>
-				<li class="nav-item">
-				  <a class="nav-link" href="{{path('addUser')}}"><i class="fas fa-user-alt"></i>Utilisateurs</a>
-				</li>
-				{% endif %}
-				
 			</ul>
 			<ul class="navbar-nav ml-auto">
           		<li class="nav-item"><a class="nav-link logout" href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a> 
@@ -210,9 +204,9 @@
 					<button type="button" id="btn-analyse" class="text-white font-weight-bold"  onclick="makeRequest()" >ANALYSER</button>      
 				</div>
 				<div id="btn-save-recalculate" style="display: none; text-align: center;">
-					<button type="button" id="btn-save" class="btn btn-success" onclick="saveResult()" >Sauvegarder</button>
-					<button type="button" id="btn-recalculate" class="btn btn-warning" onclick="recalculate()" >Recalculer</button>
-					<a href="#popup-result"><button class="btn btn-unique" id="btn-results" onclick="setDataToTable()" >Résultats</button></a>
+					<button type="button" id="btn-save" class="btn font-weight-bold" style="background-color: #95DBE5FF; border:1px solid #95DBE5FF;"  onclick="saveResult()" >Sauvegarder</button>
+					<button type="button" id="btn-recalculate" class="btn font-weight-bold" style="background-color: #078282FF; border:1px solid #078282FF;" onclick="recalculate()" >Recalculer</button>
+					<a href="#popup-result" style="color: black"><button class="btn font-weight-bold" style="background-color: #339E66FF; border:1px solid #339E66FF;" id="btn-results" onclick="setDataToTable()" >Résultats</button></a>
 				</div>
 			</div>
 	</div>

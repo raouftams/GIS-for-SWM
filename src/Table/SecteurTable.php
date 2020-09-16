@@ -125,6 +125,10 @@ class SecteurTable extends Table{
 	public function deleteSectorisation($codeSectorisation){
 		return $this->query('DELETE from secteurs where sectorisation = ?', [$codeSectorisation]);
 	}
+
+	public function getSecteur($code){
+		return $this->query("SELECT * from secteurs where code = ?", [$code]);
+	}
 }
   
 

@@ -21,7 +21,8 @@ class TourneeController extends AbstractController{
     $this->app->loadModel('Vehicle');
     $this->app->loadModel('Equipe');
     $this->app->loadModel('Secteur');
-	$this->app->loadModel('RotationPrevue');
+    $this->app->loadModel('RotationPrevue');
+    $this->app->loadModel('Employe');
 	
 	$this->parameterBag = $parameterBag;
     
@@ -59,6 +60,35 @@ class TourneeController extends AbstractController{
       $vehicle = $this->app->Vehicle->getVehicle($bon[0]["vehicule"]);
       $vehicleName = "".$vehicle["code"]." ".$vehicle["matricule"]." ".$vehicle["genre"]; 
       return $this->render('public/tournee/tourneeDetail.html.twig', ["bon" => $bon[0], "vehicle"=>$vehicleName, "ticket"=>$ticket[0], "id_tournee" => $id, "ticket_image" => $ticket[0]["image_name"]]);
+  }
+
+  /**
+     * @Route("/user/tournee/{id}/details", methods={"POST","GET"}, name="tourneeDetailUser")
+     */
+    public function userTourneeDetail($id){
+      $bon = $this->app->Tournee->getBonTransport($id);
+      for ($i=0; $i <count($bon[0]) ; $i++) { 
+        unset($bon[0][$i]);
+      }
+      $employes = $this->app->Employe->getEmployesEquipe($bon[0]["equipe"]);
+      foreach($employes as $key => $employe){
+        if($employe["fonction"] == "chauffeur"){
+          $chauffeur = $employe;
+          unset($employes[$key]);
+        }
+      }
+      $secteur = $this->app->Secteur->getSecteur($bon[0]["secteur"])[0];
+      $vehicle = $this->app->Vehicle->getVehicle($bon[0]["vehicule"]);
+      $vehicleName = "".$vehicle["code"]." ".$vehicle["matricule"]." ".$vehicle["genre"]; 
+      return $this->render('public/tournee/tourneeDetailUser.html.twig', [
+        "bon" => $bon[0], 
+        "vehicle"=>$vehicleName, 
+        "id_tournee" => $id,
+        "chauffeur" => $chauffeur,
+        "agents" => $employes,
+        "secteur" => $secteur
+        
+      ]);
   }
 
     /**
@@ -197,7 +227,7 @@ class TourneeController extends AbstractController{
             "secteurs" => $secteurs,
             "vehicles" => $vehicules,
             "equipes" => $equipes,
-            "result" => "Rotation inserée avec succès."
+            "result" => "Rotation planifiée avec succès."
           ]);
       }
       return $this->render('public/tournee/add.html.twig',[

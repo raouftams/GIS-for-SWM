@@ -1,3 +1,11 @@
+body::-webkit-scrollbar{
+	width: 8px;
+	background-color: #a9cfd8;
+}
+body::-webkit-scrollbar-thumb{
+	background-color: #1d8097;
+}
+
 .navbar {position: fixed; box-shadow:none; border-bottom: 2px solid rgb(223, 222, 222); background-color: rgb(253, 253, 253); margin-bottom: 10px;}
 .navbar-brand{color: #1d8097;}
 

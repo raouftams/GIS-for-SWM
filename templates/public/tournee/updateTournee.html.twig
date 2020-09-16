@@ -1,7 +1,11 @@
 {% extends "userbase.html.twig" %}
-
+{% block title %}Mise à jour des données {%endblock%}
 {% block stylesheets %}
-
+<style>
+    .btn-primary{
+        background-color: #1d8097 !important;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
@@ -17,7 +21,7 @@
 {% endif %}
 <form class="form" method="POST" enctype="multipart/form-data">
     <div id="tournee-form">
-        <h3>Rotation réalisée:</h3>
+        <h3 class="font-weight-bold" style="color:  #1d8097;">Rotation réalisée:</h3>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="heuredemarrage">Heure démarrage du parc:</label>
@@ -63,7 +67,7 @@
 
     <hr>
     <div id="form-ticket">
-        <h3>Ticket de pesée</h3>
+        <h3 class="font-weight-bold" style="color:  #1d8097;">Ticket de pesée</h3>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="heurepesee">Heure de pesée:</label>

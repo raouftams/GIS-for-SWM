@@ -24,7 +24,7 @@
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <a href="#" class="navbar-brand">
-            Tableau de bord
+            {%block title%}{%endblock%}
         </a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <i class="fas fa-bars"></i>
@@ -32,7 +32,7 @@
 
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{{path('userIndex')}}" ><i class="fas fa-tachometer-alt"></i>&nbsp; Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="{{path('userIndex')}}" ><i class="fas fa-tachometer-alt"></i>&nbsp; Accueil <span class="sr-only">(current)</span></a>
             </div>
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link logout"href="{{path('logout')}}" ><i class="fas fa-sign-out-alt"></i>&nbsp; Déconnexion </a>
