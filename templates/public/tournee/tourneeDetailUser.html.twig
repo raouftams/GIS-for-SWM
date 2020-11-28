@@ -37,9 +37,11 @@
                 <th class="font-weight-bold" style="padding-left: 180px;">Agents:</th>
                 <td>
                     <ul>
+                    {% if agents != null %}
                         {% for agent in agents %}
                             <li>{{agent.matricule}}_{{agent.nom}} {{agent.prenom}}</li>
                         {% endfor %}
+                    {% endif %}
                     </ul>
                 </td>
             </tr>
@@ -61,7 +63,9 @@
             </tr>
             <tr>
                 <th class="font-weight-bold">Chauffeur:</th>
+                {% if chauffeur != null %}
                 <td>{{chauffeur.matricule}}_{{chauffeur.nom}} {{chauffeur.prenom}}</td>
+                {% endif %}
             </tr>
         </tbody>
     </table>

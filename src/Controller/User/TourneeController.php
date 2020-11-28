@@ -66,6 +66,7 @@ class TourneeController extends AbstractController{
      * @Route("/user/tournee/{id}/details", methods={"POST","GET"}, name="tourneeDetailUser")
      */
     public function userTourneeDetail($id){
+      $chauffeur = null;
       $bon = $this->app->Tournee->getBonTransport($id);
       for ($i=0; $i <count($bon[0]) ; $i++) { 
         unset($bon[0][$i]);

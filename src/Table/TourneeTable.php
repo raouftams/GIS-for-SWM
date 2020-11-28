@@ -172,7 +172,7 @@ class TourneeTable extends Table{
      */
     public function tauxRealisees(){
       return $this->query('SELECT sum(qte_dechets) AS qte_p, sum(qte_realise) AS qte_r,
-      sum(nombre_points) AS nbp_points, sum((taux_realisation * nombre_points)) AS nbr_points,
+      sum(nombre_points) AS nbp_points, sum(nombre_points) AS nbr_points,
       sum(ro.kilometrage) AS kilometrage_p, sum(tr.kilometrage) AS kilometrage_r, sum(ro.carburant) AS carburant_p, sum(tr.carburant) AS carburant_r
       FROM tournee tr
 	    JOIN rotation_prevue ro ON (ro.vehicle = tr.vehicle AND ro.equipe = tr.equipe AND ro.secteur = tr.secteur)
