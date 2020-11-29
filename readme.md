@@ -1,7 +1,7 @@
 # Web GIS for the Optimization of Solid Waste Collection and Transport: Case Study of Babezzouar, Algeria
 ## Abstract
 In the context of a **web GIS** (Geographic Information System), this study focuses on the application of the Vehicle Routing Problem to calculate the best routes (shortest route, fastest route, etc.) of a fleet of vehicles to serve (collect and transport) a set of collection points of an agglomeration (geographic database of collection points).
-## System modeling (UML diagrams)
+## System design (UML diagrams)
 ![Class diagram](https://github.com/raouftams/pfe/blob/master/UML/ClassDiagram.jpg?raw=true)
 ![Usecase diagram](https://github.com/raouftams/pfe/blob/master/UML/usecase1.jpg?raw=true)
 ![Usecase diagram](https://github.com/raouftams/pfe/blob/master/UML/usecase2.jpg?raw=true)
